@@ -1,0 +1,4 @@
+[submodule "vendors/ClassIsland"]
+	path = vendors/ClassIsland
+	url = git@github.com:HelloWRC/ClassIsland.git
+	branch = dev
