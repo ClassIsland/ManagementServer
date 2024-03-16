@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.34607.79
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassIsland.ManagementServer.Server", "ClassIsland.ManagementServer.Server\ClassIsland.ManagementServer.Server.csproj", "{C5FBFE86-191C-4EE2-9065-1F4648670D73}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "classisland.managementserver.client", "classisland.managementserver.client\classisland.managementserver.client.esproj", "{502F2888-0BA3-4EFB-A201-9159259948F6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C5FBFE86-191C-4EE2-9065-1F4648670D73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5FBFE86-191C-4EE2-9065-1F4648670D73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5FBFE86-191C-4EE2-9065-1F4648670D73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5FBFE86-191C-4EE2-9065-1F4648670D73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{502F2888-0BA3-4EFB-A201-9159259948F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{502F2888-0BA3-4EFB-A201-9159259948F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{502F2888-0BA3-4EFB-A201-9159259948F6}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{502F2888-0BA3-4EFB-A201-9159259948F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{502F2888-0BA3-4EFB-A201-9159259948F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{502F2888-0BA3-4EFB-A201-9159259948F6}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {53CFB226-7DB2-4F48-B656-6BE5C8738D49}
+	EndGlobalSection
+EndGlobal
