@@ -10,6 +10,12 @@ public class ClientRegistryController(ManagementServerContext context) : Control
 {
     private ManagementServerContext DataContext { get; } = context;
     
+    /// <summary>
+    /// 列举已经注册的实例。
+    /// </summary>
+    /// <returns>
+    /// 返回已经注册的实例列表
+    /// </returns>
     [HttpGet("list")]
     public IActionResult List()
     {
@@ -21,7 +27,7 @@ public class ClientRegistryController(ManagementServerContext context) : Control
     {
         if (DataContext.Clients.Any(x => x.Cuid == client.Cuid))
         {
-            return BadRequest("Client already registered");
+            return BadRequest("这个实例已经注册。");
         }
         DataContext.Clients.Add(new Client()
         {
@@ -31,5 +37,28 @@ public class ClientRegistryController(ManagementServerContext context) : Control
         });
         DataContext.SaveChanges();
         return Ok();
+    }
+    
+    [HttpDelete("unregister")]
+    public IActionResult Unregister([FromQuery] Client client)
+    {
+        if (!DataContext.Clients.Any(x => x.Cuid == client.Cuid))
+        {
+            return BadRequest("实例还没有注册。");
+        }
+        DataContext.Clients.Remove(DataContext.Clients.First(x => x.Cuid == client.Cuid));
+        DataContext.SaveChanges();
+        return Ok();
+    }
+    
+    [HttpGet("query/{cuid}")]
+    public IActionResult Query([FromRoute]string cuid)
+    {
+        var c = DataContext.Clients.FirstOrDefault(x => x.Cuid == cuid);
+        if (c == null)
+        {
+            return BadRequest("实例还没有注册。");
+        }
+        return Ok(c);
     }
 }
