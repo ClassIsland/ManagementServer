@@ -11,7 +11,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ManagementServerContext>(options =>
 {
-    options.UseMySql(builder.Configuration.GetConnectionString("ManagementServerContext"), Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.3.0-mysql"));
+    options.UseMySql(builder.Configuration.GetConnectionString("Development"), Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.3.0-mysql"));
 });
 
 var app = builder.Build();
