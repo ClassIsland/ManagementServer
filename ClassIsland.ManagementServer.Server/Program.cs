@@ -1,3 +1,6 @@
+using ClassIsland.ManagementServer.Server.Context;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +9,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddDbContext<ManagementServerContext>(options =>
+{
+    options.UseMySql(builder.Configuration.GetConnectionString("ManagementServerContext"), Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.3.0-mysql"));
+});
 
 var app = builder.Build();
 
