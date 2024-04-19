@@ -264,9 +264,7 @@ public partial class ManagementServerContext : DbContext
 
             entity.HasIndex(e => e.SubjectId, "fk_profile_classplan_classes_profile_subjects_1");
 
-            entity.Property(e => e.InternalId)
-                .ValueGeneratedNever()
-                .HasColumnName("internal_id");
+            entity.Property(e => e.InternalId).HasColumnName("internal_id");
             entity.Property(e => e.AttachedObjects)
                 .HasColumnType("json")
                 .HasColumnName("attached_objects");

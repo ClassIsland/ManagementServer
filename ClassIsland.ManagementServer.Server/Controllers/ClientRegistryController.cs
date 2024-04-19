@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ClassIsland.ManagementServer.Server.Controllers;
 
 [ApiController]
-[Route("api/clients")]
+[Route("api/v1/clients_registry")]
 public class ClientRegistryController(ManagementServerContext context) : ControllerBase
 {
     private ManagementServerContext DataContext { get; } = context;
@@ -29,14 +29,16 @@ public class ClientRegistryController(ManagementServerContext context) : Control
         {
             return BadRequest("这个实例已经注册。");
         }
-        DataContext.Clients.Add(new Client()
+
+        var newClient = new Client()
         {
             Cuid = client.Cuid,
             Id = client.Id,
             RegisterTime = DateTime.Now
-        });
+        };
+        DataContext.Clients.Add(client);
         DataContext.SaveChanges();
-        return Ok();
+        return Ok(newClient);
     }
     
     [HttpDelete("unregister")]
