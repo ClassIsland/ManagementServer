@@ -8,16 +8,16 @@ using Microsoft.EntityFrameworkCore;
 namespace ClassIsland.ManagementServer.Server.Services;
 
 public class ProfileEntitiesService(ManagementServerContext context, 
-    ObjectsUpdateNofifyService objectsUpdateNotifyService,
+    ObjectsUpdateNotifyService objectsUpdateNotifyService,
     ILogger<ProfileEntitiesService> logger)
 {
     private ManagementServerContext DbContext { get; } = context;
 
-    private ObjectsUpdateNofifyService ObjectsUpdateNotifyService { get; } = objectsUpdateNotifyService;
+    private ObjectsUpdateNotifyService ObjectsUpdateNotifyService { get; } = objectsUpdateNotifyService;
 
     private ILogger<ProfileEntitiesService> Logger { get; } = logger;
 
-    public void SetSubjectEntity(string id, Subject subject, bool replace)
+    public async void SetSubjectEntity(string id, Subject subject, bool replace)
     {
         Logger.LogDebug("处理科目：{}（{}）", id, subject.Name);
         var o = new ProfileSubject()
@@ -38,10 +38,10 @@ public class ProfileEntitiesService(ManagementServerContext context,
         {
             DbContext.ProfileSubjects.Add(o);
         }
-        ObjectsUpdateNotifyService.NotifyObjectUpdating(id, ObjectTypes.ProfileSubject);
+        await ObjectsUpdateNotifyService.NotifyObjectUpdatingAsync(id, ObjectTypes.ProfileSubject);
     }
     
-    public void SetTimeLayoutEntity(string id, TimeLayout timeLayout, bool replace)
+    public async void SetTimeLayoutEntity(string id, TimeLayout timeLayout, bool replace)
     {
         Logger.LogDebug("处理时间表：{}（{}）", id, timeLayout.Name);
         var o = new ProfileTimelayout()
@@ -76,10 +76,10 @@ public class ProfileEntitiesService(ManagementServerContext context,
                 Index = index ++
             });
         }
-        ObjectsUpdateNotifyService.NotifyObjectUpdating(id, ObjectTypes.ProfileTimeLayout);
+        await ObjectsUpdateNotifyService.NotifyObjectUpdatingAsync(id, ObjectTypes.ProfileTimeLayout);
     }
     
-    public void SetClassPlanEntity(string id, ClassPlan classPlan, bool replace)
+    public async void SetClassPlanEntity(string id, ClassPlan classPlan, bool replace)
     {
         Logger.LogDebug("处理课表：{}（{}）", id, classPlan.Name);
         var o = new ProfileClassplan()
@@ -116,7 +116,7 @@ public class ProfileEntitiesService(ManagementServerContext context,
                 Index = index ++
             });
         }
-        ObjectsUpdateNotifyService.NotifyObjectUpdating(id, ObjectTypes.ProfileClassPlan);
+        await ObjectsUpdateNotifyService.NotifyObjectUpdatingAsync(id, ObjectTypes.ProfileClassPlan);
     }
 
 }

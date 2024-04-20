@@ -14,7 +14,7 @@ builder.Services.AddDbContext<ManagementServerContext>(options =>
 {
     options.UseMySql(builder.Configuration.GetConnectionString("Development"), Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.3.0-mysql"));
 });
-builder.Services.AddScoped<ObjectsUpdateNofifyService>();
+builder.Services.AddScoped<ObjectsUpdateNotifyService>();
 builder.Services.AddScoped<ObjectsAssigneeService>();
 builder.Services.AddScoped<ProfileEntitiesService>();
 

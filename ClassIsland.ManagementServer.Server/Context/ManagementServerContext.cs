@@ -94,9 +94,7 @@ public partial class ManagementServerContext : DbContext
 
             entity.HasIndex(e => e.ObjectId, "fk_object_updates_settings_1");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.ObjectId)
                 .HasMaxLength(36)
                 .HasColumnName("object_id");
@@ -107,26 +105,6 @@ public partial class ManagementServerContext : DbContext
             entity.Property(e => e.UpdateTime)
                 .HasColumnType("datetime")
                 .HasColumnName("update_time");
-
-            entity.HasOne(d => d.Object).WithMany(p => p.ObjectUpdates)
-                .HasForeignKey(d => d.ObjectId)
-                .HasConstraintName("fk_object_updates_policies_1");
-
-            entity.HasOne(d => d.ObjectNavigation).WithMany(p => p.ObjectUpdates)
-                .HasForeignKey(d => d.ObjectId)
-                .HasConstraintName("fk_object_updates_profile_classplans_1");
-
-            entity.HasOne(d => d.Object1).WithMany(p => p.ObjectUpdates)
-                .HasForeignKey(d => d.ObjectId)
-                .HasConstraintName("fk_object_updates_profile_subjects_1");
-
-            entity.HasOne(d => d.Object2).WithMany(p => p.ObjectUpdates)
-                .HasForeignKey(d => d.ObjectId)
-                .HasConstraintName("fk_object_updates_profile_timelayouts_1");
-
-            entity.HasOne(d => d.Object3).WithMany(p => p.ObjectUpdates)
-                .HasForeignKey(d => d.ObjectId)
-                .HasConstraintName("fk_object_updates_settings_1");
 
             entity.HasOne(d => d.TargetCu).WithMany(p => p.ObjectUpdates)
                 .HasForeignKey(d => d.TargetCuid)
@@ -145,9 +123,7 @@ public partial class ManagementServerContext : DbContext
 
             entity.HasIndex(e => e.ObjectId, "fk_objects_assignees_profile_groups_1");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.ObjectId)
                 .HasMaxLength(36)
                 .HasColumnName("object_id");
@@ -159,30 +135,6 @@ public partial class ManagementServerContext : DbContext
                 .HasMaxLength(36)
                 .HasColumnName("target_client_id");
             entity.Property(e => e.TargetGroupId).HasColumnName("target_group_id");
-
-            entity.HasOne(d => d.Object).WithMany(p => p.ObjectsAssignees)
-                .HasForeignKey(d => d.ObjectId)
-                .HasConstraintName("fk_objects_assignees_policies_1");
-
-            entity.HasOne(d => d.ObjectNavigation).WithMany(p => p.ObjectsAssignees)
-                .HasForeignKey(d => d.ObjectId)
-                .HasConstraintName("fk_objects_assignees_profile_classplans_1");
-
-            entity.HasOne(d => d.Object1).WithMany(p => p.ObjectsAssignees)
-                .HasForeignKey(d => d.ObjectId)
-                .HasConstraintName("fk_objects_assignees_profile_groups_1");
-
-            entity.HasOne(d => d.Object2).WithMany(p => p.ObjectsAssignees)
-                .HasForeignKey(d => d.ObjectId)
-                .HasConstraintName("fk_objects_assignees_profile_subjects_1");
-
-            entity.HasOne(d => d.Object3).WithMany(p => p.ObjectsAssignees)
-                .HasForeignKey(d => d.ObjectId)
-                .HasConstraintName("fk_objects_assignees_profile_timelayouts_1");
-
-            entity.HasOne(d => d.Object4).WithMany(p => p.ObjectsAssignees)
-                .HasForeignKey(d => d.ObjectId)
-                .HasConstraintName("fk_objects_assignees_settings_1");
 
             entity.HasOne(d => d.TargetClientCu).WithMany(p => p.ObjectsAssignees)
                 .HasForeignKey(d => d.TargetClientCuid)

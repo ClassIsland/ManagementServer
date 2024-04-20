@@ -23,10 +23,6 @@ public partial class ProfileClassplan
 
     public virtual ProfileGroup? Group { get; set; }
 
-    public virtual ICollection<ObjectUpdate> ObjectUpdates { get; set; } = new List<ObjectUpdate>();
-
-    public virtual ICollection<ObjectsAssignee> ObjectsAssignees { get; set; } = new List<ObjectsAssignee>();
-
     public virtual ICollection<ProfileClassplanClass> ProfileClassplanClasses { get; set; } = new List<ProfileClassplanClass>();
 
     public virtual ProfileTimelayout? TimeLayout { get; set; }

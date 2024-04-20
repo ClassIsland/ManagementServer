@@ -15,10 +15,6 @@ public partial class ProfileTimelayout
 
     public virtual ProfileGroup? Group { get; set; }
 
-    public virtual ICollection<ObjectUpdate> ObjectUpdates { get; set; } = new List<ObjectUpdate>();
-
-    public virtual ICollection<ObjectsAssignee> ObjectsAssignees { get; set; } = new List<ObjectsAssignee>();
-
     public virtual ICollection<ProfileClassplan> ProfileClassplans { get; set; } = new List<ProfileClassplan>();
 
     public virtual ICollection<ProfileTimelayoutTimepoint> ProfileTimelayoutTimepoints { get; set; } = new List<ProfileTimelayoutTimepoint>();

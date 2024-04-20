@@ -4,18 +4,18 @@ using ClassIsland.ManagementServer.Server.Enums;
 
 namespace ClassIsland.ManagementServer.Server.Services;
 
-public class ObjectsUpdateNofifyService(ManagementServerContext context, ObjectsAssigneeService objectsAssigneeService)
+public class ObjectsUpdateNotifyService(ManagementServerContext context, ObjectsAssigneeService objectsAssigneeService)
 {
     private ManagementServerContext DbContext { get; } = context;
 
     private ObjectsAssigneeService ObjectsAssigneeService { get; } = objectsAssigneeService;
 
-    public void NotifyObjectUpdating(string id, ObjectTypes objectType)
+    public async Task NotifyObjectUpdatingAsync(string id, ObjectTypes objectType)
     {
-        var clients = ObjectsAssigneeService.GetObjectAssignedClients(id);
+        var clients = await ObjectsAssigneeService.GetObjectAssignedClients(id);
         foreach (var i in clients)
         {
-            DbContext.ObjectUpdates.Add(new ObjectUpdate()
+            await DbContext.ObjectUpdates.AddAsync(new ObjectUpdate()
             {
                 ObjectId = id,
                 ObjectType = (int)objectType,
