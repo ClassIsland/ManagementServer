@@ -23,20 +23,20 @@ public class ClientRegistryController(ManagementServerContext context) : Control
     }
     
     [HttpPost("register")]
-    public IActionResult Register([FromQuery] Client client)
+    public IActionResult Register([FromQuery] string cuid, [FromQuery] string id)
     {
-        if (DataContext.Clients.Any(x => x.Cuid == client.Cuid))
+        if (DataContext.Clients.Any(x => x.Cuid == cuid))
         {
             return BadRequest("这个实例已经注册。");
         }
 
         var newClient = new Client()
         {
-            Cuid = client.Cuid,
-            Id = client.Id,
+            Cuid = cuid,
+            Id = id,
             RegisterTime = DateTime.Now
         };
-        DataContext.Clients.Add(client);
+        DataContext.Clients.Add(newClient);
         DataContext.SaveChanges();
         return Ok(newClient);
     }

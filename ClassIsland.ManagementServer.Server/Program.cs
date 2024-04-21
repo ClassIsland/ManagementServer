@@ -1,5 +1,7 @@
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Services;
+using ClassIsland.ManagementServer.Server.Services.Grpc;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +20,10 @@ builder.Services.AddDbContext<ManagementServerContext>(options =>
 builder.Services.AddScoped<ObjectsUpdateNotifyService>();
 builder.Services.AddScoped<ObjectsAssigneeService>();
 builder.Services.AddScoped<ProfileEntitiesService>();
+builder.WebHost.ConfigureKestrel((context, options) =>
+{
+    
+});
 
 var app = builder.Build();
 
@@ -36,6 +42,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapGrpcService<ManagementServerConnectionService>();
 
 app.MapFallbackToFile("/index.html");
 
