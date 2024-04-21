@@ -1,5 +1,6 @@
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
+using ClassIsland.ManagementServer.Server.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClassIsland.ManagementServer.Server.Services;
@@ -22,5 +23,14 @@ public class ObjectsAssigneeService(ManagementServerContext context)
         }
 
         return r;
+    }
+
+    public async Task<List<ObjectsAssignee>> GetClientAssigningObjects(Client client, ObjectTypes type)
+    {
+        return await DbContext.ObjectsAssignees.Where(x => 
+            x.ObjectType == (int)type &&
+            ((x.TargetClientCuid != null && x.TargetClientCuid == client.Cuid) ||
+             (x.TargetClientId != null && x.TargetClientId == client.Id) ||
+             (x.TargetGroupId != null && x.TargetGroupId == client.GroupId))).Select(x => x).ToListAsync();
     }
 }

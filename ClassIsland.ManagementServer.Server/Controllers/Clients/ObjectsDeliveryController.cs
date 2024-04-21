@@ -1,3 +1,5 @@
+using System.Collections.ObjectModel;
+using System.Runtime.InteropServices.JavaScript;
 using System.Text.Json;
 using ClassIsland.Core;
 using ClassIsland.Core.Models.Profile;
@@ -24,16 +26,12 @@ public class ObjectsDeliveryController(
     private static readonly JsonSerializerOptions JsonOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
     
     [HttpGet("subjects")]
-    public IActionResult GetSubjects([FromRoute] string cuid)
+    public async Task<IActionResult> GetSubjects([FromRoute] string cuid)
     {
         var client = DbContext.Clients.FirstOrDefault(x => x.Cuid == cuid);
         if (client == null)
             return NotFound();
-        var assignees = DbContext.ObjectsAssignees.Where(x => 
-            x.ObjectType == (int)ObjectTypes.ProfileSubject &&
-            ((x.TargetClientCuid != null && x.TargetClientCuid == cuid) ||
-             (x.TargetClientId != null && x.TargetClientId == client.Id) ||
-             (x.TargetGroupId != null && x.TargetGroupId == client.GroupId))).Select(x => x).ToList();
+        var assignees = await ObjectsAssigneeService.GetClientAssigningObjects(client, ObjectTypes.ProfileSubject);
         var subjects = new ObservableDictionary<string, Subject>();
         foreach (var i in assignees)
         {
@@ -53,6 +51,100 @@ public class ObjectsDeliveryController(
         return Ok(new Profile()
         {
             Subjects = subjects
+        });
+    }
+
+    private DateTime ConvertTimeOnly(TimeOnly t)
+    {
+        var now = DateTime.Now;
+        return new DateTime(now.Year, now.Month, now.Day, t.Hour, t.Minute, t.Second);
+    }
+
+    [HttpGet("timelayouts")]
+    public async Task<IActionResult> GetTimeLayouts([FromRoute] string cuid)
+    {
+        var client = DbContext.Clients.FirstOrDefault(x => x.Cuid == cuid);
+        if (client == null)
+            return NotFound();
+        var assignees = await ObjectsAssigneeService.GetClientAssigningObjects(client, ObjectTypes.ProfileTimeLayout);
+        var timeLayouts = new ObservableDictionary<string, TimeLayout>();
+        foreach (var i in assignees)
+        {
+            var tl = DbContext.ProfileTimelayouts.FirstOrDefault(x => x.Id == i.ObjectId);
+            if (tl == null)
+                continue;
+            var tp = new ObservableCollection<TimeLayoutItem>(DbContext.ProfileTimelayoutTimepoints
+                .Where(x => x.ParentId == tl.Id).OrderBy(x => x.Index).Select(x => x).ToList()
+                .Select(x =>
+                    new TimeLayoutItem()
+                    {
+                        StartSecond = ConvertTimeOnly(x.Start ?? TimeOnly.MinValue),
+                        EndSecond = ConvertTimeOnly(x.End ?? TimeOnly.MinValue),
+                        TimeType = x.TimeType ?? 0,
+                        DefaultClassId = x.DefaultSubjectId ?? "",
+                        // TODO: IsHideDefault = x.IsHideDefault,
+                        AttachedObjects =
+                            JsonSerializer.Deserialize<Dictionary<string, object?>>(x.AttachedObjects ?? "{}",
+                                JsonOptions) ?? new()
+                    }
+                ));
+            timeLayouts.Add(tl.Id, new TimeLayout()
+            {
+                Name = tl.Name ?? "",
+                Layouts = tp,
+                AttachedObjects = JsonSerializer.Deserialize<Dictionary<string, object?>>(tl.AttachedObjects ?? "{}",
+                    JsonOptions) ?? new()
+            });
+        }
+
+        return Ok(new Profile()
+        {
+            TimeLayouts = timeLayouts
+        });
+    }
+    
+    [HttpGet("classplans")]
+    public async Task<IActionResult> GetClassPlans([FromRoute] string cuid)
+    {
+        var client = DbContext.Clients.FirstOrDefault(x => x.Cuid == cuid);
+        if (client == null)
+            return NotFound();
+        var assignees = await ObjectsAssigneeService.GetClientAssigningObjects(client, ObjectTypes.ProfileClassPlan);
+        var classPlans = new ObservableDictionary<string, ClassPlan>();
+        foreach (var i in assignees)
+        {
+            var cp = DbContext.ProfileClassplans.FirstOrDefault(x => x.Id == i.ObjectId);
+            if (cp == null)
+                continue;
+            var c = new ObservableCollection<ClassInfo>(DbContext.ProfileClassplanClasses    
+                .Where(x => x.ParentId == cp.Id).OrderBy(x => x.Index).Select(x => x).ToList()
+                .Select(x =>
+                    new ClassInfo()
+                    {
+                        SubjectId = x.SubjectId,
+                        // TODO: AttachedObjects =
+                        //     JsonSerializer.Deserialize<Dictionary<string, object?>>(x.AttachedObjects ?? "{}",
+                        //         JsonOptions) ?? new()
+                    }
+                ));
+            classPlans.Add(cp.Id, new ClassPlan()
+            {
+                Name = cp.Name ?? "",
+                TimeRule = new TimeRule()
+                {
+                    WeekDay = cp.WeekDay ?? 0,
+                    WeekCountDiv = cp.WeekDiv ?? 0
+                },
+                TimeLayoutId = cp.TimeLayoutId ?? "",
+                Classes = c,
+                AttachedObjects = JsonSerializer.Deserialize<Dictionary<string, object?>>(cp.AttachedObjects ?? "{}",
+                    JsonOptions) ?? new()
+            });
+        }
+
+        return Ok(new Profile()
+        {
+            ClassPlans = classPlans
         });
     }
 }
