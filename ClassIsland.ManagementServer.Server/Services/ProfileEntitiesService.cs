@@ -89,6 +89,7 @@ public class ProfileEntitiesService(ManagementServerContext context,
             AttachedObjects = JsonSerializer.Serialize(classPlan.AttachedObjects),
             WeekDay = classPlan.TimeRule.WeekDay,
             WeekDiv = classPlan.TimeRule.WeekCountDiv,
+            TimeLayoutId = classPlan.TimeLayoutId,
             // TODO: IsEnabled = ...
         };
         if (DbContext.ProfileClassplans.Any(x => x.Id == id))
