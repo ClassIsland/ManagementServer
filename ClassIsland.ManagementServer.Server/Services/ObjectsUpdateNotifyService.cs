@@ -24,6 +24,23 @@ public class ObjectsUpdateNotifyService(ManagementServerContext context, Objects
             });
         }
     }
+    
+    public async Task NotifyClientUpdatingAsync(string? cuid=null, string? id=null, int? group=null)
+    {
+        var clients = DbContext.Clients.Where(x =>
+            (cuid != null && x.Cuid != null && x.Cuid == cuid) ||
+            (id != null && x.Id != null && x.Id == id) ||
+            (group != null && x.GroupId != null && x.GroupId == group)
+        ).Select(x => x).ToList();
+        foreach (var i in clients)
+        {
+            await DbContext.ObjectUpdates.AddAsync(new ObjectUpdate()
+            {
+                TargetCuid = i.Cuid,
+                UpdateTime = DateTime.Now
+            });
+        }
+    }
 
     public void NotifyClientUpdated(string cuid, string id)
     {

@@ -23,6 +23,7 @@ public class ClientRegistryController(ManagementServerContext context) : Control
     }
     
     [HttpPost("register")]
+    [Obsolete]
     public IActionResult Register([FromQuery] string cuid, [FromQuery] string id)
     {
         if (DataContext.Clients.Any(x => x.Cuid == cuid))
