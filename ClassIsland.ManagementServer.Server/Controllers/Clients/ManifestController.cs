@@ -27,33 +27,66 @@ public class ManifestController(ManagementServerContext dataContext,
         }
 
         var manifest = new ManagementManifest();
+        using var tran = DataContext.Database.BeginTransaction();
 
-        if (DataContext.ObjectUpdates.Any(
-                x => x.TargetCuid == cuid && x.ObjectType == (int)ObjectTypes.ProfileClassPlan))
+        client.ClassplanVersion ??= 0;
+        client.TimeLayoutVersion ??= 0;
+        client.SubjectsVersion ??= 0;
+        client.PolicyVersion ??= 0;
+        client.SubjectsVersion ??= 0;
+        var classplanUpdates = DataContext.ObjectUpdates.Where(
+            x => x.TargetCuid == cuid && (x.ObjectType == (int)ObjectTypes.ProfileClassPlan)).Select(x =>x);
+        if (classplanUpdates.Any())
         {
             client.ClassplanVersion++;
-        }
-        if (DataContext.ObjectUpdates.Any(
-                x => x.TargetCuid == cuid && x.ObjectType == (int)ObjectTypes.ProfileTimeLayout))
-        {
-            client.TimeLayoutVersion++;
-        }
-        if (DataContext.ObjectUpdates.Any(
-                x => x.TargetCuid == cuid && x.ObjectType == (int)ObjectTypes.ProfileSubject))
-        {
-            client.SubjectsVersion++;
-        }
-        if (DataContext.ObjectUpdates.Any(
-                x => x.TargetCuid == cuid && x.ObjectType == (int)ObjectTypes.Policy))
-        {
-            client.PolicyVersion++;
-        }
-        if (DataContext.ObjectUpdates.Any(
-                x => x.TargetCuid == cuid && x.ObjectType == (int)ObjectTypes.AppSettings))
-        {
-            client.DefaultSettingsVersion++;
+            classplanUpdates.ExecuteDelete();
         }
 
+        var timeLayoutUpdates = DataContext.ObjectUpdates.Where(
+            x => x.TargetCuid == cuid && (x.ObjectType == (int)ObjectTypes.ProfileTimeLayout)).Select(x => x);
+        if (timeLayoutUpdates.Any())
+        {
+            client.TimeLayoutVersion++;
+            timeLayoutUpdates.ExecuteDelete();
+        }
+
+        var subjectUpdates = DataContext.ObjectUpdates.Where(
+            x => x.TargetCuid == cuid && (x.ObjectType == (int)ObjectTypes.ProfileSubject)).Select(x => x);
+        if (subjectUpdates.Any())
+        {
+            client.SubjectsVersion++;
+            subjectUpdates.ExecuteDelete();
+        }
+
+        var policyUpdates = DataContext.ObjectUpdates.Where(
+            x => x.TargetCuid == cuid && (x.ObjectType == (int)ObjectTypes.Policy)).Select(x => x);
+        if (policyUpdates.Any())
+        {
+            client.PolicyVersion++;
+            policyUpdates.ExecuteDelete();
+        }
+
+        var settingsUpdates = DataContext.ObjectUpdates.Where(
+            x => x.TargetCuid == cuid && (x.ObjectType == (int)ObjectTypes.AppSettings)).Select(x => x);
+        if (settingsUpdates.Any())
+        {
+            client.DefaultSettingsVersion++;
+            settingsUpdates.ExecuteDelete();
+        }
+
+        var globalUpdates = DataContext.ObjectUpdates.Where(
+            x => x.TargetCuid == cuid && (x.ObjectType == null)).Select(x => x);
+        if (globalUpdates.Any())
+        {
+            client.ClassplanVersion++;
+            client.TimeLayoutVersion++;
+            client.SubjectsVersion++;
+            client.PolicyVersion++;
+            client.DefaultSettingsVersion++;
+            globalUpdates.ExecuteDelete();
+        }
+
+        tran.Commit();
         DataContext.SaveChanges();
         return Ok(new ManagementManifest()
         {
