@@ -53,17 +53,28 @@ public partial class ManagementServerContext : DbContext
             entity.Property(e => e.Cuid)
                 .HasMaxLength(36)
                 .HasColumnName("cuid");
-            entity.Property(e => e.DefaultSettingsVersion).HasColumnName("defaultSettings_version");
+            entity.Property(e => e.ClassplanVersion)
+                .HasDefaultValueSql("'0'")
+                .HasColumnName("classplan_version");
+            entity.Property(e => e.DefaultSettingsVersion)
+                .HasDefaultValueSql("'0'")
+                .HasColumnName("defaultSettings_version");
             entity.Property(e => e.GroupId).HasColumnName("group_id");
             entity.Property(e => e.Id)
                 .HasColumnType("text")
                 .HasColumnName("id");
-            entity.Property(e => e.PolicyVersion).HasColumnName("policy_version");
+            entity.Property(e => e.PolicyVersion)
+                .HasDefaultValueSql("'0'")
+                .HasColumnName("policy_version");
             entity.Property(e => e.RegisterTime)
                 .HasColumnType("datetime")
                 .HasColumnName("register_time");
-            entity.Property(e => e.SubjectsVersion).HasColumnName("subjects_version");
-            entity.Property(e => e.TimeLayoutVersion).HasColumnName("timeLayout_version");
+            entity.Property(e => e.SubjectsVersion)
+                .HasDefaultValueSql("'0'")
+                .HasColumnName("subjects_version");
+            entity.Property(e => e.TimeLayoutVersion)
+                .HasDefaultValueSql("'0'")
+                .HasColumnName("timeLayout_version");
 
             entity.HasOne(d => d.Group).WithMany(p => p.Clients)
                 .HasForeignKey(d => d.GroupId)

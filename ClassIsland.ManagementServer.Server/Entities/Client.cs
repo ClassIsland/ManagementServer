@@ -21,6 +21,8 @@ public partial class Client
 
     public int? DefaultSettingsVersion { get; set; }
 
+    public int? ClassplanVersion { get; set; }
+
     public virtual ClientGroup? Group { get; set; }
 
     public virtual ICollection<ObjectUpdate> ObjectUpdates { get; set; } = new List<ObjectUpdate>();

@@ -34,4 +34,9 @@ public class ObjectsUpdateNotifyService(ManagementServerContext context, Objects
     {
         return false;
     }
+
+    public bool IsClientUpdated(string cuid, ObjectTypes type)
+    {
+        throw new NotImplementedException();
+    }
 }
