@@ -16,6 +16,7 @@ builder.Services.AddGrpc();
 builder.Services.AddDbContext<ManagementServerContext>(options =>
 {
     options.UseMySql(builder.Configuration.GetConnectionString("Development"), Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.3.0-mysql"));
+    // options.EnableSensitiveDataLogging();
 });
 builder.Services.AddScoped<ObjectsUpdateNotifyService>();
 builder.Services.AddScoped<ObjectsAssigneeService>();

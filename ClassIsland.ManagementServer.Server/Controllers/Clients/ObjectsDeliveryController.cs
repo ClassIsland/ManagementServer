@@ -2,8 +2,10 @@ using System.Collections.ObjectModel;
 using System.Runtime.InteropServices.JavaScript;
 using System.Text.Json;
 using ClassIsland.Core;
+using ClassIsland.Core.Models.Management;
 using ClassIsland.Core.Models.Profile;
 using ClassIsland.ManagementServer.Server.Context;
+using ClassIsland.ManagementServer.Server.Entities;
 using ClassIsland.ManagementServer.Server.Enums;
 using ClassIsland.ManagementServer.Server.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -146,5 +148,20 @@ public class ObjectsDeliveryController(
         {
             ClassPlans = classPlans
         });
+    }
+
+    [HttpGet("policy")]
+    public async Task<IActionResult> GetPolicy([FromRoute] string cuid)
+    {
+        var client = DbContext.Clients.FirstOrDefault(x => x.Cuid == cuid);
+        if (client == null)
+            return NotFound();
+        // TODO: 按照分配粒度分配策略
+        var assignees = await ObjectsAssigneeService.GetClientAssigningObjects(client, ObjectTypes.Policy);
+        foreach (var policy in assignees.Select(i => DbContext.Policies.FirstOrDefault(x => x.Id == i.ObjectId)).OfType<Policy>().Where(policy => (policy.IsEnabled ?? false)))
+        {
+            return Ok(policy.Content ?? "{}");
+        }
+        return Ok(new ManagementPolicy());
     }
 }

@@ -9,5 +9,7 @@ public partial class Policy
 
     public string? Name { get; set; }
 
-    public string? IsEnabled { get; set; }
+    public bool? IsEnabled { get; set; }
+
+    public string? Content { get; set; }
 }

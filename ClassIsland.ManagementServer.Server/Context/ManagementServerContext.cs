@@ -165,9 +165,10 @@ public partial class ManagementServerContext : DbContext
             entity.Property(e => e.Id)
                 .HasMaxLength(36)
                 .HasColumnName("id");
-            entity.Property(e => e.IsEnabled)
-                .HasMaxLength(255)
-                .HasColumnName("is_enabled");
+            entity.Property(e => e.Content)
+                .HasColumnType("json")
+                .HasColumnName("content");
+            entity.Property(e => e.IsEnabled).HasColumnName("is_enabled");
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .HasColumnName("name");
