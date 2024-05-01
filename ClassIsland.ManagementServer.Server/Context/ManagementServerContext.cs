@@ -192,9 +192,7 @@ public partial class ManagementServerContext : DbContext
             entity.Property(e => e.GroupId)
                 .HasMaxLength(36)
                 .HasColumnName("group_id");
-            entity.Property(e => e.IsEnabled)
-                .HasColumnType("tinytext")
-                .HasColumnName("is_enabled");
+            entity.Property(e => e.IsEnabled).HasColumnName("is_enabled");
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .HasColumnName("name");
@@ -285,7 +283,9 @@ public partial class ManagementServerContext : DbContext
             entity.Property(e => e.Initials)
                 .HasMaxLength(255)
                 .HasColumnName("initials");
-            entity.Property(e => e.IsOutDoor).HasColumnName("is_out_door");
+            entity.Property(e => e.IsOutDoor)
+                .HasDefaultValueSql("'0'")
+                .HasColumnName("is_out_door");
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .HasColumnName("name");
@@ -340,6 +340,7 @@ public partial class ManagementServerContext : DbContext
                 .HasColumnType("time")
                 .HasColumnName("end");
             entity.Property(e => e.Index).HasColumnName("index");
+            entity.Property(e => e.IsHideDefault).HasColumnName("is_hide_default");
             entity.Property(e => e.ParentId)
                 .HasMaxLength(36)
                 .HasColumnName("parent_id");

@@ -13,7 +13,7 @@ public partial class ProfileSubject
 
     public string? Initials { get; set; }
 
-    public sbyte? IsOutDoor { get; set; }
+    public bool? IsOutDoor { get; set; }
 
     public string? AttachedObjects { get; set; }
 

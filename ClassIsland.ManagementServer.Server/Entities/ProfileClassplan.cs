@@ -17,7 +17,7 @@ public partial class ProfileClassplan
 
     public string? TimeLayoutId { get; set; }
 
-    public string? IsEnabled { get; set; }
+    public bool? IsEnabled { get; set; }
 
     public string? AttachedObjects { get; set; }
 

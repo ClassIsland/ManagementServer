@@ -21,5 +21,7 @@ public partial class ProfileTimelayoutTimepoint
 
     public string? AttachedObjects { get; set; }
 
+    public bool? IsHideDefault { get; set; }
+
     public virtual ProfileTimelayout? Parent { get; set; }
 }

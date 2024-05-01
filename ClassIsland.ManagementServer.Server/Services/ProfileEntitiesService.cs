@@ -26,7 +26,7 @@ public class ProfileEntitiesService(ManagementServerContext context,
             Name = subject.Name,
             Initials = subject.Initial,
             AttachedObjects = JsonSerializer.Serialize(subject.AttachedObjects),
-            // TODO: IsOutdoor = ...
+            IsOutDoor = subject.IsOutDoor
         };
         if (await DbContext.ProfileSubjects.AnyAsync(x => x.Id == id))
         {
@@ -73,6 +73,7 @@ public class ProfileEntitiesService(ManagementServerContext context,
                 End = new TimeOnly(p.EndSecond.Hour, p.EndSecond.Minute, p.EndSecond.Second),
                 TimeType = p.TimeType,
                 DefaultSubjectId = p.DefaultClassId,
+                IsHideDefault = p.IsHideDefault,
                 Index = index ++
             });
         }
@@ -90,7 +91,7 @@ public class ProfileEntitiesService(ManagementServerContext context,
             WeekDay = classPlan.TimeRule.WeekDay,
             WeekDiv = classPlan.TimeRule.WeekCountDiv,
             TimeLayoutId = classPlan.TimeLayoutId,
-            // TODO: IsEnabled = ...
+            IsEnabled = classPlan.IsEnabled
         };
         if (await DbContext.ProfileClassplans.AnyAsync(x => x.Id == id))
         {

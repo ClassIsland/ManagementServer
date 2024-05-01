@@ -42,7 +42,7 @@ public class ObjectsDeliveryController(
             {
                 Name = subject.Name ?? "",
                 Initial = subject.Initials ?? "",
-                // TODO: IsOutDoor = ...,
+                IsOutDoor = subject.IsOutDoor ?? false,
                 TeacherName = "",
                 AttachedObjects = JsonSerializer.Deserialize<Dictionary<string, object?>>(subject.AttachedObjects ?? "{}", JsonOptions) ?? new()
             });
@@ -82,7 +82,7 @@ public class ObjectsDeliveryController(
                         EndSecond = ConvertTimeOnly(x.End ?? TimeOnly.MinValue),
                         TimeType = x.TimeType ?? 0,
                         DefaultClassId = x.DefaultSubjectId ?? "",
-                        // TODO: IsHideDefault = x.IsHideDefault,
+                        IsHideDefault = x.IsHideDefault ?? false,
                         AttachedObjects =
                             JsonSerializer.Deserialize<Dictionary<string, object?>>(x.AttachedObjects ?? "{}",
                                 JsonOptions) ?? new()
