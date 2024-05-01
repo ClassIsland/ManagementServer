@@ -23,29 +23,29 @@ public class ProfilesController(ManagementServerContext dbContext,
     private ProfileEntitiesService ProfileEntitiesService { get; } = profileEntitiesService;
 
     [HttpPost("upload")]
-    public IActionResult UploadProfile([FromBody] Profile profile, [FromQuery] bool replace=false)
+    public async Task<IActionResult> UploadProfile([FromBody] Profile profile, [FromQuery] bool replace=false)
     {
-        using var tran = DbContext.Database.BeginTransaction();
+        await using var tran = await DbContext.Database.BeginTransactionAsync();
         // 处理科目
         foreach (var i in profile.Subjects)
         {
-            ProfileEntitiesService.SetSubjectEntity(i.Key, i.Value, replace);
+            await ProfileEntitiesService.SetSubjectEntity(i.Key, i.Value, replace);
         }
         
         // 处理时间表
         foreach (var i in profile.TimeLayouts)
         {
-            ProfileEntitiesService.SetTimeLayoutEntity(i.Key, i.Value, replace);
+            await ProfileEntitiesService.SetTimeLayoutEntity(i.Key, i.Value, replace);
         }
         
         // 处理课表
         foreach (var i in profile.ClassPlans)
         {
-            ProfileEntitiesService.SetClassPlanEntity(i.Key, i.Value, replace);
+            await ProfileEntitiesService.SetClassPlanEntity(i.Key, i.Value, replace);
         }
 
-        tran.Commit();
-        DbContext.SaveChanges();
+        await tran.CommitAsync();
+        await DbContext.SaveChangesAsync();
         return Ok();
     }
     

@@ -17,7 +17,7 @@ public class ProfileEntitiesService(ManagementServerContext context,
 
     private ILogger<ProfileEntitiesService> Logger { get; } = logger;
 
-    public async void SetSubjectEntity(string id, Subject subject, bool replace)
+    public async Task SetSubjectEntity(string id, Subject subject, bool replace)
     {
         Logger.LogDebug("处理科目：{}（{}）", id, subject.Name);
         var o = new ProfileSubject()
@@ -28,7 +28,7 @@ public class ProfileEntitiesService(ManagementServerContext context,
             AttachedObjects = JsonSerializer.Serialize(subject.AttachedObjects),
             // TODO: IsOutdoor = ...
         };
-        if (DbContext.ProfileSubjects.Any(x => x.Id == id))
+        if (await DbContext.ProfileSubjects.AnyAsync(x => x.Id == id))
         {
             if (!replace)
                 return;
@@ -36,12 +36,12 @@ public class ProfileEntitiesService(ManagementServerContext context,
         }
         else
         {
-            DbContext.ProfileSubjects.Add(o);
+            await DbContext.ProfileSubjects.AddAsync(o);
         }
         await ObjectsUpdateNotifyService.NotifyObjectUpdatingAsync(id, ObjectTypes.ProfileSubject);
     }
     
-    public async void SetTimeLayoutEntity(string id, TimeLayout timeLayout, bool replace)
+    public async Task SetTimeLayoutEntity(string id, TimeLayout timeLayout, bool replace)
     {
         Logger.LogDebug("处理时间表：{}（{}）", id, timeLayout.Name);
         var o = new ProfileTimelayout()
@@ -50,7 +50,7 @@ public class ProfileEntitiesService(ManagementServerContext context,
             Name = timeLayout.Name,
             AttachedObjects = JsonSerializer.Serialize(timeLayout.AttachedObjects)
         };
-        if (DbContext.ProfileTimelayouts.Any(x => x.Id == id))
+        if (await DbContext.ProfileTimelayouts.AnyAsync(x => x.Id == id))
         {
             if (!replace)
                 return;
@@ -59,13 +59,13 @@ public class ProfileEntitiesService(ManagementServerContext context,
         }
         else
         {
-            DbContext.ProfileTimelayouts.Add(o);
+            await DbContext.ProfileTimelayouts.AddAsync(o);
         }
 
         var index = 0;
         foreach (var p in timeLayout.Layouts)
         {
-            DbContext.ProfileTimelayoutTimepoints.Add(new ProfileTimelayoutTimepoint()
+            await DbContext.ProfileTimelayoutTimepoints.AddAsync(new ProfileTimelayoutTimepoint()
             {
                 Parent = o,
                 AttachedObjects = JsonSerializer.Serialize(p.AttachedObjects),
@@ -79,7 +79,7 @@ public class ProfileEntitiesService(ManagementServerContext context,
         await ObjectsUpdateNotifyService.NotifyObjectUpdatingAsync(id, ObjectTypes.ProfileTimeLayout);
     }
     
-    public async void SetClassPlanEntity(string id, ClassPlan classPlan, bool replace)
+    public async Task SetClassPlanEntity(string id, ClassPlan classPlan, bool replace)
     {
         Logger.LogDebug("处理课表：{}（{}）", id, classPlan.Name);
         var o = new ProfileClassplan()
@@ -92,24 +92,24 @@ public class ProfileEntitiesService(ManagementServerContext context,
             TimeLayoutId = classPlan.TimeLayoutId,
             // TODO: IsEnabled = ...
         };
-        if (DbContext.ProfileClassplans.Any(x => x.Id == id))
+        if (await DbContext.ProfileClassplans.AnyAsync(x => x.Id == id))
         {
             if (!replace)
                 return;
             DbContext.Entry(o).State = EntityState.Modified;
-            DbContext.ProfileClassplanClasses.Where(x => x.ParentId == id).ExecuteDelete();
+            await DbContext.ProfileClassplanClasses.Where(x => x.ParentId == id).ExecuteDeleteAsync();
         }
         else
         {
-            DbContext.ProfileClassplans.Add(o);
+            await DbContext.ProfileClassplans.AddAsync(o);
         }
         var index = 0;
         foreach (var p in classPlan.Classes)
         {
             Logger.LogDebug("处理课程：{}", p.SubjectId);
-            if (!DbContext.ProfileSubjects.Any(x => x.Id == p.SubjectId))
+            if (!await DbContext.ProfileSubjects.AnyAsync(x => x.Id == p.SubjectId))
                 continue;
-            DbContext.ProfileClassplanClasses.Add(new ProfileClassplanClass()
+            await DbContext.ProfileClassplanClasses.AddAsync(new ProfileClassplanClass()
             {
                 Parent = o,
                 // AttachedObjects = JsonSerializer.Serialize(p.AttachedObjects),  // TODO: 等到ClassIsland完成课程层面的附加信息开发后取消注释这个
