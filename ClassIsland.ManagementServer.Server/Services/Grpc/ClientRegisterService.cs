@@ -15,16 +15,14 @@ public class ClientRegisterService(ManagementServerContext dbContext) : ClientRe
     public override async Task<ClientRegisterScRsp> Register(ClientRegisterCsReq request, ServerCallContext context)
     {
         var result = new ClientRegisterScRsp();
-        if (DbContext.Clients.Any(x => x.Cuid == request.ClientUid))
-        {
-            result.Retcode = Retcode.Registered;
-            result.Message = "Client has already been registered";
-
-            return result;
-        }
-
         try
         {
+            if (DbContext.Clients.Any(x => x.Cuid == request.ClientUid))
+            {
+                result.Retcode = Retcode.Registered;
+                result.Message = "Client has already been registered";
+                return result;
+            }
             var newClient = new Client()
             {
                 Cuid = request.ClientUid,
@@ -48,16 +46,14 @@ public class ClientRegisterService(ManagementServerContext dbContext) : ClientRe
     public override async Task<ClientRegisterScRsp> UnRegister(ClientRegisterCsReq request, ServerCallContext context)
     {
         var result = new ClientRegisterScRsp();
-
-        if (!DbContext.Clients.Any(x => x.Cuid == request.ClientUid))
-        {
-            result.Retcode = Retcode.ClientNotFound;
-            result.Message = "Client not found.";
-            return result;
-        }
-
         try
         {
+            if (!DbContext.Clients.Any(x => x.Cuid == request.ClientUid))
+            {
+                result.Retcode = Retcode.ClientNotFound;
+                result.Message = "Client not found.";
+                return result;
+            }
             await foreach (var client in DbContext.Clients)
             {
                 if (client.Cuid == request.ClientUid && client.Id == request.ClientId)
