@@ -21,6 +21,7 @@ builder.Services.AddDbContext<ManagementServerContext>(options =>
 builder.Services.AddScoped<ObjectsUpdateNotifyService>();
 builder.Services.AddScoped<ObjectsAssigneeService>();
 builder.Services.AddScoped<ProfileEntitiesService>();
+builder.Services.AddScoped<ClientCommandDeliverService>();
 builder.WebHost.ConfigureKestrel((context, options) =>
 {
     
@@ -44,6 +45,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapGrpcService<ClientRegisterService>();
+app.MapGrpcService<ClientCommandDeliverFrontedService>();
 
 app.MapFallbackToFile("/index.html");
 

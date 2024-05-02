@@ -16,14 +16,19 @@ public class ObjectsAssigneeService(ManagementServerContext context)
         var assignees = DbContext.ObjectsAssignees.Where(x => x.ObjectId == objectId).Select(x => x).ToList();
         foreach (var i in assignees)
         {
-            r.AddRange(await DbContext.Clients.Where(x =>
-                ((i.AssigneeType == (int)AssigneeTypes.Group && i.TargetGroupId == x.GroupId) ||
-                 (i.AssigneeType == (int)AssigneeTypes.Id && i.TargetClientId == x.Id) ||
-                 (i.AssigneeType == (int)AssigneeTypes.ClientUid && i.TargetClientCuid == x.Cuid)) &&
-                !r.Contains(x)).Select(x => x).ToListAsync());
+            r.AddRange(from x in await GetAssignedClients(i) where !r.Contains(x) select x);
         }
 
         return r;
+    }
+
+    public async Task<List<Client>> GetAssignedClients(ObjectsAssignee assignee)
+    {
+        return await DbContext.Clients.Where(x =>
+                ((assignee.AssigneeType == (int)AssigneeTypes.Group && assignee.TargetGroupId == x.GroupId) ||
+                 (assignee.AssigneeType == (int)AssigneeTypes.Id && assignee.TargetClientId == x.Id) ||
+                 (assignee.AssigneeType == (int)AssigneeTypes.ClientUid && assignee.TargetClientCuid == x.Cuid)))
+            .Select(x => x).ToListAsync();
     }
 
     public async Task<List<ObjectsAssignee>> GetClientAssigningObjects(Client client, ObjectTypes type)
