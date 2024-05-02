@@ -5,6 +5,7 @@ using ClassIsland.Core.Protobuf.Service;
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
 using Grpc.Core;
+using Microsoft.EntityFrameworkCore;
 
 namespace ClassIsland.ManagementServer.Server.Services.Grpc;
 
@@ -17,7 +18,7 @@ public class ClientRegisterService(ManagementServerContext dbContext) : ClientRe
         var result = new ClientRegisterScRsp();
         try
         {
-            if (DbContext.Clients.Any(x => x.Cuid == request.ClientUid))
+            if (await DbContext.Clients.AnyAsync(x => x.Cuid == request.ClientUid))
             {
                 result.Retcode = Retcode.Registered;
                 result.Message = "Client has already been registered";
@@ -29,7 +30,7 @@ public class ClientRegisterService(ManagementServerContext dbContext) : ClientRe
                 Id = request.ClientId,
                 RegisterTime = DateTime.Now
             };
-            DbContext.Clients.Add(newClient);
+            await DbContext.Clients.AddAsync(newClient);
             await DbContext.SaveChangesAsync();
         }
         catch (Exception e)
@@ -48,20 +49,15 @@ public class ClientRegisterService(ManagementServerContext dbContext) : ClientRe
         var result = new ClientRegisterScRsp();
         try
         {
-            if (!DbContext.Clients.Any(x => x.Cuid == request.ClientUid))
+            var c = DbContext.Clients.FirstOrDefault(client => client.Cuid == request.ClientUid);
+            if (c == null)
             {
                 result.Retcode = Retcode.ClientNotFound;
                 result.Message = "Client not found.";
                 return result;
             }
-            await foreach (var client in DbContext.Clients)
-            {
-                if (client.Cuid == request.ClientUid && client.Id == request.ClientId)
-                {
-                    DbContext.Clients.Remove(client);
-                    break;
-                }
-            }
+            DbContext.Clients.Remove(c);
+            await DbContext.SaveChangesAsync();
 
             result.Retcode = Retcode.Success;
             return result;
