@@ -135,6 +135,7 @@ public partial class ManagementServerContext : DbContext
             entity.HasIndex(e => e.ObjectId, "fk_objects_assignees_profile_groups_1");
 
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.AssigneeType).HasColumnName("assignee_type");
             entity.Property(e => e.ObjectId)
                 .HasMaxLength(36)
                 .HasColumnName("object_id");

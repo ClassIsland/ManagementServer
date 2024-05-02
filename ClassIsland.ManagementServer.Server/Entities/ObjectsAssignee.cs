@@ -17,6 +17,8 @@ public partial class ObjectsAssignee
 
     public int? TargetGroupId { get; set; }
 
+    public int? AssigneeType { get; set; }
+
     public virtual Client? TargetClientCu { get; set; }
 
     public virtual ClientGroup? TargetGroup { get; set; }

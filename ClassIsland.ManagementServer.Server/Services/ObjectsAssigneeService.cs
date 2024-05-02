@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
 using ClassIsland.ManagementServer.Server.Enums;
@@ -16,9 +17,9 @@ public class ObjectsAssigneeService(ManagementServerContext context)
         foreach (var i in assignees)
         {
             r.AddRange(await DbContext.Clients.Where(x =>
-                ((i.TargetGroupId != null && i.TargetGroupId == x.GroupId) ||
-                 (i.TargetClientId != null && i.TargetClientId == x.Id) ||
-                 (i.TargetClientCuid != null && i.TargetClientCuid == x.Cuid)) &&
+                ((i.AssigneeType == (int)AssigneeTypes.Group && i.TargetGroupId == x.GroupId) ||
+                 (i.AssigneeType == (int)AssigneeTypes.Id && i.TargetClientId == x.Id) ||
+                 (i.AssigneeType == (int)AssigneeTypes.ClientUid && i.TargetClientCuid == x.Cuid)) &&
                 !r.Contains(x)).Select(x => x).ToListAsync());
         }
 
@@ -29,8 +30,20 @@ public class ObjectsAssigneeService(ManagementServerContext context)
     {
         return await DbContext.ObjectsAssignees.Where(x => 
             x.ObjectType == (int)type &&
-            ((x.TargetClientCuid != null && x.TargetClientCuid == client.Cuid) ||
-             (x.TargetClientId != null && x.TargetClientId == client.Id) ||
-             (x.TargetGroupId != null && x.TargetGroupId == client.GroupId))).Select(x => x).ToListAsync();
+            ((x.AssigneeType == (int)AssigneeTypes.ClientUid && x.TargetClientCuid == client.Cuid) ||
+             (x.AssigneeType == (int)AssigneeTypes.Id && x.TargetClientId == client.Id) ||
+             (x.AssigneeType == (int)AssigneeTypes.Group && x.TargetGroupId == client.GroupId))).Select(x => x).ToListAsync();
+    }
+
+    public async Task<List<ObjectsAssignee>> GetClientAssigningObjectsLeveled(Client client, ObjectTypes type)
+    {
+        return await DbContext.ObjectsAssignees.Where(x => 
+            x.ObjectType == (int)type &&
+            ((x.AssigneeType == (int)AssigneeTypes.ClientUid && x.TargetClientCuid == client.Cuid) ||
+             (x.AssigneeType == (int)AssigneeTypes.Id && x.TargetClientId == client.Id) ||
+             (x.AssigneeType == (int)AssigneeTypes.Group && x.TargetGroupId == client.GroupId)))
+            .OrderBy(x => x.AssigneeType ?? 0)
+            .Select(x => x)
+            .ToListAsync();
     }
 }

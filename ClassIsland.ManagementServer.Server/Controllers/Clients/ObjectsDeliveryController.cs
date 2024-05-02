@@ -156,11 +156,24 @@ public class ObjectsDeliveryController(
         var client = DbContext.Clients.FirstOrDefault(x => x.Cuid == cuid);
         if (client == null)
             return NotFound();
-        // TODO: 按照分配粒度分配策略
-        var assignees = await ObjectsAssigneeService.GetClientAssigningObjects(client, ObjectTypes.Policy);
+        var assignees = await ObjectsAssigneeService.GetClientAssigningObjectsLeveled(client, ObjectTypes.Policy);
         foreach (var policy in assignees.Select(i => DbContext.Policies.FirstOrDefault(x => x.Id == i.ObjectId)).OfType<Policy>().Where(policy => (policy.IsEnabled ?? false)))
         {
             return Ok(policy.Content ?? "{}");
+        }
+        return Ok(new ManagementPolicy());
+    }
+    
+    [HttpGet("default-settings")]
+    public async Task<IActionResult> GetDefaultSettings([FromRoute] string cuid)
+    {
+        var client = DbContext.Clients.FirstOrDefault(x => x.Cuid == cuid);
+        if (client == null)
+            return NotFound();
+        var assignees = await ObjectsAssigneeService.GetClientAssigningObjectsLeveled(client, ObjectTypes.AppSettings);
+        foreach (var setting in assignees.Select(i => DbContext.Settings.FirstOrDefault(x => x.Id == i.ObjectId)).OfType<Setting>())
+        {
+            return Ok(setting.Settings ?? "{}");
         }
         return Ok(new ManagementPolicy());
     }
