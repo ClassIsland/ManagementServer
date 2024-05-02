@@ -43,7 +43,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapGrpcService<ManagementServerConnectionService>();
+app.MapGrpcService<ClientRegisterService>();
 
 app.MapFallbackToFile("/index.html");
 
