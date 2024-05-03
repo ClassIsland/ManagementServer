@@ -1,0 +1,30 @@
+using ClassIsland.Core.Protobuf.Enum;
+using ClassIsland.ManagementServer.Server.Models;
+using ClassIsland.ManagementServer.Server.Models.Command;
+using ClassIsland.ManagementServer.Server.Services;
+using Google.Protobuf;
+using Google.Protobuf.WellKnownTypes;
+using Microsoft.AspNetCore.Mvc;
+
+namespace ClassIsland.ManagementServer.Server.Controllers;
+
+[ApiController]
+[Route("api/v1/client-commands/")]
+public class ClientCommandDeliverController(ClientCommandDeliverService clientCommandDeliverService) : ControllerBase
+{
+    private ClientCommandDeliverService ClientCommandDeliverService { get; } = clientCommandDeliverService;
+    
+    [HttpPost]
+    public async Task<IActionResult> SendNotification([FromBody] SendNotificationRequest request)
+    {
+        foreach (var target in request.Targets)
+        {
+            await ClientCommandDeliverService.DeliverCommandAsync(
+                CommandTypes.SendNotification,
+                request.Payload,
+                target);
+        }
+
+        return Ok();
+    }
+}
