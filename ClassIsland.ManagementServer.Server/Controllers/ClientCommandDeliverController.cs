@@ -14,7 +14,7 @@ public class ClientCommandDeliverController(ClientCommandDeliverService clientCo
 {
     private ClientCommandDeliverService ClientCommandDeliverService { get; } = clientCommandDeliverService;
     
-    [HttpPost]
+    [HttpPost("show-notification")]
     public async Task<IActionResult> SendNotification([FromBody] SendNotificationRequest request)
     {
         foreach (var target in request.Targets)
@@ -22,6 +22,20 @@ public class ClientCommandDeliverController(ClientCommandDeliverService clientCo
             await ClientCommandDeliverService.DeliverCommandAsync(
                 CommandTypes.SendNotification,
                 request.Payload,
+                target);
+        }
+
+        return Ok();
+    }
+    
+    [HttpPost("restart-app")]
+    public async Task<IActionResult> RestartApp([FromBody] RestartAppRequest request)
+    {
+        foreach (var target in request.Targets)
+        {
+            await ClientCommandDeliverService.DeliverCommandAsync(
+                CommandTypes.RestartApp,
+                new Empty(),
                 target);
         }
 
