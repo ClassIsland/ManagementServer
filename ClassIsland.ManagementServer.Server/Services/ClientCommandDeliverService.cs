@@ -34,6 +34,7 @@ public class ClientCommandDeliverService(ManagementServerContext managementServe
             var stream = Streams[i.Cuid];
             await stream.WriteAsync(new ClientCommandDeliverScRsp()
             {
+                RetCode = Retcode.Success,
                 Type = type,
                 Payload = payload.ToByteString()
             });

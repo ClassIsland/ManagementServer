@@ -15,18 +15,28 @@ public class ClientCommandDeliverFrontedService(ClientCommandDeliverService clie
 
     private ILogger<ClientCommandDeliverFrontedService> Logger { get; } = logger;
     
-    public override async Task ListenCommand(ClientCommandDeliverScReq request, IServerStreamWriter<ClientCommandDeliverScRsp> responseStream, ServerCallContext context)
+    public override async Task ListenCommand(IAsyncStreamReader<ClientCommandDeliverScReq> requestStream, IServerStreamWriter<ClientCommandDeliverScRsp> responseStream, ServerCallContext context)
     {
-        ClientCommandDeliverService.Streams[request.ClientUid] = responseStream;
-        Logger.LogInformation("与 {} 建立命令流连接", request.ClientUid);
+        var cuid = context.RequestHeaders.GetValue("cuid");
+        if (cuid == null)
+        {
+            await responseStream.WriteAsync(new ClientCommandDeliverScRsp()
+            {
+                RetCode = Retcode.InvalidRequest
+            });
+            return;
+        }
+
+        ClientCommandDeliverService.Streams[cuid] = responseStream;
+        Logger.LogInformation("与 {} 建立命令流连接", cuid);
         await ClientCommandDeliverService.DeliverCommandAsync(CommandTypes.ServerConnected, new Empty(),
             new ObjectsAssignee()
             {
                 AssigneeType = (int)AssigneeTypes.ClientUid,
-                TargetClientCuid = request.ClientUid
+                TargetClientCuid = cuid
             });
         await Task.Run(() => context.CancellationToken.WaitHandle.WaitOne());
         ClientCommandDeliverService.Streams.Remove(ClientCommandDeliverService.Streams.FirstOrDefault(x => x.Value == responseStream).Key);
-        Logger.LogInformation("断开与 {} 命令流连接", request.ClientUid);
+        Logger.LogInformation("断开与 {} 命令流连接", cuid);
     }
 }
