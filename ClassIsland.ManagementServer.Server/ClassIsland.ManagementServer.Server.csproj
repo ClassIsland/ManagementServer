@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ClassIsland.Core\ClassIsland.Core.csproj" />
     <ProjectReference Include="..\classisland.managementserver.client\classisland.managementserver.client.esproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
