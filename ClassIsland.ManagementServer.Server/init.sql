@@ -10,6 +10,33 @@ START TRANSACTION;
 
 ALTER DATABASE CHARACTER SET utf8mb4;
 
+CREATE TABLE `AspNetRoles` (
+    `Id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+    `Name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+    `NormalizedName` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+    `ConcurrencyStamp` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+    CONSTRAINT `PK_AspNetRoles` PRIMARY KEY (`Id`)
+) CHARACTER SET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `AspNetUsers` (
+    `Id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+    `UserName` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+    `NormalizedUserName` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+    `Email` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+    `NormalizedEmail` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+    `EmailConfirmed` tinyint(1) NOT NULL,
+    `PasswordHash` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+    `SecurityStamp` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+    `ConcurrencyStamp` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+    `PhoneNumber` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+    `PhoneNumberConfirmed` tinyint(1) NOT NULL,
+    `TwoFactorEnabled` tinyint(1) NOT NULL,
+    `LockoutEnd` datetime(6) NULL,
+    `LockoutEnabled` tinyint(1) NOT NULL,
+    `AccessFailedCount` int NOT NULL,
+    CONSTRAINT `PK_AspNetUsers` PRIMARY KEY (`Id`)
+) CHARACTER SET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 CREATE TABLE `client_groups` (
     `group_id` int NOT NULL,
     `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
@@ -37,6 +64,50 @@ CREATE TABLE `settings` (
     `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
     `settings` json NULL,
     CONSTRAINT `PRIMARY` PRIMARY KEY (`id`)
+) CHARACTER SET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `AspNetRoleClaims` (
+    `Id` int NOT NULL AUTO_INCREMENT,
+    `RoleId` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+    `ClaimType` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+    `ClaimValue` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+    CONSTRAINT `PK_AspNetRoleClaims` PRIMARY KEY (`Id`),
+    CONSTRAINT `FK_AspNetRoleClaims_AspNetRoles_RoleId` FOREIGN KEY (`RoleId`) REFERENCES `AspNetRoles` (`Id`) ON DELETE CASCADE
+) CHARACTER SET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `AspNetUserClaims` (
+    `Id` int NOT NULL AUTO_INCREMENT,
+    `UserId` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+    `ClaimType` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+    `ClaimValue` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+    CONSTRAINT `PK_AspNetUserClaims` PRIMARY KEY (`Id`),
+    CONSTRAINT `FK_AspNetUserClaims_AspNetUsers_UserId` FOREIGN KEY (`UserId`) REFERENCES `AspNetUsers` (`Id`) ON DELETE CASCADE
+) CHARACTER SET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `AspNetUserLogins` (
+    `LoginProvider` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+    `ProviderKey` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+    `ProviderDisplayName` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+    `UserId` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+    CONSTRAINT `PK_AspNetUserLogins` PRIMARY KEY (`LoginProvider`, `ProviderKey`),
+    CONSTRAINT `FK_AspNetUserLogins_AspNetUsers_UserId` FOREIGN KEY (`UserId`) REFERENCES `AspNetUsers` (`Id`) ON DELETE CASCADE
+) CHARACTER SET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `AspNetUserRoles` (
+    `UserId` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+    `RoleId` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+    CONSTRAINT `PK_AspNetUserRoles` PRIMARY KEY (`UserId`, `RoleId`),
+    CONSTRAINT `FK_AspNetUserRoles_AspNetRoles_RoleId` FOREIGN KEY (`RoleId`) REFERENCES `AspNetRoles` (`Id`) ON DELETE CASCADE,
+    CONSTRAINT `FK_AspNetUserRoles_AspNetUsers_UserId` FOREIGN KEY (`UserId`) REFERENCES `AspNetUsers` (`Id`) ON DELETE CASCADE
+) CHARACTER SET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `AspNetUserTokens` (
+    `UserId` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+    `LoginProvider` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+    `Name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+    `Value` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+    CONSTRAINT `PK_AspNetUserTokens` PRIMARY KEY (`UserId`, `LoginProvider`, `Name`),
+    CONSTRAINT `FK_AspNetUserTokens_AspNetUsers_UserId` FOREIGN KEY (`UserId`) REFERENCES `AspNetUsers` (`Id`) ON DELETE CASCADE
 ) CHARACTER SET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `clients` (
@@ -135,6 +206,20 @@ CREATE TABLE `profile_classplan_classes` (
     CONSTRAINT `fk_profile_classplan_classes_profile_subjects_1` FOREIGN KEY (`subject_id`) REFERENCES `profile_subjects` (`id`)
 ) CHARACTER SET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+CREATE INDEX `IX_AspNetRoleClaims_RoleId` ON `AspNetRoleClaims` (`RoleId`);
+
+CREATE UNIQUE INDEX `RoleNameIndex` ON `AspNetRoles` (`NormalizedName`);
+
+CREATE INDEX `IX_AspNetUserClaims_UserId` ON `AspNetUserClaims` (`UserId`);
+
+CREATE INDEX `IX_AspNetUserLogins_UserId` ON `AspNetUserLogins` (`UserId`);
+
+CREATE INDEX `IX_AspNetUserRoles_RoleId` ON `AspNetUserRoles` (`RoleId`);
+
+CREATE INDEX `EmailIndex` ON `AspNetUsers` (`NormalizedEmail`);
+
+CREATE UNIQUE INDEX `UserNameIndex` ON `AspNetUsers` (`NormalizedUserName`);
+
 CREATE INDEX `fk_clients_client_groups_1` ON `clients` (`group_id`);
 
 CREATE INDEX `fk_object_updates_clients_1` ON `object_updates` (`target_cuid`);
@@ -162,7 +247,7 @@ CREATE INDEX `fk_profile_timelayout_timepoint_profile_timelayouts_1` ON `profile
 CREATE INDEX `fk_profile_timelayouts_profile_groups_1` ON `profile_timelayouts` (`group_id`);
 
 INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
-VALUES ('20240601134828_Initial', '8.0.2');
+VALUES ('20240608143223_init', '8.0.6');
 
 COMMIT;
 

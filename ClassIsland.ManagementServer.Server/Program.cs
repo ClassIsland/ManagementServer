@@ -1,7 +1,10 @@
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Services;
 using ClassIsland.ManagementServer.Server.Services.Grpc;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +29,20 @@ builder.WebHost.ConfigureKestrel((context, options) =>
 {
     
 });
+builder.Services.AddAuthorization();
+builder.Services.AddIdentityApiEndpoints<IdentityUser>()
+    .AddEntityFrameworkStores<ManagementServerContext>()
+    .AddDefaultTokenProviders();
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options => {
+        options.LoginPath = "/auth/login";
+        options.LogoutPath = "/auth/logout";
+        options.AccessDeniedPath = "/auth/access-denied";
+
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SameSite = SameSiteMode.Lax;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+    });
 
 var app = builder.Build();
 
@@ -46,7 +63,17 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapGrpcService<ClientRegisterService>();
 app.MapGrpcService<ClientCommandDeliverFrontedService>();
+app.MapGroup("/api/v1/identity")
+    .MapIdentityApi<IdentityUser>();
 
 app.MapFallbackToFile("/index.html");
+
+#if DEBUG  // 处于开发环境时需要自动迁移
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ManagementServerContext>();
+    db.Database.Migrate();
+}
+#endif
 
 app.Run();

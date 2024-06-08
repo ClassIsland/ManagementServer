@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using ClassIsland.ManagementServer.Server.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClassIsland.ManagementServer.Server.Context;
 
-public partial class ManagementServerContext : DbContext
+public partial class ManagementServerContext : IdentityDbContext<IdentityUser>
 {
     public ManagementServerContext(DbContextOptions<ManagementServerContext> options)
         : base(options)
@@ -41,6 +43,8 @@ public partial class ManagementServerContext : DbContext
         modelBuilder
             .UseCollation("utf8mb4_0900_ai_ci")
             .HasCharSet("utf8mb4");
+            // .HasDefaultSchema("public");
+        base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<Client>(entity =>
         {
@@ -375,7 +379,6 @@ public partial class ManagementServerContext : DbContext
                 .HasColumnType("json")
                 .HasColumnName("settings");
         });
-
         OnModelCreatingPartial(modelBuilder);
     }
 
