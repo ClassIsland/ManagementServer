@@ -1,6 +1,6 @@
 syntax = "proto3";
-package ClassIsland.Core.Protobuf.Client;
-option csharp_namespace = "ClassIsland.Core.Protobuf.Client";
+package ClassIsland.Shared.IPC.Protobuf.Client;
+option csharp_namespace = "ClassIsland.Shared.IPC.Protobuf.Client";
 
 import "Protobuf/Enum/CommandTypes.proto";
 

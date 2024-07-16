@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassIsland.Core", "ClassIs
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "classisland.managementserver.client", "classisland.managementserver.client\classisland.managementserver.client.esproj", "{075A4E9B-DEAC-4835-BE3A-6EDB97FEDD34}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassIsland.Shared.IPC", "ClassIsland.Shared.IPC\ClassIsland.Shared.IPC.csproj", "{E1FBB2F8-311C-46CB-ADB9-9C1C886FE5FB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{075A4E9B-DEAC-4835-BE3A-6EDB97FEDD34}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{075A4E9B-DEAC-4835-BE3A-6EDB97FEDD34}.Release|Any CPU.Build.0 = Release|Any CPU
 		{075A4E9B-DEAC-4835-BE3A-6EDB97FEDD34}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{E1FBB2F8-311C-46CB-ADB9-9C1C886FE5FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1FBB2F8-311C-46CB-ADB9-9C1C886FE5FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1FBB2F8-311C-46CB-ADB9-9C1C886FE5FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1FBB2F8-311C-46CB-ADB9-9C1C886FE5FB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
