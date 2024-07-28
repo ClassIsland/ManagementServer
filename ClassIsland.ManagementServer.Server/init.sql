@@ -1,4 +1,4 @@
-use classisland_management_dev;
+use `classisland_management_dev`;
 
 CREATE TABLE IF NOT EXISTS `__EFMigrationsHistory` (
     `MigrationId` varchar(150) CHARACTER SET utf8mb4 NOT NULL,
