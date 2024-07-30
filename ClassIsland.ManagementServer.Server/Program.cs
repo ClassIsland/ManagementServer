@@ -3,8 +3,6 @@ using ClassIsland.ManagementServer.Server.Services;
 using ClassIsland.ManagementServer.Server.Services.Grpc;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,7 +16,14 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddGrpc();
 builder.Services.AddDbContext<ManagementServerContext>(options =>
 {
-    options.UseMySql(builder.Configuration.GetConnectionString("Development"), Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.0-mysql"));
+    options.UseMySql(
+        builder.Configuration.GetConnectionString(
+#if DEBUG
+            "Development"
+#else
+            "Production"
+#endif
+            ),ServerVersion.Parse("8.0.0-mysql"));
     // options.EnableSensitiveDataLogging();
 });
 builder.Services.AddScoped<ObjectsUpdateNotifyService>();
