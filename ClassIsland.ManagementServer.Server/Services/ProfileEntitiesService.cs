@@ -1,8 +1,8 @@
 using System.Text.Json;
-using ClassIsland.Core.Models.Profile;
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
 using ClassIsland.ManagementServer.Server.Enums;
+using ClassIsland.Shared.Models.Profile;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClassIsland.ManagementServer.Server.Services;

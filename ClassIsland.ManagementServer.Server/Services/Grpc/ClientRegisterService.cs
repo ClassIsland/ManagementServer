@@ -1,9 +1,9 @@
-using ClassIsland.Core.Protobuf.Client;
-using ClassIsland.Core.Protobuf.Enum;
-using ClassIsland.Core.Protobuf.Server;
-using ClassIsland.Core.Protobuf.Service;
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
+using ClassIsland.Shared.Protobuf.Client;
+using ClassIsland.Shared.Protobuf.Enum;
+using ClassIsland.Shared.Protobuf.Server;
+using ClassIsland.Shared.Protobuf.Service;
 using Grpc.Core;
 using Microsoft.EntityFrameworkCore;
 

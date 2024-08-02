@@ -1,7 +1,7 @@
-using ClassIsland.Core.Protobuf.Enum;
 using ClassIsland.ManagementServer.Server.Models;
 using ClassIsland.ManagementServer.Server.Models.Command;
 using ClassIsland.ManagementServer.Server.Services;
+using ClassIsland.Shared.Protobuf.Enum;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.Mvc;

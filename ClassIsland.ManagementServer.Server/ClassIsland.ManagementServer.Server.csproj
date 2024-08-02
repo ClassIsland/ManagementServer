@@ -25,11 +25,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ClassIsland.Core\ClassIsland.Core.csproj" />
+    <Folder Include="Context\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Context\" />
+    <ProjectReference Include="..\ClassIsland.Shared\ClassIsland.Shared.csproj" />
   </ItemGroup>
 
 </Project>

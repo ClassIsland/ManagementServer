@@ -1,8 +1,8 @@
-using ClassIsland.Core.Enums;
-using ClassIsland.Core.Models.Management;
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Enums;
 using ClassIsland.ManagementServer.Server.Services;
+using ClassIsland.Shared.Enums;
+using ClassIsland.Shared.Models.Management;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

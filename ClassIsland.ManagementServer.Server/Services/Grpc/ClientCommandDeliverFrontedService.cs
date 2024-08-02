@@ -1,10 +1,10 @@
-using ClassIsland.Core.Protobuf.Client;
-using ClassIsland.Core.Protobuf.Command;
-using ClassIsland.Core.Protobuf.Enum;
-using ClassIsland.Core.Protobuf.Server;
-using ClassIsland.Core.Protobuf.Service;
 using ClassIsland.ManagementServer.Server.Entities;
 using ClassIsland.ManagementServer.Server.Enums;
+using ClassIsland.Shared.Protobuf.Client;
+using ClassIsland.Shared.Protobuf.Command;
+using ClassIsland.Shared.Protobuf.Enum;
+using ClassIsland.Shared.Protobuf.Server;
+using ClassIsland.Shared.Protobuf.Service;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;

@@ -1,13 +1,13 @@
 using System.Collections.ObjectModel;
 using System.Runtime.InteropServices.JavaScript;
 using System.Text.Json;
-using ClassIsland.Core;
-using ClassIsland.Core.Models.Management;
-using ClassIsland.Core.Models.Profile;
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
 using ClassIsland.ManagementServer.Server.Enums;
 using ClassIsland.ManagementServer.Server.Services;
+using ClassIsland.Shared;
+using ClassIsland.Shared.Models.Management;
+using ClassIsland.Shared.Models.Profile;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClassIsland.ManagementServer.Server.Controllers.Clients;

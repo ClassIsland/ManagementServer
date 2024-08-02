@@ -1,4 +1,4 @@
-using ClassIsland.Core.Protobuf.Command;
+using ClassIsland.Shared.Protobuf.Command;
 using Google.Protobuf;
 
 namespace ClassIsland.ManagementServer.Server.Models.Command;

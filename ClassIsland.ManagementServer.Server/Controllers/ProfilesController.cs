@@ -1,10 +1,10 @@
 using System.Text.Json;
-using ClassIsland.Core.Models.Profile;
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
 using ClassIsland.ManagementServer.Server.Enums;
 using ClassIsland.ManagementServer.Server.Models;
 using ClassIsland.ManagementServer.Server.Services;
+using ClassIsland.Shared.Models.Profile;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
