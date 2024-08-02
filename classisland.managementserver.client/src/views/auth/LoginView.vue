@@ -28,7 +28,7 @@ function login() {
 </script>
 
 <template>
-  <div style="width: 400px" class="d-flex flex-column">
+  <div class="d-flex flex-column">
     <h2>登录</h2>
     <v-form>
       <v-text-field label="用户名" name="username" v-model="username"/>
@@ -41,5 +41,5 @@ function login() {
 </template>
 
 <style scoped>
-
+  
 </style>

@@ -12,9 +12,14 @@ const router = createRouter({
       component: ViewBase,
       children: [
         {
-          path: '',
+          path: 'home',
           name: 'home',
           component: HomeView
+        },
+        {
+          path: 'clients',
+          name: 'clients',
+          component: () => import('../views/ClientsView.vue')
         },
         {
           path: 'about',
