@@ -37,7 +37,7 @@ const isSiderBarOpen = ref(true)
     </div>
   </v-NavigationDrawer>
   <v-main>
-    <RouterView />
+    <RouterView class="ma-6"/>
     
   </v-main>
 </template>

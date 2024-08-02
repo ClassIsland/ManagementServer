@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import ViewBase from "@/ViewBase.vue";
 import AuthViewBase from "@/views/auth/AuthViewBase.vue";
+import NotFoundView from "@/views/NotFoundView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -42,8 +43,10 @@ const router = createRouter({
           component: () => import('../views/auth/LoginView.vue')
         }
       ]
-    }
-    
+    },
+    // Not Found
+    { path: '/:pathMatch(.*)', component: NotFoundView },
+      
   ]
 })
 
