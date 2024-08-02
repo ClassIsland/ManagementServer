@@ -24,7 +24,7 @@ const isSiderBarOpen = ref(true)
       <v-list-item link title="首页" prepend-icon="mdi-home" to="/home"/>
       <v-divider/>
       <v-list-item link title="客户端" prepend-icon="mdi-monitor" to="/clients"/>
-      <v-list-item link title="分组" prepend-icon="mdi-select-group"/>
+      <v-list-item link title="分组" prepend-icon="mdi-select-group" to="/groups"/>
       <v-divider/>
       <v-list-item link title="课表" prepend-icon="mdi-file-chart-outline"/>
       <v-list-item link title="时间表" prepend-icon="mdi-timetable"/>
@@ -37,11 +37,13 @@ const isSiderBarOpen = ref(true)
     </div>
   </v-NavigationDrawer>
   <v-main>
-    <RouterView class="ma-6"/>
+    <RouterView class="expanded"/>
     
   </v-main>
 </template>
 
 <style scoped>
-
+.expanded {
+  height: 100%;
+}
 </style>

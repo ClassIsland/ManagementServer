@@ -20,7 +20,13 @@ const router = createRouter({
         {
           path: 'clients',
           name: 'clients',
-          component: () => import('../views/ClientsView.vue')
+          component: () => import('../views/ClientsView.vue'),
+          children: [
+            {
+              path: ':cuid',
+              component: () => import('../views/ClientDetailsView.vue')
+            }
+          ]
         },
         {
           path: 'about',
