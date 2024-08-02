@@ -8,20 +8,7 @@ import HelloWorld from './components/HelloWorld.vue'
 <template>
   <v-app>
     <v-layout full-height class="">
-      <v-app-bar :elevation="2" density="comfortable">
-        <template v-slot:prepend>
-          <v-app-bar-nav-icon icon="mdi-menu"/>
-        </template>
-        <v-app-bar-title>ClassIsland 集控控制台</v-app-bar-title>
-      </v-app-bar>
-      <v-navigation-drawer>
-        <v-list>
-          <v-list-item title="Navigation drawer"></v-list-item>
-        </v-list>
-      </v-navigation-drawer>
-      <v-main>
-        <RouterView />
-      </v-main>
+      <RouterView/>
     </v-layout>
   </v-app>
 </template>
