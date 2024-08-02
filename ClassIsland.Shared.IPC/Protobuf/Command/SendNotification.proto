@@ -1,6 +1,6 @@
 syntax = "proto3";
-package ClassIsland.Core.Protobuf.Command;
-option csharp_namespace = "ClassIsland.Core.Protobuf.Command";
+package ClassIsland.Shared.IPC.Protobuf.Command;
+option csharp_namespace = "ClassIsland.Shared.IPC.Protobuf.Command";
 
 message SendNotification {
   string MessageMask=1;

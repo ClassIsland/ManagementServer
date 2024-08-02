@@ -1,4 +1,4 @@
-using ClassIsland.Core.Protobuf.Enum;
+using ClassIsland.Shared.IPC.Protobuf.Enum;
 using ClassIsland.ManagementServer.Server.Entities;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;

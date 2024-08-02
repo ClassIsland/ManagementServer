@@ -1,6 +1,6 @@
 syntax = "proto3";
-package ClassIsland.Core.Protobuf.Enum;
-option csharp_namespace = "ClassIsland.Core.Protobuf.Enum";
+package ClassIsland.Shared.IPC.Protobuf.Enum;
+option csharp_namespace = "ClassIsland.Shared.IPC.Protobuf.Enum";
 
 enum Retcode {
     None = 0;

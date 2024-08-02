@@ -1,4 +1,4 @@
-using ClassIsland.Core.Protobuf.Enum;
+using ClassIsland.Shared.IPC.Protobuf.Enum;
 using Google.Protobuf;
 
 namespace ClassIsland.Core.Models.Management;

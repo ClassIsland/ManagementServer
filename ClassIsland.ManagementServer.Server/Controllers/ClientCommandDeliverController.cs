@@ -1,4 +1,4 @@
-using ClassIsland.Core.Protobuf.Enum;
+using ClassIsland.Shared.IPC.Protobuf.Enum;
 using ClassIsland.ManagementServer.Server.Models;
 using ClassIsland.ManagementServer.Server.Models.Command;
 using ClassIsland.ManagementServer.Server.Services;

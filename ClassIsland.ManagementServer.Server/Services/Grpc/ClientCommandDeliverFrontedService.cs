@@ -1,8 +1,8 @@
-using ClassIsland.Core.Protobuf.Client;
-using ClassIsland.Core.Protobuf.Command;
-using ClassIsland.Core.Protobuf.Enum;
-using ClassIsland.Core.Protobuf.Server;
-using ClassIsland.Core.Protobuf.Service;
+using ClassIsland.Shared.IPC.Protobuf.Client;
+using ClassIsland.Shared.IPC.Protobuf.Command;
+using ClassIsland.Shared.IPC.Protobuf.Enum;
+using ClassIsland.Shared.IPC.Protobuf.Server;
+using ClassIsland.Shared.IPC.Protobuf.Service;
 using ClassIsland.ManagementServer.Server.Entities;
 using ClassIsland.ManagementServer.Server.Enums;
 using Google.Protobuf;

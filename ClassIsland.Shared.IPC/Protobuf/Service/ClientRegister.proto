@@ -1,6 +1,6 @@
 syntax = "proto3";
-package ClassIsland.Core.Protobuf.Service;
-option csharp_namespace = "ClassIsland.Core.Protobuf.Service";
+package ClassIsland.Shared.IPC.Protobuf.Service;
+option csharp_namespace = "ClassIsland.Shared.IPC.Protobuf.Service";
 
 import "Protobuf/Client/ClientRegisterCsReq.proto";
 import "Protobuf/Server/ClientRegisterScRsp.proto";
