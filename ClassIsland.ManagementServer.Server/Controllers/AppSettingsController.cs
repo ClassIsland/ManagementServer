@@ -18,7 +18,7 @@ public class AppSettingsController(ManagementServerContext dbContext) : Controll
     }
     
     [HttpGet("{id}")]
-    public async Task<IActionResult> Get([FromRoute] string id)
+    public async Task<IActionResult> Get([FromRoute] Guid id)
     {
         var o = await DbContext.Settings.Where(x => x.Id == id).FirstOrDefaultAsync();
         if (o == null)
@@ -30,7 +30,7 @@ public class AppSettingsController(ManagementServerContext dbContext) : Controll
     }
     
     [HttpPost("{id}")]
-    public async Task<IActionResult> Update([FromRoute] string id, [FromBody] Setting setting)
+    public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] Setting setting)
     {
         var o = await DbContext.Settings.Where(x => x.Id == id).AsNoTracking().FirstOrDefaultAsync();
         setting.Id = id;
@@ -50,14 +50,14 @@ public class AppSettingsController(ManagementServerContext dbContext) : Controll
     [HttpPost]
     public async Task<IActionResult> Update([FromBody] Setting setting)
     {
-        setting.Id = Guid.NewGuid().ToString();
+        setting.Id = Guid.NewGuid();
         await DbContext.Settings.AddAsync(setting);
         await DbContext.SaveChangesAsync();
         return Ok(setting);
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete([FromRoute] string id)
+    public async Task<IActionResult> Delete([FromRoute] Guid id)
     {
         var o = await DbContext.Settings.Where(x => x.Id == id).FirstOrDefaultAsync();
         if (o == null)

@@ -10,7 +10,7 @@ public class ObjectsUpdateNotifyService(ManagementServerContext context, Objects
 
     private ObjectsAssigneeService ObjectsAssigneeService { get; } = objectsAssigneeService;
 
-    public async Task NotifyObjectUpdatingAsync(string id, ObjectTypes objectType)
+    public async Task NotifyObjectUpdatingAsync(Guid id, ObjectTypes objectType)
     {
         var clients = await ObjectsAssigneeService.GetObjectAssignedClients(id);
         foreach (var i in clients)
@@ -18,19 +18,19 @@ public class ObjectsUpdateNotifyService(ManagementServerContext context, Objects
             await DbContext.ObjectUpdates.AddAsync(new ObjectUpdate()
             {
                 ObjectId = id,
-                ObjectType = (int)objectType,
+                ObjectType = objectType,
                 TargetCuid = i.Cuid,
                 UpdateTime = DateTime.Now
             });
         }
     }
     
-    public async Task NotifyClientUpdatingAsync(string? cuid=null, string? id=null, int? group=null)
+    public async Task NotifyClientUpdatingAsync(Guid? cuid=null, string? id=null, long? group=null)
     {
         var clients = DbContext.Clients.Where(x =>
-            (cuid != null && x.Cuid != null && x.Cuid == cuid) ||
-            (id != null && x.Id != null && x.Id == id) ||
-            (group != null && x.GroupId != null && x.GroupId == group)
+            (cuid != null && x.Cuid == cuid) ||
+            (id != null && x.Id == id) ||
+            (group != null && x.GroupId == group)
         ).Select(x => x).ToList();
         foreach (var i in clients)
         {

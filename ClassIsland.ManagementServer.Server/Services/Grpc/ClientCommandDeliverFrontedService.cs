@@ -19,8 +19,7 @@ public class ClientCommandDeliverFrontedService(ClientCommandDeliverService clie
     
     public override async Task ListenCommand(IAsyncStreamReader<ClientCommandDeliverScReq> requestStream, IServerStreamWriter<ClientCommandDeliverScRsp> responseStream, ServerCallContext context)
     {
-        var cuid = context.RequestHeaders.GetValue("cuid");
-        if (cuid == null)
+        if (!Guid.TryParse(context.RequestHeaders.GetValue("cuid"), out var cuid))
         {
             await responseStream.WriteAsync(new ClientCommandDeliverScRsp()
             {
@@ -34,7 +33,7 @@ public class ClientCommandDeliverFrontedService(ClientCommandDeliverService clie
         await ClientCommandDeliverService.DeliverCommandAsync(CommandTypes.ServerConnected, new Empty(),
             new ObjectsAssignee()
             {
-                AssigneeType = (int)AssigneeTypes.ClientUid,
+                AssigneeType = AssigneeTypes.ClientUid,
                 TargetClientCuid = cuid
             });
         while (!context.CancellationToken.IsCancellationRequested)

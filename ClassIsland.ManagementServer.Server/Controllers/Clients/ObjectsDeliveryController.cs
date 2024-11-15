@@ -28,25 +28,22 @@ public class ObjectsDeliveryController(
     private static readonly JsonSerializerOptions JsonOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
     
     [HttpGet("subjects")]
-    public async Task<IActionResult> GetSubjects([FromRoute] string cuid)
+    public async Task<IActionResult> GetSubjects([FromRoute] Guid cuid)
     {
         var client = DbContext.Clients.FirstOrDefault(x => x.Cuid == cuid);
         if (client == null)
             return NotFound();
         var assignees = await ObjectsAssigneeService.GetClientAssigningObjects(client, ObjectTypes.ProfileSubject);
         var subjects = new ObservableDictionary<string, Subject>();
-        foreach (var i in assignees)
+        foreach (var subject in assignees.Select(i => DbContext.ProfileSubjects.FirstOrDefault(x => x.Id == i.ObjectId)).OfType<ProfileSubject>())
         {
-            var subject = DbContext.ProfileSubjects.FirstOrDefault(x => x.Id == i.ObjectId);
-            if (subject == null)
-                continue;
-            subjects.Add(subject.Id, new Subject()
+            subjects.Add(subject.Id.ToString(), new Subject()
             {
-                Name = subject.Name ?? "",
-                Initial = subject.Initials ?? "",
-                IsOutDoor = subject.IsOutDoor ?? false,
+                Name = subject.Name,
+                Initial = subject.Initials,
+                IsOutDoor = subject.IsOutDoor,
                 TeacherName = "",
-                AttachedObjects = JsonSerializer.Deserialize<Dictionary<string, object?>>(subject.AttachedObjects ?? "{}", JsonOptions) ?? new()
+                AttachedObjects = subject.AttachedObjects
             });
         }
 
@@ -63,7 +60,7 @@ public class ObjectsDeliveryController(
     }
 
     [HttpGet("timelayouts")]
-    public async Task<IActionResult> GetTimeLayouts([FromRoute] string cuid)
+    public async Task<IActionResult> GetTimeLayouts([FromRoute] Guid cuid)
     {
         var client = DbContext.Clients.FirstOrDefault(x => x.Cuid == cuid);
         if (client == null)
@@ -80,22 +77,19 @@ public class ObjectsDeliveryController(
                 .Select(x =>
                     new TimeLayoutItem()
                     {
-                        StartSecond = ConvertTimeOnly(x.Start ?? TimeOnly.MinValue),
-                        EndSecond = ConvertTimeOnly(x.End ?? TimeOnly.MinValue),
-                        TimeType = x.TimeType ?? 0,
+                        StartSecond = ConvertTimeOnly(x.Start),
+                        EndSecond = ConvertTimeOnly(x.End),
+                        TimeType = x.TimeType,
                         DefaultClassId = x.DefaultSubjectId ?? "",
-                        IsHideDefault = x.IsHideDefault ?? false,
-                        AttachedObjects =
-                            JsonSerializer.Deserialize<Dictionary<string, object?>>(x.AttachedObjects ?? "{}",
-                                JsonOptions) ?? new()
+                        IsHideDefault = x.IsHideDefault,
+                        AttachedObjects = x.AttachedObjects
                     }
                 ));
-            timeLayouts.Add(tl.Id, new TimeLayout()
+            timeLayouts.Add(tl.Id.ToString(), new TimeLayout()
             {
-                Name = tl.Name ?? "",
+                Name = tl.Name,
                 Layouts = tp,
-                AttachedObjects = JsonSerializer.Deserialize<Dictionary<string, object?>>(tl.AttachedObjects ?? "{}",
-                    JsonOptions) ?? new()
+                AttachedObjects = tl.AttachedObjects
             });
         }
 
@@ -106,7 +100,7 @@ public class ObjectsDeliveryController(
     }
     
     [HttpGet("classplans")]
-    public async Task<IActionResult> GetClassPlans([FromRoute] string cuid)
+    public async Task<IActionResult> GetClassPlans([FromRoute] Guid cuid)
     {
         var client = DbContext.Clients.FirstOrDefault(x => x.Cuid == cuid);
         if (client == null)
@@ -123,24 +117,23 @@ public class ObjectsDeliveryController(
                 .Select(x =>
                     new ClassInfo()
                     {
-                        SubjectId = x.SubjectId,
+                        SubjectId = x.SubjectId.ToString(),
                         // TODO: AttachedObjects =
                         //     JsonSerializer.Deserialize<Dictionary<string, object?>>(x.AttachedObjects ?? "{}",
                         //         JsonOptions) ?? new()
                     }
                 ));
-            classPlans.Add(cp.Id, new ClassPlan()
+            classPlans.Add(cp.Id.ToString(), new ClassPlan()
             {
-                Name = cp.Name ?? "",
+                Name = cp.Name,
                 TimeRule = new TimeRule()
                 {
-                    WeekDay = cp.WeekDay ?? 0,
-                    WeekCountDiv = cp.WeekDiv ?? 0
+                    WeekDay = cp.WeekDay,
+                    WeekCountDiv = cp.WeekDiv
                 },
-                TimeLayoutId = cp.TimeLayoutId ?? "",
+                TimeLayoutId = cp.TimeLayoutId.ToString(),
                 Classes = c,
-                AttachedObjects = JsonSerializer.Deserialize<Dictionary<string, object?>>(cp.AttachedObjects ?? "{}",
-                    JsonOptions) ?? new()
+                AttachedObjects = cp.AttachedObjects
             });
         }
 
@@ -151,21 +144,22 @@ public class ObjectsDeliveryController(
     }
 
     [HttpGet("policy")]
-    public async Task<IActionResult> GetPolicy([FromRoute] string cuid)
+    public async Task<IActionResult> GetPolicy([FromRoute] Guid cuid)
     {
         var client = DbContext.Clients.FirstOrDefault(x => x.Cuid == cuid);
         if (client == null)
             return NotFound();
         var assignees = await ObjectsAssigneeService.GetClientAssigningObjectsLeveled(client, ObjectTypes.Policy);
-        foreach (var policy in assignees.Select(i => DbContext.Policies.FirstOrDefault(x => x.Id == i.ObjectId)).OfType<Policy>().Where(policy => (policy.IsEnabled ?? false)))
+        foreach (var policy in assignees.Select(i => DbContext.Policies.FirstOrDefault(x => x.Id == i.ObjectId)).OfType<Policy>().Where(policy => (policy.IsEnabled)))
         {
-            return Ok(policy.Content ?? "{}");
+            // todo
+            return Ok(policy.Content);
         }
         return Ok(new ManagementPolicy());
     }
     
     [HttpGet("default-settings")]
-    public async Task<IActionResult> GetDefaultSettings([FromRoute] string cuid)
+    public async Task<IActionResult> GetDefaultSettings([FromRoute] Guid cuid)
     {
         var client = DbContext.Clients.FirstOrDefault(x => x.Cuid == cuid);
         if (client == null)

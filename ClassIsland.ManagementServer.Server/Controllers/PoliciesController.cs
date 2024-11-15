@@ -18,7 +18,7 @@ public class PoliciesController(ManagementServerContext dbContext) : ControllerB
     }
     
     [HttpGet("{id}")]
-    public async Task<IActionResult> Get([FromRoute] string id)
+    public async Task<IActionResult> Get([FromRoute] Guid id)
     {
         var o = await DbContext.Policies.Where(x => x.Id == id).FirstOrDefaultAsync();
         if (o == null)
@@ -30,7 +30,7 @@ public class PoliciesController(ManagementServerContext dbContext) : ControllerB
     }
     
     [HttpPost("{id}")]
-    public async Task<IActionResult> Update([FromRoute] string id, [FromBody] Policy policy)
+    public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] Policy policy)
     {
         var o = await DbContext.Policies.Where(x => x.Id == id).AsNoTracking().FirstOrDefaultAsync();
         policy.Id = id;
@@ -50,14 +50,14 @@ public class PoliciesController(ManagementServerContext dbContext) : ControllerB
     [HttpPost]
     public async Task<IActionResult> Update([FromBody] Policy policy)
     {
-        policy.Id = Guid.NewGuid().ToString();
+        policy.Id = Guid.NewGuid();
         await DbContext.Policies.AddAsync(policy);
         await DbContext.SaveChangesAsync();
         return Ok(policy);
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete([FromRoute] string id)
+    public async Task<IActionResult> Delete([FromRoute] Guid id)
     {
         var o = await DbContext.Policies.Where(x => x.Id == id).FirstOrDefaultAsync();
         if (o == null)

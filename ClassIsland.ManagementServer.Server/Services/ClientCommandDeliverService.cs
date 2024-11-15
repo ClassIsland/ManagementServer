@@ -11,7 +11,7 @@ public class ClientCommandDeliverService(ManagementServerContext managementServe
     ObjectsAssigneeService objectsAssigneeService,
     ILogger<ClientCommandDeliverService> logger)
 {
-    public static Dictionary<string, IServerStreamWriter<ClientCommandDeliverScRsp>> Streams { get; } = new();
+    public static Dictionary<Guid, IServerStreamWriter<ClientCommandDeliverScRsp>> Streams { get; } = new();
 
     private ObjectsAssigneeService ObjectsAssigneeService { get; } = objectsAssigneeService;
 
@@ -25,13 +25,12 @@ public class ClientCommandDeliverService(ManagementServerContext managementServe
         foreach (var i in clients)
         {
             Logger.LogInformation("向 {} 发送命令 {}", i.Cuid, type);
-            if (!Streams.ContainsKey(i.Cuid))
+            if (!Streams.TryGetValue(i.Cuid, out var stream))
             {
                 Logger.LogTrace("{} 未连接", i.Cuid);
                 continue;
             }
 
-            var stream = Streams[i.Cuid];
             await stream.WriteAsync(new ClientCommandDeliverScRsp()
             {
                 RetCode = Retcode.Success,

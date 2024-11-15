@@ -2,6 +2,7 @@ using System.Text.Json;
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
 using ClassIsland.ManagementServer.Server.Enums;
+using ClassIsland.ManagementServer.Server.Helpers;
 using ClassIsland.Shared.Models.Profile;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,7 +18,7 @@ public class ProfileEntitiesService(ManagementServerContext context,
 
     private ILogger<ProfileEntitiesService> Logger { get; } = logger;
 
-    public async Task SetSubjectEntity(string id, Subject subject, bool replace)
+    public async Task SetSubjectEntity(Guid id, Subject subject, bool replace)
     {
         Logger.LogDebug("处理科目：{}（{}）", id, subject.Name);
         var o = new ProfileSubject()
@@ -25,7 +26,7 @@ public class ProfileEntitiesService(ManagementServerContext context,
             Id = id,
             Name = subject.Name,
             Initials = subject.Initial,
-            AttachedObjects = JsonSerializer.Serialize(subject.AttachedObjects),
+            AttachedObjects = subject.AttachedObjects,
             IsOutDoor = subject.IsOutDoor
         };
         if (await DbContext.ProfileSubjects.AnyAsync(x => x.Id == id))
@@ -41,14 +42,14 @@ public class ProfileEntitiesService(ManagementServerContext context,
         await ObjectsUpdateNotifyService.NotifyObjectUpdatingAsync(id, ObjectTypes.ProfileSubject);
     }
     
-    public async Task SetTimeLayoutEntity(string id, TimeLayout timeLayout, bool replace)
+    public async Task SetTimeLayoutEntity(Guid id, TimeLayout timeLayout, bool replace)
     {
         Logger.LogDebug("处理时间表：{}（{}）", id, timeLayout.Name);
-        var o = new ProfileTimelayout()
+        var o = new ProfileTimeLayout()
         {
             Id = id,
             Name = timeLayout.Name,
-            AttachedObjects = JsonSerializer.Serialize(timeLayout.AttachedObjects)
+            AttachedObjects = timeLayout.AttachedObjects
         };
         if (await DbContext.ProfileTimelayouts.AnyAsync(x => x.Id == id))
         {
@@ -65,10 +66,10 @@ public class ProfileEntitiesService(ManagementServerContext context,
         var index = 0;
         foreach (var p in timeLayout.Layouts)
         {
-            await DbContext.ProfileTimelayoutTimepoints.AddAsync(new ProfileTimelayoutTimepoint()
+            await DbContext.ProfileTimelayoutTimepoints.AddAsync(new ProfileTimeLayoutTimePoint()
             {
                 Parent = o,
-                AttachedObjects = JsonSerializer.Serialize(p.AttachedObjects),
+                AttachedObjects = p.AttachedObjects,
                 Start = new TimeOnly(p.StartSecond.Hour, p.StartSecond.Minute, p.StartSecond.Second),
                 End = new TimeOnly(p.EndSecond.Hour, p.EndSecond.Minute, p.EndSecond.Second),
                 TimeType = p.TimeType,
@@ -80,17 +81,17 @@ public class ProfileEntitiesService(ManagementServerContext context,
         await ObjectsUpdateNotifyService.NotifyObjectUpdatingAsync(id, ObjectTypes.ProfileTimeLayout);
     }
     
-    public async Task SetClassPlanEntity(string id, ClassPlan classPlan, bool replace)
+    public async Task SetClassPlanEntity(Guid id, ClassPlan classPlan, bool replace)
     {
         Logger.LogDebug("处理课表：{}（{}）", id, classPlan.Name);
         var o = new ProfileClassplan()
         {
             Id = id,
             Name = classPlan.Name,
-            AttachedObjects = JsonSerializer.Serialize(classPlan.AttachedObjects),
+            AttachedObjects = classPlan.AttachedObjects,
             WeekDay = classPlan.TimeRule.WeekDay,
             WeekDiv = classPlan.TimeRule.WeekCountDiv,
-            TimeLayoutId = classPlan.TimeLayoutId,
+            TimeLayoutId = GuidHelpers.TryParseGuidOrEmpty(classPlan.TimeLayoutId),
             IsEnabled = classPlan.IsEnabled
         };
         if (await DbContext.ProfileClassplans.AnyAsync(x => x.Id == id))
@@ -108,13 +109,13 @@ public class ProfileEntitiesService(ManagementServerContext context,
         foreach (var p in classPlan.Classes)
         {
             Logger.LogDebug("处理课程：{}", p.SubjectId);
-            if (!await DbContext.ProfileSubjects.AnyAsync(x => x.Id == p.SubjectId))
+            if (!await DbContext.ProfileSubjects.AnyAsync(x => x.Id == GuidHelpers.TryParseGuidOrEmpty(p.SubjectId)))
                 continue;
-            await DbContext.ProfileClassplanClasses.AddAsync(new ProfileClassplanClass()
+            await DbContext.ProfileClassplanClasses.AddAsync(new ProfileClassPlanClass()
             {
                 Parent = o,
                 // AttachedObjects = JsonSerializer.Serialize(p.AttachedObjects),  // TODO: 等到ClassIsland完成课程层面的附加信息开发后取消注释这个
-                SubjectId = p.SubjectId,
+                SubjectId = GuidHelpers.TryParseGuidOrEmpty(p.SubjectId),
                 Index = index ++
             });
         }

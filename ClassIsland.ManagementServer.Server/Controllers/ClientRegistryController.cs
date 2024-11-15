@@ -24,7 +24,7 @@ public class ClientRegistryController(ManagementServerContext context) : Control
     
     [HttpPost("register")]
     [Obsolete]
-    public IActionResult Register([FromQuery] string cuid, [FromQuery] string id)
+    public IActionResult Register([FromQuery] Guid cuid, [FromQuery] string id)
     {
         if (DataContext.Clients.Any(x => x.Cuid == cuid))
         {
@@ -55,7 +55,7 @@ public class ClientRegistryController(ManagementServerContext context) : Control
     }
     
     [HttpGet("query/{cuid}")]
-    public IActionResult Query([FromRoute]string cuid)
+    public IActionResult Query([FromRoute]Guid cuid)
     {
         var c = DataContext.Clients.FirstOrDefault(x => x.Cuid == cuid);
         if (c == null)

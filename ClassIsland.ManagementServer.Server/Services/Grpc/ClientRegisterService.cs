@@ -18,7 +18,7 @@ public class ClientRegisterService(ManagementServerContext dbContext) : ClientRe
         var result = new ClientRegisterScRsp();
         try
         {
-            if (await DbContext.Clients.AnyAsync(x => x.Cuid == request.ClientUid))
+            if (await DbContext.Clients.AnyAsync(x => x.Cuid.ToString() == request.ClientUid))
             {
                 result.Retcode = Retcode.Registered;
                 result.Message = "Client has already been registered";
@@ -26,7 +26,7 @@ public class ClientRegisterService(ManagementServerContext dbContext) : ClientRe
             }
             var newClient = new Client()
             {
-                Cuid = request.ClientUid,
+                Cuid = new Guid(request.ClientUid),
                 Id = request.ClientId,
                 RegisterTime = DateTime.Now
             };
@@ -49,7 +49,7 @@ public class ClientRegisterService(ManagementServerContext dbContext) : ClientRe
         var result = new ClientRegisterScRsp();
         try
         {
-            var c = DbContext.Clients.FirstOrDefault(client => client.Cuid == request.ClientUid);
+            var c = DbContext.Clients.FirstOrDefault(client => client.Cuid.ToString() == request.ClientUid);
             if (c == null)
             {
                 result.Retcode = Retcode.ClientNotFound;

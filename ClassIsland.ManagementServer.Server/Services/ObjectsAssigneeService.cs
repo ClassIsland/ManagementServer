@@ -10,7 +10,7 @@ public class ObjectsAssigneeService(ManagementServerContext context)
 {
     private ManagementServerContext DbContext { get; } = context;
 
-    public async Task<List<Client>> GetObjectAssignedClients(string objectId)
+    public async Task<List<Client>> GetObjectAssignedClients(Guid objectId)
     {
         var r = new List<Client>();
         var assignees = DbContext.ObjectsAssignees.Where(x => x.ObjectId == objectId).Select(x => x).ToList();
@@ -25,29 +25,29 @@ public class ObjectsAssigneeService(ManagementServerContext context)
     public async Task<List<Client>> GetAssignedClients(ObjectsAssignee assignee)
     {
         return await DbContext.Clients.Where(x =>
-                ((assignee.AssigneeType == (int)AssigneeTypes.Group && assignee.TargetGroupId == x.GroupId) ||
-                 (assignee.AssigneeType == (int)AssigneeTypes.Id && assignee.TargetClientId == x.Id) ||
-                 (assignee.AssigneeType == (int)AssigneeTypes.ClientUid && assignee.TargetClientCuid == x.Cuid)))
+                ((assignee.AssigneeType == AssigneeTypes.Group && assignee.TargetGroupId == x.GroupId) ||
+                 (assignee.AssigneeType == AssigneeTypes.Id && assignee.TargetClientId == x.Id) ||
+                 (assignee.AssigneeType == AssigneeTypes.ClientUid && assignee.TargetClientCuid == x.Cuid)))
             .Select(x => x).ToListAsync();
     }
 
     public async Task<List<ObjectsAssignee>> GetClientAssigningObjects(Client client, ObjectTypes type)
     {
         return await DbContext.ObjectsAssignees.Where(x => 
-            x.ObjectType == (int)type &&
-            ((x.AssigneeType == (int)AssigneeTypes.ClientUid && x.TargetClientCuid == client.Cuid) ||
-             (x.AssigneeType == (int)AssigneeTypes.Id && x.TargetClientId == client.Id) ||
-             (x.AssigneeType == (int)AssigneeTypes.Group && x.TargetGroupId == client.GroupId))).Select(x => x).ToListAsync();
+            x.ObjectType == type &&
+            ((x.AssigneeType == AssigneeTypes.ClientUid && x.TargetClientCuid == client.Cuid) ||
+             (x.AssigneeType == AssigneeTypes.Id && x.TargetClientId == client.Id) ||
+             (x.AssigneeType == AssigneeTypes.Group && x.TargetGroupId == client.GroupId))).Select(x => x).ToListAsync();
     }
 
     public async Task<List<ObjectsAssignee>> GetClientAssigningObjectsLeveled(Client client, ObjectTypes type)
     {
         return await DbContext.ObjectsAssignees.Where(x => 
-            x.ObjectType == (int)type &&
-            ((x.AssigneeType == (int)AssigneeTypes.ClientUid && x.TargetClientCuid == client.Cuid) ||
-             (x.AssigneeType == (int)AssigneeTypes.Id && x.TargetClientId == client.Id) ||
-             (x.AssigneeType == (int)AssigneeTypes.Group && x.TargetGroupId == client.GroupId)))
-            .OrderBy(x => x.AssigneeType ?? 0)
+            x.ObjectType == type &&
+            ((x.AssigneeType == AssigneeTypes.ClientUid && x.TargetClientCuid == client.Cuid) ||
+             (x.AssigneeType == AssigneeTypes.Id && x.TargetClientId == client.Id) ||
+             (x.AssigneeType == AssigneeTypes.Group && x.TargetGroupId == client.GroupId)))
+            .OrderBy(x => (int)x.AssigneeType)
             .Select(x => x)
             .ToListAsync();
     }
