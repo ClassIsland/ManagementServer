@@ -5,26 +5,12 @@ import { renderIcon } from '@/utils/index';
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/about',
-    name: 'about',
-    component: Layout,
+    path: '/login',
+    name: 'Login',
+    component: () => import('@/views/auth/login/index.vue'),
     meta: {
-      sort: 10,
-      isRoot: true,
-      activeMenu: 'about_index',
-      icon: renderIcon(ProjectOutlined),
+      title: '登录',
     },
-    children: [
-      {
-        path: 'index',
-        name: `about_index`,
-        meta: {
-          title: '关于项目',
-          activeMenu: 'about_index',
-        },
-        component: () => import('@/views/about/index.vue'),
-      },
-    ],
   },
 ];
 

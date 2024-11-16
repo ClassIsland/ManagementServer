@@ -22,7 +22,8 @@
     "lint:eslint": "eslint \"{src,mock}/**/*.{vue,ts,tsx}\" --fix",
     "lint:prettier": "prettier --write --loglevel warn \"src/**/*.{js,json,tsx,css,less,scss,vue,html,md}\"",
     "lint:stylelint": "stylelint --fix \"**/*.{vue,less,postcss,css,scss}\" --cache --cache-location node_modules/.cache/stylelint/",
-    "lint:pretty": "pretty-quick --staged"
+    "lint:pretty": "pretty-quick --staged",
+    "update-api": "openapi-typescript http://localhost:5090/swagger/v1/swagger.json -o ./src/api/schema.d.ts"
   },
   "dependencies": {
     "@alova/mock": "^2.0.6",
@@ -74,6 +75,8 @@
     "less": "^4.2.0",
     "less-loader": "^11.1.4",
     "lint-staged": "^13.3.0",
+    "openapi-fetch": "^0.13.0",
+    "openapi-typescript": "^7.4.3",
     "postcss": "^8.4.45",
     "prettier": "^2.8.8",
     "pretty-quick": "^3.3.1",

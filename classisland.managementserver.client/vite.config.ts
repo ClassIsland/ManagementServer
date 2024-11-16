@@ -77,8 +77,8 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
     },
     server: {
       proxy: {
-        '^/api': {
-          target,
+        '/api': {
+          target: 'http://localhost:5090',
           secure: false
         }
       },

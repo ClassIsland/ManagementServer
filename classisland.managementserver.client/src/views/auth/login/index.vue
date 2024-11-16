@@ -93,6 +93,8 @@
   import { PersonOutline, LockClosedOutline, LogoGithub, LogoFacebook } from '@vicons/ionicons5';
   import { PageEnum } from '@/enums/pageEnum';
   import { websiteConfig } from '@/config/website.config';
+  import createClient from "openapi-fetch";
+  import type { paths } from "@/api/schema"
   interface FormState {
     username: string;
     password: string;
@@ -119,6 +121,8 @@
 
   const router = useRouter();
   const route = useRoute();
+  
+  const client = createClient();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -134,16 +138,17 @@
         };
 
         try {
-          const { code, message: msg } = await userStore.login(params);
+          const result = await client.POST("/api/v1/identity/login")
+          // const { code, message: msg } = await userStore.login(params);
           message.destroyAll();
-          if (code == ResultEnum.SUCCESS) {
+          if (result.response.ok) {
             const toPath = decodeURIComponent((route.query?.redirect || '/') as string);
             message.success('登录成功，即将进入系统');
             if (route.name === LOGIN_NAME) {
               router.replace('/');
             } else router.replace(toPath);
           } else {
-            message.info(msg || '登录失败');
+            message.info(result.response.statusText || '登录失败');
           }
         } finally {
           loading.value = false;

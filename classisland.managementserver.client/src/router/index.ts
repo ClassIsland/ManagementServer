@@ -28,20 +28,26 @@ export const RootRoute: RouteRecordRaw = {
   },
 };
 
-export const LoginRoute: RouteRecordRaw = {
-  path: '/login',
-  name: 'Login',
-  component: () => import('@/views/login/index.vue'),
-  meta: {
-    title: '登录',
-  },
+export const AuthRoute: RouteRecordRaw = {
+  path: '/auth',
+  name: '',
+  children: [
+    {
+      path: 'login',
+      name: 'Login',
+      component: () => import('@/views/auth/login/index.vue'),
+      meta: {
+        title: '登录',
+      },
+    }
+  ],
 };
 
 //需要验证权限
 export const asyncRoutes = [...routeModuleList];
 
 //普通路由 无需验证权限
-export const constantRouter: RouteRecordRaw[] = [LoginRoute, RootRoute, RedirectRoute];
+export const constantRouter: RouteRecordRaw[] = [AuthRoute, RootRoute, RedirectRoute];
 
 const router = createRouter({
   history: createWebHistory(),
