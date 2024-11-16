@@ -89,12 +89,14 @@
   import { useRoute, useRouter } from 'vue-router';
   import { useUserStore } from '@/store/modules/user';
   import { useMessage } from 'naive-ui';
-  import { ResultEnum } from '@/enums/httpEnum';
   import { PersonOutline, LockClosedOutline, LogoGithub, LogoFacebook } from '@vicons/ionicons5';
   import { PageEnum } from '@/enums/pageEnum';
   import { websiteConfig } from '@/config/website.config';
   import createClient from "openapi-fetch";
-  import type { paths } from "@/api/schema"
+  import Apis from "@/api/index";
+  import {ACCESS_TOKEN} from "@/store/mutation-types";
+  import {store} from "@/store";
+
   interface FormState {
     username: string;
     password: string;
@@ -121,8 +123,6 @@
 
   const router = useRouter();
   const route = useRoute();
-  
-  const client = createClient();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -138,19 +138,27 @@
         };
 
         try {
-          const result = await client.POST("/api/v1/identity/login")
+          const result = await Apis.classislandManagementserverServer.post_api_v1_identity_login({
+            params: {},
+            data: {
+              email: params.username,
+              password: params.password,
+            }
+          })
           // const { code, message: msg } = await userStore.login(params);
           message.destroyAll();
-          if (result.response.ok) {
-            const toPath = decodeURIComponent((route.query?.redirect || '/') as string);
-            message.success('登录成功，即将进入系统');
-            if (route.name === LOGIN_NAME) {
-              router.replace('/');
-            } else router.replace(toPath);
-          } else {
-            message.info(result.response.statusText || '登录失败');
-          }
-        } finally {
+          userStore.token = result.accessToken ?? "";
+          store[ACCESS_TOKEN] = result.accessToken ?? "";
+          const toPath = decodeURIComponent((route.query?.redirect || '/') as string);
+          message.success('登录成功，即将进入系统');
+          if (route.name === LOGIN_NAME) {
+            router.replace('/');
+          } else router.replace(toPath);
+        } catch (e) {
+          console.log(e)
+          message.error("登陆失败：" + e.message)
+        }
+        finally {
           loading.value = false;
         }
       } else {
@@ -200,7 +208,7 @@
 
   @media (min-width: 768px) {
     .view-account {
-      background-image: url('../../assets/images/login.svg');
+      background-image: url('../../../assets/images/login.svg');
       background-repeat: no-repeat;
       background-position: 50%;
       background-size: 100%;
