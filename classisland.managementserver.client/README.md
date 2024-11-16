@@ -1,39 +1,168 @@
-# classisland.managementserver.client
+## 🚀 简介
 
-This template should help get you started developing with Vue 3 in Vite.
+`Naive Ui Admin` 是一款 完全免费 且可商用的中后台解决方案，基于 🌟 `Vue3.0` 🌟、🚀 `Vite` 🚀、✨ [Naive UI](https://www.naiveui.com/) ✨ 和 🎉 `TypeScript` 🎉。
+它融合了最新的前端技术栈，提炼了典型的业务模型和页面，包括二次封装组件、动态菜单、权限校验等功能，助力快速搭建企业级中后台项目。
 
-## Recommended IDE Setup
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
 
-## Type Support for `.vue` Imports in TS
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+## 🌈 特性
+📦 二次封装的实用高扩展性组件
+🎨 响应式、多主题、多配置，快速集成，开箱即用
+🚀 强大的鉴权系统，支持 三种鉴权模式，满足多样业务需求
+🌐 持续更新的实用性页面模板和交互设计，简化页面构建
 
-## Customize configuration
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+## 🎥 预览
+- [naive-ui-admin](https://jekip.github.io)
 
-## Project Setup
+账号：admin，密码：123456（随意）
 
-```sh
-npm install
+## 💡 提示
+
+如果您需要更多功能和组件，不妨尝试全新的 `NaiveAdmin`，它可能正是您寻找的解决方案
+
+[NaiveAdmin 官网](https://www.naiveadmin.com)
+
+[NaiveAdmin 变更日志](https://www.yuque.com/u5825/zaqu0e)
+
+[为什么选我们？](https://www.naiveadmin.com/choose/we)
+
+### Plus
+
+全新设计版本，增加了众多特性，值得一试
+
+基于 `NaiveUi` 组件库
+
+[NaiveAdmin Plus 预览](https://plus.naiveadmin.com)
+
+基于 `Antd` 组件库
+
+[NaiveAdmin Antd Plus 预览](https://plus-full.naiveadmin.com)
+
+### Arco vue
+
+智能设计体系，提供轻盈体验
+
+[NaiveAdmin Arco 预览](https://arco.naiveadmin.com)
+
+### Element Plus
+
+面向设计师和开发者的组件库
+
+[Element Plus Admin 预览](https://element.naiveadmin.com)
+
+### Antd vue
+
+新产品，如果您选的技术栈是 `Antd` 的话，不妨看看
+
+[NaiveAdmin Antd 预览](https://antd.naiveadmin.com)
+
+以上版本同时具备 `NaiveAdmin` 功能/组件/页面，一如既往、开箱即用，欢迎前往查看。
+
+## 📚 文档
+
+[文档地址](https://docs.naiveadmin.com)
+
+## 🛠 准备
+
+- [node](http://nodejs.org/) 和 [git](https://git-scm.com/) -项目开发环境
+- [Vite](https://vitejs.dev/) - 熟悉 vite 特性
+- [Vue3](https://v3.vuejs.org/) - 熟悉 Vue 基础语法
+- [TypeScript](https://www.typescriptlang.org/) - 熟悉`TypeScript`基本语法
+- [Es6+](http://es6.ruanyifeng.com/) - 熟悉 es6 基本语法
+- [Vue-Router-Next](https://next.router.vuejs.org/) - 熟悉 vue-router 基本使用
+- [NaiveUi](https://www.naiveui.com/) - ui 基本使用
+- [Mock.js](https://github.com/nuysoft/Mock) - mockjs 基本语法
+
+
+## 🏗️ 使用
+
+- 获取项目代码
+
+```bash
+git clone https://github.com/jekip/naive-ui-admin.git
 ```
 
-### Compile and Hot-Reload for Development
+- 安装依赖
 
-```sh
-npm run dev
+```bash
+cd naive-ui-admin
+
+pnpm install
+
 ```
 
-### Type-Check, Compile and Minify for Production
+- 运行
 
-```sh
-npm run build
+```bash
+pnpm run dev
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+- 打包
 
-```sh
-npm run lint
+```bash
+pnpm build
 ```
+
+## 📜 更新日志
+
+[CHANGELOG](./CHANGELOG.md)
+
+
+## 🤝 如何贡献
+
+非常欢迎你的加入！[提一个 Issue](https://github.com/jekip/naive-ui-admin/issues) 或者提交一个 `Pull Request`
+
+**Pull Request:**
+
+1. Fork 代码!
+2. 创建自己的分支: `git checkout -b feat/xxxx`
+3. 提交你的修改: `git commit -am 'feat(function): add xxxxx'`
+4. 推送您的分支: `git push origin feat/xxxx`
+5. 提交`pull request`
+
+## 📋 Git 贡献提交规范
+
+- 参考 [vue](https://github.com/vuejs/vue/blob/dev/.github/COMMIT_CONVENTION.md) 规范 ([Angular](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-angular))
+
+  - `feat` 增加新功能
+  - `fix` 修复问题/BUG
+  - `style` 代码风格相关无影响运行结果的
+  - `perf` 优化/性能提升
+  - `refactor` 重构
+  - `revert` 撤销修改
+  - `test` 测试相关
+  - `docs` 文档/注释
+  - `chore` 依赖更新/脚手架配置修改等
+  - `workflow` 工作流改进
+  - `ci` 持续集成
+  - `types` 类型定义文件更改
+  - `wip` 开发中
+
+## 🌐 浏览器支持
+
+本地开发推荐使用`Chrome 80+` 浏览器
+
+支持现代浏览器, 不支持 IE
+
+| [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt=" Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>IE | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt=" Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Edge | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Safari |
+| :-: | :-: | :-: | :-: | :-: |
+| not support | last 2 versions | last 2 versions | last 2 versions | last 2 versions |
+
+## 👥 维护者
+[@Ah jung](https://github.com/jekip)
+
+## 💬 交流
+
+有关 `Naive Ui Admin` 的使用或其他问题，欢迎加入我们的讨论群组或提出问题。
+
+QQ1群：328347666 （已满）
+QQ2群：741353560
+
+## 💖 赞助
+#### 如果您觉得这个项目对您有帮助，可以通过下面的链接为作者买一杯果汁，表示感谢！。
+
+![donate](https://assets.naiveadmin.com/images/sponsor.png)
+
+[Paypal Me](https://www.paypal.com/paypalme/majunping)

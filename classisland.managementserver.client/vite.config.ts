@@ -1,13 +1,16 @@
-import { fileURLToPath, URL } from 'node:url'
-
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import VueDevTools from 'vite-plugin-vue-devtools'
-import vuetify from 'vite-plugin-vuetify'
-import fs from 'fs';
-import path from 'path';
-import child_process from 'child_process';
+import type { UserConfig, ConfigEnv } from 'vite';
+import { loadEnv } from 'vite';
+import { resolve } from 'path';
+import { wrapperEnv } from './build/utils';
+import { createVitePlugins } from './build/vite/plugin';
+import { OUTPUT_DIR } from './build/constant';
+import { createProxy } from './build/vite/proxy';
+import pkg from './package.json';
+import { format } from 'date-fns';
+const { dependencies, devDependencies, name, version } = pkg;
 import { env } from 'process';
+import path from 'path';
+import fs from 'fs';
 
 const baseFolder =
     env.APPDATA !== undefined && env.APPDATA !== ''
@@ -17,6 +20,9 @@ const baseFolder =
 const certificateName = "classisland.managementserver.client";
 const certFilePath = path.join(baseFolder, `${certificateName}.pem`);
 const keyFilePath = path.join(baseFolder, `${certificateName}.key`);
+
+const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_HTTPS_PORT}` :
+    env.ASPNETCORE_URLS ? env.ASPNETCORE_URLS.split(';')[0] : 'https://localhost:7289';
 
 if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
   if (0 !== child_process.spawnSync('dotnet', [
@@ -32,41 +38,66 @@ if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
   }
 }
 
-const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_HTTPS_PORT}` :
-    env.ASPNETCORE_URLS ? env.ASPNETCORE_URLS.split(';')[0] : 'https://localhost:7289';
+const __APP_INFO__ = {
+  pkg: { dependencies, devDependencies, name, version },
+  lastBuildTime: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
+};
 
-// https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [
-    vue(),
-    VueDevTools(),
-    vuetify({ autoImport: true }),
-  ],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
-  },
-  server: {
-    proxy: {
-      '^/api': {
-        target,
-        secure: false
+function pathResolve(dir: string) {
+  return resolve(process.cwd(), '.', dir);
+}
+
+export default ({ command, mode }: ConfigEnv): UserConfig => {
+  const root = process.cwd();
+  const env = loadEnv(mode, root);
+  const viteEnv = wrapperEnv(env);
+  const { VITE_PUBLIC_PATH, VITE_PORT, VITE_PROXY } = viteEnv;
+  const isBuild = command === 'build';
+  return {
+    base: VITE_PUBLIC_PATH,
+    esbuild: {},
+    resolve: {
+      alias: [
+        {
+          find: /\/#\//,
+          replacement: pathResolve('types') + '/',
+        },
+        {
+          find: '@',
+          replacement: pathResolve('src') + '/',
+        },
+      ],
+      dedupe: ['vue'],
+    },
+    plugins: createVitePlugins(viteEnv, isBuild),
+    define: {
+      __APP_ENV__: JSON.stringify(env.APP_ENV),
+      __APP_INFO__: JSON.stringify(__APP_INFO__),
+      __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: false,
+    },
+    server: {
+      proxy: {
+        '^/api': {
+          target,
+          secure: false
+        }
+      },
+      port: 5173,
+      https: {
+        key: fs.readFileSync(keyFilePath),
+        cert: fs.readFileSync(certFilePath),
       }
     },
-    port: 5173,
-    https: {
-      key: fs.readFileSync(keyFilePath),
-      cert: fs.readFileSync(certFilePath),
-    }
-  },
-  optimizeDeps: {
-    include: [
-      `monaco-editor/esm/vs/language/json/json.worker`,
-      `monaco-editor/esm/vs/language/css/css.worker`,
-      `monaco-editor/esm/vs/language/html/html.worker`,
-      `monaco-editor/esm/vs/language/typescript/ts.worker`,
-      `monaco-editor/esm/vs/editor/editor.worker`
-    ],
-  },
-})
+    optimizeDeps: {
+      include: [],
+      exclude: ['vue-demi'],
+    },
+    build: {
+      target: 'es2015',
+      cssTarget: 'chrome80',
+      outDir: OUTPUT_DIR,
+      reportCompressedSize: false,
+      chunkSizeWarningLimit: 2000,
+    },
+  };
+};
