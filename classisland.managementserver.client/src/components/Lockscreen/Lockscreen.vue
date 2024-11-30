@@ -159,7 +159,7 @@
         onLockLogin(false);
         useScreenLock.setLock(false);
         router.replace({
-          path: '/login',
+          path: '/auth/login',
           query: {
             redirect: route.fullPath,
           },

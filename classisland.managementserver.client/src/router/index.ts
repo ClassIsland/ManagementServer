@@ -33,7 +33,7 @@ export const AuthRoute: RouteRecordRaw = {
   name: '',
   children: [
     {
-      path: 'login',
+      path: '/auth/login',
       name: 'Login',
       component: () => import('@/views/auth/login/index.vue'),
       meta: {

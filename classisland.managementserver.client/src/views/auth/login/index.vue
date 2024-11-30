@@ -17,7 +17,7 @@
           :rules="rules"
         >
           <n-form-item path="username">
-            <n-input v-model:value="formInline.username" placeholder="请输入用户名">
+            <n-input v-model:value="formInline.username" id="username" placeholder="电子邮箱">
               <template #prefix>
                 <n-icon size="18" color="#808695">
                   <PersonOutline />
@@ -30,7 +30,9 @@
               v-model:value="formInline.password"
               type="password"
               showPasswordOn="click"
-              placeholder="请输入密码"
+              id="password"
+              :onkeydown="onKeyDown"
+              placeholder="密码"
             >
               <template #prefix>
                 <n-icon size="18" color="#808695">
@@ -50,7 +52,7 @@
             </div>
           </n-form-item>
           <n-form-item>
-            <n-button type="primary" @click="handleSubmit" size="large" :loading="loading" block>
+            <n-button type="primary" attr-type="submit" @click="handleSubmit" size="large" :loading="loading" block>
               登录
             </n-button>
           </n-form-item>
@@ -115,7 +117,7 @@
   });
 
   const rules = {
-    username: { required: true, message: '请输入用户名', trigger: 'blur' },
+    username: { required: true, message: '请输入用电子邮箱', trigger: 'blur' },
     password: { required: true, message: '请输入密码', trigger: 'blur' },
   };
 
@@ -144,8 +146,8 @@
           const toPath = decodeURIComponent((route.query?.redirect || '/') as string);
           message.success('登录成功，即将进入系统');
           if (route.name === LOGIN_NAME) {
-            router.replace('/');
-          } else router.replace(toPath);
+            router.push('/');
+          } else router.push(toPath);
         } catch (e) {
           console.log(e)
           message.error("登陆失败：" + e.message)
@@ -158,6 +160,12 @@
       }
     });
   };
+  
+  function onKeyDown(e) {
+    if (e.code == "Enter"){
+      handleSubmit(e);
+    }
+  }
 </script>
 
 <style lang="less" scoped>

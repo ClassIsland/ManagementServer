@@ -33,7 +33,5 @@ export function changePassword(params, uid) {
  * @description: 用户登出
  */
 export function logout(params) {
-  return Alova.Post('/login/logout', {
-    params,
-  });
+  
 }
