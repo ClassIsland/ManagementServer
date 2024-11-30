@@ -1,5 +1,10 @@
+using System.Text;
+using System.Text.Json;
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
+using ClassIsland.Shared.Enums;
+using ClassIsland.Shared.Models.Management;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClassIsland.ManagementServer.Server.Controllers;
@@ -9,7 +14,7 @@ namespace ClassIsland.ManagementServer.Server.Controllers;
 public class ClientRegistryController(ManagementServerContext context) : ControllerBase
 {
     private ManagementServerContext DataContext { get; } = context;
-    
+
     /// <summary>
     /// 列举已经注册的实例。
     /// </summary>
@@ -17,9 +22,9 @@ public class ClientRegistryController(ManagementServerContext context) : Control
     /// 返回已经注册的实例列表
     /// </returns>
     [HttpGet("list")]
-    public IActionResult List()
+    public async Task<IActionResult> List([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 20)
     {
-        return Ok(DataContext.Clients.ToList());
+        return Ok(await PaginatedList<Client>.CreateAsync(DataContext.Clients.Select(x => x), pageIndex, pageSize));
     }
     
     [HttpPost("register")]
@@ -63,5 +68,20 @@ public class ClientRegistryController(ManagementServerContext context) : Control
             return BadRequest("实例还没有注册。");
         }
         return Ok(c);
+    }
+
+    [AllowAnonymous]
+    [HttpGet("client_configure")]
+    public IActionResult DownloadClientConfigure()
+    {
+        // TODO: 返回真实服务器地址
+        var json = JsonSerializer.Serialize(new ManagementSettings()
+        {
+            ManagementServer = "http://localhost:5090",
+            ManagementServerGrpc = "http://localhost:5091",
+            ManagementServerKind = ManagementServerKind.ManagementServer
+        });
+        var bytes = Encoding.UTF8.GetBytes(json);
+        return File(bytes, "application/json", "ManagementPreset.json");
     }
 }

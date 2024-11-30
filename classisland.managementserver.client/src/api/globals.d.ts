@@ -298,7 +298,7 @@ export type Profile = {
 };
 declare global {
   interface Apis {
-    AppSettings: {
+    appsettings: {
       /**
        * ---
        *
@@ -315,7 +315,7 @@ declare global {
        */
       get_api_v1_default_settings<Config extends Alova2MethodConfig<unknown>>(
         config?: Config
-      ): Alova2Method<unknown, 'AppSettings.get_api_v1_default_settings', Config>;
+      ): Alova2Method<unknown, 'appsettings.get_api_v1_default_settings', Config>;
       /**
        * ---
        *
@@ -348,7 +348,7 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'AppSettings.post_api_v1_default_settings', Config>;
+      ): Alova2Method<unknown, 'appsettings.post_api_v1_default_settings', Config>;
       /**
        * ---
        *
@@ -384,7 +384,7 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'AppSettings.get_api_v1_default_settings_id', Config>;
+      ): Alova2Method<unknown, 'appsettings.get_api_v1_default_settings_id', Config>;
       /**
        * ---
        *
@@ -433,7 +433,7 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'AppSettings.post_api_v1_default_settings_id', Config>;
+      ): Alova2Method<unknown, 'appsettings.post_api_v1_default_settings_id', Config>;
       /**
        * ---
        *
@@ -469,9 +469,9 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'AppSettings.delete_api_v1_default_settings_id', Config>;
+      ): Alova2Method<unknown, 'appsettings.delete_api_v1_default_settings_id', Config>;
     };
-    Assignees: {
+    assignees: {
       /**
        * ---
        *
@@ -507,7 +507,7 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'Assignees.get_api_v1_assignees_id', Config>;
+      ): Alova2Method<unknown, 'assignees.get_api_v1_assignees_id', Config>;
       /**
        * ---
        *
@@ -586,7 +586,7 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'Assignees.post_api_v1_assignees_id', Config>;
+      ): Alova2Method<unknown, 'assignees.post_api_v1_assignees_id', Config>;
       /**
        * ---
        *
@@ -622,7 +622,7 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'Assignees.delete_api_v1_assignees_id', Config>;
+      ): Alova2Method<unknown, 'assignees.delete_api_v1_assignees_id', Config>;
       /**
        * ---
        *
@@ -685,9 +685,9 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'Assignees.post_api_v1_assignees', Config>;
+      ): Alova2Method<unknown, 'assignees.post_api_v1_assignees', Config>;
     };
-    classislandManagementserverServer: {
+    identity: {
       /**
        * ---
        *
@@ -718,7 +718,7 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'classislandManagementserverServer.post_api_v1_identity_register', Config>;
+      ): Alova2Method<unknown, 'identity.post_api_v1_identity_register', Config>;
       /**
        * ---
        *
@@ -770,7 +770,7 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<AccessTokenResponse, 'classislandManagementserverServer.post_api_v1_identity_login', Config>;
+      ): Alova2Method<AccessTokenResponse, 'identity.post_api_v1_identity_login', Config>;
       /**
        * ---
        *
@@ -805,7 +805,7 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<AccessTokenResponse, 'classislandManagementserverServer.post_api_v1_identity_refresh', Config>;
+      ): Alova2Method<AccessTokenResponse, 'identity.post_api_v1_identity_refresh', Config>;
       /**
        * ---
        *
@@ -841,7 +841,7 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'classislandManagementserverServer.mapidentityapiApiV1IdentityConfirmemail', Config>;
+      ): Alova2Method<unknown, 'identity.mapidentityapiApiV1IdentityConfirmemail', Config>;
       /**
        * ---
        *
@@ -871,11 +871,7 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<
-        unknown,
-        'classislandManagementserverServer.post_api_v1_identity_resendconfirmationemail',
-        Config
-      >;
+      ): Alova2Method<unknown, 'identity.post_api_v1_identity_resendconfirmationemail', Config>;
       /**
        * ---
        *
@@ -905,7 +901,7 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'classislandManagementserverServer.post_api_v1_identity_forgotpassword', Config>;
+      ): Alova2Method<unknown, 'identity.post_api_v1_identity_forgotpassword', Config>;
       /**
        * ---
        *
@@ -937,7 +933,7 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'classislandManagementserverServer.post_api_v1_identity_resetpassword', Config>;
+      ): Alova2Method<unknown, 'identity.post_api_v1_identity_resetpassword', Config>;
       /**
        * ---
        *
@@ -977,7 +973,7 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<TwoFactorResponse, 'classislandManagementserverServer.post_api_v1_identity_manage_2fa', Config>;
+      ): Alova2Method<TwoFactorResponse, 'identity.post_api_v1_identity_manage_2fa', Config>;
       /**
        * ---
        *
@@ -997,7 +993,7 @@ declare global {
        */
       get_api_v1_identity_manage_info<Config extends Alova2MethodConfig<InfoResponse>>(
         config?: Config
-      ): Alova2Method<InfoResponse, 'classislandManagementserverServer.get_api_v1_identity_manage_info', Config>;
+      ): Alova2Method<InfoResponse, 'identity.get_api_v1_identity_manage_info', Config>;
       /**
        * ---
        *
@@ -1032,9 +1028,9 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<InfoResponse, 'classislandManagementserverServer.post_api_v1_identity_manage_info', Config>;
+      ): Alova2Method<InfoResponse, 'identity.post_api_v1_identity_manage_info', Config>;
     };
-    ClientCommandDeliver: {
+    clientcommanddeliver: {
       /**
        * ---
        *
@@ -1113,7 +1109,7 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'ClientCommandDeliver.post_api_v1_client_commands_show_notification', Config>;
+      ): Alova2Method<unknown, 'clientcommanddeliver.post_api_v1_client_commands_show_notification', Config>;
       /**
        * ---
        *
@@ -1179,9 +1175,9 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'ClientCommandDeliver.post_api_v1_client_commands_restart_app', Config>;
+      ): Alova2Method<unknown, 'clientcommanddeliver.post_api_v1_client_commands_restart_app', Config>;
     };
-    ClientRegistry: {
+    clientregistry: {
       /**
        * ---
        *
@@ -1191,14 +1187,31 @@ declare global {
        *
        * ---
        *
+       * **Query Parameters**
+       * ```ts
+       * type QueryParameters = {
+       *   pageIndex?: number
+       *   pageSize?: number
+       * }
+       * ```
+       *
+       * ---
+       *
        * **Response**
        * ```ts
        * type Response = unknown
        * ```
        */
-      get_api_v1_clients_registry_list<Config extends Alova2MethodConfig<unknown>>(
-        config?: Config
-      ): Alova2Method<unknown, 'ClientRegistry.get_api_v1_clients_registry_list', Config>;
+      get_api_v1_clients_registry_list<
+        Config extends Alova2MethodConfig<unknown> & {
+          params: {
+            pageIndex?: number;
+            pageSize?: number;
+          };
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'clientregistry.get_api_v1_clients_registry_list', Config>;
       /**
        * ---
        *
@@ -1232,7 +1245,7 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'ClientRegistry.post_api_v1_clients_registry_register', Config>;
+      ): Alova2Method<unknown, 'clientregistry.post_api_v1_clients_registry_register', Config>;
       /**
        * ---
        *
@@ -1359,7 +1372,7 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'ClientRegistry.delete_api_v1_clients_registry_unregister', Config>;
+      ): Alova2Method<unknown, 'clientregistry.delete_api_v1_clients_registry_unregister', Config>;
       /**
        * ---
        *
@@ -1395,9 +1408,26 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'ClientRegistry.get_api_v1_clients_registry_query_cuid', Config>;
+      ): Alova2Method<unknown, 'clientregistry.get_api_v1_clients_registry_query_cuid', Config>;
+      /**
+       * ---
+       *
+       * [GET]
+       *
+       * **path:** /api/v1/clients_registry/client_configure
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      get_api_v1_clients_registry_client_configure<Config extends Alova2MethodConfig<unknown>>(
+        config?: Config
+      ): Alova2Method<unknown, 'clientregistry.get_api_v1_clients_registry_client_configure', Config>;
     };
-    Manifest: {
+    manifest: {
       /**
        * ---
        *
@@ -1433,9 +1463,9 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'Manifest.get_api_v1_client_cuid_manifest', Config>;
+      ): Alova2Method<unknown, 'manifest.get_api_v1_client_cuid_manifest', Config>;
     };
-    ObjectsDelivery: {
+    objectsdelivery: {
       /**
        * ---
        *
@@ -1471,7 +1501,7 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'ObjectsDelivery.get_api_v1_client_cuid_subjects', Config>;
+      ): Alova2Method<unknown, 'objectsdelivery.get_api_v1_client_cuid_subjects', Config>;
       /**
        * ---
        *
@@ -1507,7 +1537,7 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'ObjectsDelivery.get_api_v1_client_cuid_timelayouts', Config>;
+      ): Alova2Method<unknown, 'objectsdelivery.get_api_v1_client_cuid_timelayouts', Config>;
       /**
        * ---
        *
@@ -1543,7 +1573,7 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'ObjectsDelivery.get_api_v1_client_cuid_classplans', Config>;
+      ): Alova2Method<unknown, 'objectsdelivery.get_api_v1_client_cuid_classplans', Config>;
       /**
        * ---
        *
@@ -1579,7 +1609,7 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'ObjectsDelivery.get_api_v1_client_cuid_policy', Config>;
+      ): Alova2Method<unknown, 'objectsdelivery.get_api_v1_client_cuid_policy', Config>;
       /**
        * ---
        *
@@ -1615,9 +1645,9 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'ObjectsDelivery.get_api_v1_client_cuid_default_settings', Config>;
+      ): Alova2Method<unknown, 'objectsdelivery.get_api_v1_client_cuid_default_settings', Config>;
     };
-    Policies: {
+    policies: {
       /**
        * ---
        *
@@ -1634,7 +1664,7 @@ declare global {
        */
       get_api_v1_policies<Config extends Alova2MethodConfig<unknown>>(
         config?: Config
-      ): Alova2Method<unknown, 'Policies.get_api_v1_policies', Config>;
+      ): Alova2Method<unknown, 'policies.get_api_v1_policies', Config>;
       /**
        * ---
        *
@@ -1677,7 +1707,7 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'Policies.post_api_v1_policies', Config>;
+      ): Alova2Method<unknown, 'policies.post_api_v1_policies', Config>;
       /**
        * ---
        *
@@ -1713,7 +1743,7 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'Policies.get_api_v1_policies_id', Config>;
+      ): Alova2Method<unknown, 'policies.get_api_v1_policies_id', Config>;
       /**
        * ---
        *
@@ -1772,7 +1802,7 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'Policies.post_api_v1_policies_id', Config>;
+      ): Alova2Method<unknown, 'policies.post_api_v1_policies_id', Config>;
       /**
        * ---
        *
@@ -1808,9 +1838,9 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'Policies.delete_api_v1_policies_id', Config>;
+      ): Alova2Method<unknown, 'policies.delete_api_v1_policies_id', Config>;
     };
-    Profiles: {
+    profiles: {
       /**
        * ---
        *
@@ -1921,7 +1951,45 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'Profiles.post_api_v1_profiles_upload', Config>;
+      ): Alova2Method<unknown, 'profiles.post_api_v1_profiles_upload', Config>;
+    };
+    usersinfo: {
+      /**
+       * ---
+       *
+       * [GET]
+       *
+       * **path:** /api/v1/users/info/{id}
+       *
+       * ---
+       *
+       * **Path Parameters**
+       * ```ts
+       * type PathParameters = {
+       *   // [required]
+       *   id: string
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      get_api_v1_users_info_id<
+        Config extends Alova2MethodConfig<unknown> & {
+          pathParams: {
+            /**
+             * [required]
+             */
+            id: string;
+          };
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'usersinfo.get_api_v1_users_info_id', Config>;
     };
   }
 

@@ -2,6 +2,7 @@ using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Models.Identity;
 using ClassIsland.ManagementServer.Server.Services;
 using ClassIsland.ManagementServer.Server.Services.Grpc;
+using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -10,12 +11,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddGrpc();
-builder.Services.AddAuthorization();
 builder.Services.AddDbContext<ManagementServerContext>(options =>
 {
     options.UseMySql(
@@ -28,6 +23,14 @@ builder.Services.AddDbContext<ManagementServerContext>(options =>
             ),ServerVersion.Parse("8.0.0-mysql"));
     // options.EnableSensitiveDataLogging();
 });
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication();
+
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddGrpc();
 builder.Services.AddScoped<ObjectsUpdateNotifyService>();
 builder.Services.AddScoped<ObjectsAssigneeService>();
 builder.Services.AddScoped<ProfileEntitiesService>();
@@ -36,23 +39,13 @@ builder.WebHost.ConfigureKestrel((context, options) =>
 {
     
 });
-builder.Services.AddAuthorization();
 builder.Services.AddIdentityApiEndpoints<User>()
     .AddEntityFrameworkStores<ManagementServerContext>()
     .AddDefaultTokenProviders();
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options => {
-        options.LoginPath = "/auth/login";
-        options.LogoutPath = "/auth/logout";
-        options.AccessDeniedPath = "/auth/access-denied";
-
-        options.Cookie.HttpOnly = true;
-        options.Cookie.SameSite = SameSiteMode.Lax;
-        options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
-    });
 
 var app = builder.Build();
 
+app.UseAuthorization();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
@@ -64,8 +57,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-app.UseAuthorization();
 
 app.MapControllers();
 app.MapGrpcService<ClientRegisterService>();

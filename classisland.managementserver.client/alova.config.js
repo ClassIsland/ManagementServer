@@ -49,10 +49,11 @@ export default {
       handleApi: apiDescriptor => {
 
         // 返回falsy值表示过滤此api
-        if (!apiDescriptor.path.startsWith('/api/v1/identity')) {
+        if (apiDescriptor.url.startsWith('/api/v1/identity')) {
           apiDescriptor.tags[0] = "Identity"
         }
         apiDescriptor.tags[0] = apiDescriptor.tags[0].toLowerCase()
+        console.log(apiDescriptor)
         return apiDescriptor;
       }
     }
