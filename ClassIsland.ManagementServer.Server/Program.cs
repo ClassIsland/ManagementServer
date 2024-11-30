@@ -1,4 +1,5 @@
 using ClassIsland.ManagementServer.Server.Context;
+using ClassIsland.ManagementServer.Server.Models.Identity;
 using ClassIsland.ManagementServer.Server.Services;
 using ClassIsland.ManagementServer.Server.Services.Grpc;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -14,6 +15,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddGrpc();
+builder.Services.AddAuthorization();
 builder.Services.AddDbContext<ManagementServerContext>(options =>
 {
     options.UseMySql(
@@ -35,7 +37,7 @@ builder.WebHost.ConfigureKestrel((context, options) =>
     
 });
 builder.Services.AddAuthorization();
-builder.Services.AddIdentityApiEndpoints<IdentityUser>()
+builder.Services.AddIdentityApiEndpoints<User>()
     .AddEntityFrameworkStores<ManagementServerContext>()
     .AddDefaultTokenProviders();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -69,7 +71,7 @@ app.MapControllers();
 app.MapGrpcService<ClientRegisterService>();
 app.MapGrpcService<ClientCommandDeliverFrontedService>();
 app.MapGroup("/api/v1/identity")
-    .MapIdentityApi<IdentityUser>();
+    .MapIdentityApi<User>();
 
 app.MapFallbackToFile("/index.html");
 

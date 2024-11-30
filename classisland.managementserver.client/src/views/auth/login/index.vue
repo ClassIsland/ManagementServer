@@ -109,8 +109,8 @@
   const LOGIN_NAME = PageEnum.BASE_LOGIN_NAME;
 
   const formInline = reactive({
-    username: 'admin',
-    password: '123456',
+    username: '',
+    password: '',
     isCaptcha: true,
   });
 
@@ -139,16 +139,19 @@
 
         try {
           const result = await Apis.classislandManagementserverServer.post_api_v1_identity_login({
-            params: {},
+            params: {
+              
+            },
             data: {
               email: params.username,
               password: params.password,
             }
           })
-          // const { code, message: msg } = await userStore.login(params);
           message.destroyAll();
+          console.log(result);
           userStore.token = result.accessToken ?? "";
           store[ACCESS_TOKEN] = result.accessToken ?? "";
+          console.log(store[ACCESS_TOKEN]);
           const toPath = decodeURIComponent((route.query?.redirect || '/') as string);
           message.success('登录成功，即将进入系统');
           if (route.name === LOGIN_NAME) {

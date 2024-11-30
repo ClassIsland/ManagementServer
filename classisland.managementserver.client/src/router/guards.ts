@@ -28,8 +28,8 @@ export function createRouterGuards(router: Router) {
       return;
     }
 
-    const token = storage.get(ACCESS_TOKEN);
-
+    // const token = storage.get(ACCESS_TOKEN);
+    const token = userStore.token;
     if (!token) {
       // You can access without permissions. You need to set the routing meta.ignoreAuth to true
       if (to.meta.ignoreAuth) {
@@ -56,9 +56,10 @@ export function createRouterGuards(router: Router) {
       return;
     }
 
-    const userInfo = await userStore.getInfo();
+    // TODO: 根据用户信息自动生成 router
+    // const userInfo = await userStore.getInfo();
 
-    const routes = await asyncRouteStore.generateRoutes(userInfo);
+    const routes = await asyncRouteStore.generateRoutes({});
 
     // 动态添加可访问路由表
     routes.forEach((item) => {
