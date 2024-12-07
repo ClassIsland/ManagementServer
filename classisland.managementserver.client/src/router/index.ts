@@ -31,6 +31,7 @@ export const RootRoute: RouteRecordRaw = {
 export const AuthRoute: RouteRecordRaw = {
   path: '/auth',
   name: '',
+  component: () => import('@/views/auth/AuthViewBase.vue'),
   children: [
     {
       path: '/auth/login',

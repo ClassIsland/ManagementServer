@@ -1,9 +1,8 @@
-import logoImage from '@/assets/images/logo.png';
-import loginImage from '@/assets/images/account-logo.png';
+import logoImage from '@/assets/icons/logo.svg';
 
 export const websiteConfig = Object.freeze({
-  title: 'NaiveUiAdmin',
+  title: 'ClassIsland 集控控制台',
   logo: logoImage,
-  loginImage: loginImage,
-  loginDesc: 'Naive Ui Admin中后台前端/设计解决方案',
+  loginImage: logoImage,
+  loginDesc: '欢迎使用 ClassIsland 集控控制台。',
 });
