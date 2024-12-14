@@ -2,6 +2,7 @@ using System.Text;
 using System.Text.Json;
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
+using ClassIsland.ManagementServer.Server.Extensions;
 using ClassIsland.Shared.Enums;
 using ClassIsland.Shared.Models.Management;
 using Microsoft.AspNetCore.Authorization;
@@ -24,7 +25,7 @@ public class ClientRegistryController(ManagementServerContext context) : Control
     [HttpGet("list")]
     public async Task<IActionResult> List([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 20)
     {
-        return Ok(await PaginatedList<Client>.CreateAsync(DataContext.Clients.Select(x => x), pageIndex, pageSize));
+        return Ok(await DataContext.Clients.Select(x => x).ToPaginatedListAsync(pageIndex, pageSize));
     }
     
     [HttpPost("register")]

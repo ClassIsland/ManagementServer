@@ -57,5 +57,9 @@ export default {
   'policies.post_api_v1_policies_id': ['POST', '/api/v1/policies/{id}'],
   'policies.delete_api_v1_policies_id': ['DELETE', '/api/v1/policies/{id}'],
   'profiles.post_api_v1_profiles_upload': ['POST', '/api/v1/profiles/upload'],
+  'subjects.get_api_v1_profiles_subjects': ['GET', '/api/v1/profiles/subjects'],
+  'subjects.put_api_v1_profiles_subjects': ['PUT', '/api/v1/profiles/subjects'],
+  'subjects.put_api_v1_profiles_subjects_id': ['PUT', '/api/v1/profiles/subjects/{id}'],
+  'subjects.delete_api_v1_profiles_subjects_id': ['DELETE', '/api/v1/profiles/subjects/{id}'],
   'usersinfo.get_api_v1_users_info_id': ['GET', '/api/v1/users/info/{id}']
 };

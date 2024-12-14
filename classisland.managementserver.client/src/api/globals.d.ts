@@ -296,6 +296,76 @@ export type Profile = {
   isTempClassPlanGroupEnabled?: boolean;
   tempClassPlanGroupType?: TempClassPlanGroupType;
 };
+export type TimeOnly = {
+  hour?: number;
+  minute?: number;
+  second?: number;
+  millisecond?: number;
+  microsecond?: number;
+  nanosecond?: number;
+  ticks?: number;
+};
+export type ProfileTimeLayoutTimePoint = {
+  internalId?: number;
+  parentId?: string;
+  index?: number;
+  start?: TimeOnly;
+  end?: TimeOnly;
+  timeType?: number;
+  defaultSubjectId?: string;
+  isHideDefault?: boolean;
+  parent?: ProfileTimeLayout;
+  attachedObjects?: Record<string, unknown>;
+};
+export type ProfileTimeLayout = {
+  id?: string;
+  name?: string;
+  groupId?: string;
+  group?: ProfileGroup;
+  profileClassPlans?: ProfileClassplan[];
+  profileTimelayoutTimepoints?: ProfileTimeLayoutTimePoint[];
+  attachedObjects?: Record<string, unknown>;
+};
+export type ProfileClassPlanClass = {
+  internalId?: number;
+  index?: number;
+  parentId?: string;
+  subjectId?: string;
+  parent?: ProfileClassplan;
+  subject?: ProfileSubject;
+  attachedObjects?: Record<string, unknown>;
+};
+export type ProfileClassplan = {
+  id?: string;
+  name?: string;
+  groupId?: string;
+  weekDay?: number;
+  weekDiv?: number;
+  timeLayoutId?: string;
+  isEnabled?: boolean;
+  group?: ProfileGroup;
+  profileClassPlanClasses?: ProfileClassPlanClass[];
+  timeLayout?: ProfileTimeLayout;
+  attachedObjects?: Record<string, unknown>;
+};
+export type ProfileGroup = {
+  id?: string;
+  name?: string;
+  description?: string;
+  profileClassplans?: ProfileClassplan[];
+  profileSubjects?: ProfileSubject[];
+  profileTimelayouts?: ProfileTimeLayout[];
+};
+export type ProfileSubject = {
+  id?: string;
+  groupId?: string;
+  name?: string;
+  initials?: string;
+  isOutDoor?: boolean;
+  group?: ProfileGroup;
+  profileClassplanClasses?: ProfileClassPlanClass[];
+  attachedObjects?: Record<string, unknown>;
+};
 declare global {
   interface Apis {
     appsettings: {
@@ -1952,6 +2022,276 @@ declare global {
       >(
         config: Config
       ): Alova2Method<unknown, 'profiles.post_api_v1_profiles_upload', Config>;
+    };
+    subjects: {
+      /**
+       * ---
+       *
+       * [GET]
+       *
+       * **path:** /api/v1/profiles/subjects
+       *
+       * ---
+       *
+       * **Query Parameters**
+       * ```ts
+       * type QueryParameters = {
+       *   pageIndex?: number
+       *   pageSize?: number
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      get_api_v1_profiles_subjects<
+        Config extends Alova2MethodConfig<unknown> & {
+          params: {
+            pageIndex?: number;
+            pageSize?: number;
+          };
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'subjects.get_api_v1_profiles_subjects', Config>;
+      /**
+       * ---
+       *
+       * [PUT]
+       *
+       * **path:** /api/v1/profiles/subjects
+       *
+       * ---
+       *
+       * **RequestBody**
+       * ```ts
+       * type RequestBody = {
+       *   id?: string
+       *   groupId?: string
+       *   name?: string
+       *   initials?: string
+       *   isOutDoor?: boolean
+       *   group?: {
+       *     id?: string
+       *     name?: string
+       *     description?: string
+       *     profileClassplans?: Array<{
+       *       id?: string
+       *       name?: string
+       *       groupId?: string
+       *       weekDay?: number
+       *       weekDiv?: number
+       *       timeLayoutId?: string
+       *       isEnabled?: boolean
+       *       group?: ProfileGroup
+       *       profileClassPlanClasses?: Array<{
+       *         internalId?: number
+       *         index?: number
+       *         parentId?: string
+       *         subjectId?: string
+       *         parent?: ProfileClassplan
+       *         subject?: ProfileSubject
+       *         attachedObjects?: Record<string, unknown>
+       *       }>
+       *       timeLayout?: {
+       *         id?: string
+       *         name?: string
+       *         groupId?: string
+       *         group?: ProfileGroup
+       *         profileClassPlans?: Array<ProfileClassplan>
+       *         profileTimelayoutTimepoints?: Array<{
+       *           internalId?: number
+       *           parentId?: string
+       *           index?: number
+       *           start?: {
+       *             hour?: number
+       *             minute?: number
+       *             second?: number
+       *             millisecond?: number
+       *             microsecond?: number
+       *             nanosecond?: number
+       *             ticks?: number
+       *           }
+       *           end?: TimeOnly
+       *           timeType?: number
+       *           defaultSubjectId?: string
+       *           isHideDefault?: boolean
+       *           parent?: ProfileTimeLayout
+       *           attachedObjects?: Record<string, unknown>
+       *         }>
+       *         attachedObjects?: Record<string, unknown>
+       *       }
+       *       attachedObjects?: Record<string, unknown>
+       *     }>
+       *     profileSubjects?: Array<ProfileSubject>
+       *     profileTimelayouts?: Array<ProfileTimeLayout>
+       *   }
+       *   profileClassplanClasses?: Array<ProfileClassPlanClass>
+       *   attachedObjects?: Record<string, unknown>
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      put_api_v1_profiles_subjects<
+        Config extends Alova2MethodConfig<unknown> & {
+          data: ProfileSubject;
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'subjects.put_api_v1_profiles_subjects', Config>;
+      /**
+       * ---
+       *
+       * [PUT]
+       *
+       * **path:** /api/v1/profiles/subjects/{id}
+       *
+       * ---
+       *
+       * **Path Parameters**
+       * ```ts
+       * type PathParameters = {
+       *   // [required]
+       *   id: string
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **RequestBody**
+       * ```ts
+       * type RequestBody = {
+       *   id?: string
+       *   groupId?: string
+       *   name?: string
+       *   initials?: string
+       *   isOutDoor?: boolean
+       *   group?: {
+       *     id?: string
+       *     name?: string
+       *     description?: string
+       *     profileClassplans?: Array<{
+       *       id?: string
+       *       name?: string
+       *       groupId?: string
+       *       weekDay?: number
+       *       weekDiv?: number
+       *       timeLayoutId?: string
+       *       isEnabled?: boolean
+       *       group?: ProfileGroup
+       *       profileClassPlanClasses?: Array<{
+       *         internalId?: number
+       *         index?: number
+       *         parentId?: string
+       *         subjectId?: string
+       *         parent?: ProfileClassplan
+       *         subject?: ProfileSubject
+       *         attachedObjects?: Record<string, unknown>
+       *       }>
+       *       timeLayout?: {
+       *         id?: string
+       *         name?: string
+       *         groupId?: string
+       *         group?: ProfileGroup
+       *         profileClassPlans?: Array<ProfileClassplan>
+       *         profileTimelayoutTimepoints?: Array<{
+       *           internalId?: number
+       *           parentId?: string
+       *           index?: number
+       *           start?: {
+       *             hour?: number
+       *             minute?: number
+       *             second?: number
+       *             millisecond?: number
+       *             microsecond?: number
+       *             nanosecond?: number
+       *             ticks?: number
+       *           }
+       *           end?: TimeOnly
+       *           timeType?: number
+       *           defaultSubjectId?: string
+       *           isHideDefault?: boolean
+       *           parent?: ProfileTimeLayout
+       *           attachedObjects?: Record<string, unknown>
+       *         }>
+       *         attachedObjects?: Record<string, unknown>
+       *       }
+       *       attachedObjects?: Record<string, unknown>
+       *     }>
+       *     profileSubjects?: Array<ProfileSubject>
+       *     profileTimelayouts?: Array<ProfileTimeLayout>
+       *   }
+       *   profileClassplanClasses?: Array<ProfileClassPlanClass>
+       *   attachedObjects?: Record<string, unknown>
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      put_api_v1_profiles_subjects_id<
+        Config extends Alova2MethodConfig<unknown> & {
+          pathParams: {
+            /**
+             * [required]
+             */
+            id: string;
+          };
+          data: ProfileSubject;
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'subjects.put_api_v1_profiles_subjects_id', Config>;
+      /**
+       * ---
+       *
+       * [DELETE]
+       *
+       * **path:** /api/v1/profiles/subjects/{id}
+       *
+       * ---
+       *
+       * **Path Parameters**
+       * ```ts
+       * type PathParameters = {
+       *   // [required]
+       *   id: string
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      delete_api_v1_profiles_subjects_id<
+        Config extends Alova2MethodConfig<unknown> & {
+          pathParams: {
+            /**
+             * [required]
+             */
+            id: string;
+          };
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'subjects.delete_api_v1_profiles_subjects_id', Config>;
     };
     usersinfo: {
       /**

@@ -21,7 +21,7 @@ public class PaginatedList<T>(List<T> items, int count, int pageIndex, int pageS
     {
         if (pageIndex <= 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(pageIndex), "Page index should more than 0");
+            throw new ArgumentOutOfRangeException(nameof(pageIndex), "Page index should larger than 0");
         }
         var count = await source.CountAsync();
         var items = await source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
