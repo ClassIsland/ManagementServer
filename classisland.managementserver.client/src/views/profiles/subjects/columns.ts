@@ -1,9 +1,9 @@
 import { h } from 'vue';
 import { NAvatar, NTag } from 'naive-ui';
 import { BasicColumn } from '@/components/Table';
-import {Client} from "@/api/globals";
+import {Client, Subject} from "@/api/globals";
 
-export const columns: BasicColumn<Client>[] = [
+export const columns: BasicColumn<Subject>[] = [
   {
     title: '名称',
     key: 'name',
@@ -14,6 +14,9 @@ export const columns: BasicColumn<Client>[] = [
   },
   {
     title: '户外课程？',
-    key: 'isOutDoor'
+    key: 'isOutDoor',
+    render: (record) => {
+      return h(NTag, { type: record.isOutDoor ? 'success' : 'default' }, { default: () => record.isOutDoor ? '是' : '否' });
+    }
   }
 ];

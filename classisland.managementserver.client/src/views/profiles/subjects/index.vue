@@ -9,9 +9,33 @@
       ref="actionRef"
       :actionColumn="actionColumn"
       :scroll-x="1360"
-      @update:checked-row-keys="onCheckedRow"
-    />
+      @update:checked-row-keys="onCheckedRow">
+      <template v-slot:toolbar>
+        <n-button type="primary" @click="handleAdd">添加科目</n-button>
+      </template>
+    </BasicTable>
   </n-card>
+
+  <n-drawer v-model:show="isEditingDrawerVisible" :width="320" placement="right">
+    <n-drawer-content title="编辑科目">
+      <n-form v-model="editingFormRef">
+        <n-form-item label="科目名称" path="name">
+          <n-input v-model:value="editingFormRef.name"/>
+        </n-form-item>
+        <n-form-item label="科目简称" path="initials">
+          <n-input v-model:value="editingFormRef.initials"/>
+        </n-form-item>
+        <n-form-item :show-label="false" path="isOutDoor">
+          <n-checkbox label="该科目是户外课程" v-model:checked="editingFormRef.isOutDoor"/>
+        </n-form-item>
+        <n-form-item :show-label="false">
+          <n-button type="primary" attr-type="submit" @click="saveEntry" :loading="isSaving">
+            保存
+          </n-button>
+        </n-form-item>
+      </n-form>
+    </n-drawer-content>
+  </n-drawer>
 </template>
 
 <script lang="ts" setup>
@@ -21,10 +45,16 @@ import { BasicTable, TableAction } from '@/components/Table';
 import { getTableList } from '@/api/table/list';
 import { useDialog, useMessage } from 'naive-ui';
 import { DeleteOutlined, EditOutlined } from '@vicons/antd';
+import {Subject} from "@/api/globals";
+import { Guid } from 'guid-typescript';
 
 const message = useMessage();
 const dialog = useDialog();
 const actionRef = ref();
+const editingFormRef = ref<Subject | null>(null);
+const isEditingDrawerVisible = ref(false);
+const isSaving = ref(false);
+const isAdding = ref(false);
 
 const params = reactive({
   pageSize: 5,
@@ -44,6 +74,31 @@ const actionColumn = reactive({
     });
   },
 });
+
+async function saveEntry(e: MouseEvent) {
+  e.preventDefault();
+  console.log("saving");
+  if (editingFormRef?.value == null){
+    return;
+  }
+  isSaving.value = true;
+  if (isAdding.value) {
+    await Apis.subjects.put_api_v1_profiles_subjects({
+      data: editingFormRef.value
+    });
+  } else {
+    await Apis.subjects.put_api_v1_profiles_subjects_id({
+      pathParams: {
+        id: editingFormRef.value?.id,
+      },
+      data: editingFormRef.value
+    });
+  }
+  isEditingDrawerVisible.value = false;
+  isSaving.value = false;
+  actionRef.value.reload();
+  message.success("保存成功");
+}
 
 function createActions(record) {
   return [
@@ -81,16 +136,17 @@ function handleDelete(record) {
   console.log(record);
   dialog.info({
     title: '提示',
-    content: `您想删除${record.name}`,
+    content: `您想删除科目 ${record.name} 吗？`,
     positiveText: '确定',
     negativeText: '取消',
     onPositiveClick: async () => {
-      const response = Apis.subjects.delete_api_v1_profiles_subjects_id({
+      await Apis.subjects.delete_api_v1_profiles_subjects_id({
         pathParams: {
           id: record.id
         }
-      })
+      });
       message.success('删除成功');
+      actionRef.value.reload();
     },
     onNegativeClick: () => {},
   });
@@ -98,11 +154,23 @@ function handleDelete(record) {
 
 function handleEdit(record) {
   console.log(record);
-  message.success('您点击了编辑按钮');
+  isAdding.value = false;
+  editingFormRef.value = { ... record } as Subject;
+  isEditingDrawerVisible.value = true;
 }
 
-function addClient() {
-  window.open("/api/v1/clients_registry/client_configure")
+function handleAdd() {
+  editingFormRef.value = {
+    id: Guid.create().toString(),
+    groupId: null,
+    name: '',
+    initials: '',
+    isOutDoor: false,
+    attachedObjects: {}
+  } as Subject;
+  isEditingDrawerVisible.value = true;
+  isAdding.value = true;
+  
 }
 </script>
 

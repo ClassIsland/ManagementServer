@@ -36,6 +36,7 @@
     "dayjs": "^1.11.13",
     "echarts": "^5.5.1",
     "element-resize-detector": "^1.2.4",
+    "guid-typescript": "^1.0.9",
     "lodash-es": "^4.17.21",
     "mockjs": "^1.1.0",
     "naive-ui": "^2.39.0",

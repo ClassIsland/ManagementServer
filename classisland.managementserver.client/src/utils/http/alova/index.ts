@@ -16,19 +16,7 @@ export const Alova = createAlova({
   baseURL: apiUrl,
   statesHook: VueHook,
   // 关闭全局请求缓存
-  // cacheFor: null,
-  // 全局缓存配置
-  // cacheFor: {
-  //   POST: {
-  //     mode: 'memory',
-  //     expire: 60 * 10 * 1000
-  //   },
-  //   GET: {
-  //     mode: 'memory',
-  //     expire: 60 * 10 * 1000
-  //   },
-  //   HEAD: 60 * 10 * 1000 // 统一设置HEAD请求的缓存模式
-  // },
+  cacheFor: null,
   // 在开发环境开启缓存命中日志
   cacheLogger: process.env.NODE_ENV === 'development',
   requestAdapter: adapterFetch(),
@@ -50,13 +38,18 @@ export const Alova = createAlova({
   },
   responded: {
     onSuccess: async (response, method) => {
-      const res = (response.json && (await response.json())) || response.body;
+      let resRaw = null;
+      try {
+        resRaw = await response.json()
+      } catch (e) {
+        
+      }
+      const res = resRaw || response.body;
       // 不进行任何处理，直接返回
       // 用于需要直接获取 code、result、 message 这些信息时开启
       if (method.meta?.isTransformResponse === false) {
         return res;
       }
-
       // @ts-ignore
       const Message = window.$message;
       // @ts-ignore

@@ -22,7 +22,7 @@ public class SubjectsController(ManagementServerContext dbContext) : ControllerB
     public async Task<IActionResult> Put([FromBody] ProfileSubject payload, [FromRoute] Guid id)
     {
         var prev = await DbContext.ProfileSubjects.AnyAsync(x => x.Id == id);
-        if (prev)
+        if (!prev)
         {
             return BadRequest();
         }
@@ -44,7 +44,7 @@ public class SubjectsController(ManagementServerContext dbContext) : ControllerB
     public async Task<IActionResult> Delete([FromRoute] Guid id)
     {
         var entity = await DbContext.ProfileSubjects.FirstOrDefaultAsync(x => x.Id == id);
-        if (entity == null)
+        if (entity == null) 
         {
             return NotFound();
         }
