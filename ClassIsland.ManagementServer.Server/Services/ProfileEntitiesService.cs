@@ -91,7 +91,7 @@ public class ProfileEntitiesService(ManagementServerContext context,
             AttachedObjects = classPlan.AttachedObjects,
             WeekDay = classPlan.TimeRule.WeekDay,
             WeekDiv = classPlan.TimeRule.WeekCountDiv,
-            TimeLayoutId = GuidHelpers.TryParseGuidOrEmpty(classPlan.TimeLayoutId),
+            TimeLayout = await DbContext.ProfileTimelayouts.FirstOrDefaultAsync(x => x.Id == GuidHelpers.TryParseGuidOrEmpty(classPlan.TimeLayoutId)) ?? throw new Exception("TimeLayout not found"),
             IsEnabled = classPlan.IsEnabled
         };
         if (await DbContext.ProfileClassplans.AnyAsync(x => x.Id == id))
@@ -109,13 +109,14 @@ public class ProfileEntitiesService(ManagementServerContext context,
         foreach (var p in classPlan.Classes)
         {
             Logger.LogDebug("处理课程：{}", p.SubjectId);
-            if (!await DbContext.ProfileSubjects.AnyAsync(x => x.Id == GuidHelpers.TryParseGuidOrEmpty(p.SubjectId)))
+            var subject = await DbContext.ProfileSubjects.FirstOrDefaultAsync(x => x.Id == GuidHelpers.TryParseGuidOrEmpty(p.SubjectId));
+            if (subject == null)
                 continue;
             await DbContext.ProfileClassplanClasses.AddAsync(new ProfileClassPlanClass()
             {
                 Parent = o,
                 // AttachedObjects = JsonSerializer.Serialize(p.AttachedObjects),  // TODO: 等到ClassIsland完成课程层面的附加信息开发后取消注释这个
-                SubjectId = GuidHelpers.TryParseGuidOrEmpty(p.SubjectId),
+                Subject = subject,
                 Index = index ++
             });
         }
