@@ -24,7 +24,9 @@ export function createVitePlugins(viteEnv: ViteEnv, isBuild: boolean) {
       resolvers: [NaiveUiResolver()],
     }),
     
-    vueDevTools(),
+    vueDevTools({
+      launchEditor: 'rider',
+    }),
   ];
 
   // vite-plugin-html
