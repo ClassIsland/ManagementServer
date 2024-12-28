@@ -35,6 +35,11 @@ export default {
   'identity.post_api_v1_identity_manage_2fa': ['POST', '/api/v1/identity/manage/2fa'],
   'identity.get_api_v1_identity_manage_info': ['GET', '/api/v1/identity/manage/info'],
   'identity.post_api_v1_identity_manage_info': ['POST', '/api/v1/identity/manage/info'],
+  'classplans.get_api_v1_profiles_classplans': ['GET', '/api/v1/profiles/classPlans'],
+  'classplans.put_api_v1_profiles_classplans': ['PUT', '/api/v1/profiles/classPlans'],
+  'classplans.get_api_v1_profiles_classplans_id': ['GET', '/api/v1/profiles/classPlans/{id}'],
+  'classplans.put_api_v1_profiles_classplans_id': ['PUT', '/api/v1/profiles/classPlans/{id}'],
+  'classplans.delete_api_v1_profiles_classplans_id': ['DELETE', '/api/v1/profiles/classPlans/{id}'],
   'clientcommanddeliver.post_api_v1_client_commands_show_notification': [
     'POST',
     '/api/v1/client-commands/show-notification'
@@ -61,5 +66,10 @@ export default {
   'subjects.put_api_v1_profiles_subjects': ['PUT', '/api/v1/profiles/subjects'],
   'subjects.put_api_v1_profiles_subjects_id': ['PUT', '/api/v1/profiles/subjects/{id}'],
   'subjects.delete_api_v1_profiles_subjects_id': ['DELETE', '/api/v1/profiles/subjects/{id}'],
+  'timelayouts.get_api_v1_profiles_timelayouts': ['GET', '/api/v1/profiles/timeLayouts'],
+  'timelayouts.put_api_v1_profiles_timelayouts': ['PUT', '/api/v1/profiles/timeLayouts'],
+  'timelayouts.get_api_v1_profiles_timelayouts_id': ['GET', '/api/v1/profiles/timeLayouts/{id}'],
+  'timelayouts.put_api_v1_profiles_timelayouts_id': ['PUT', '/api/v1/profiles/timeLayouts/{id}'],
+  'timelayouts.delete_api_v1_profiles_timelayouts_id': ['DELETE', '/api/v1/profiles/timeLayouts/{id}'],
   'usersinfo.get_api_v1_users_info_id': ['GET', '/api/v1/users/info/{id}']
 };

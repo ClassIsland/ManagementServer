@@ -188,6 +188,28 @@ export type InfoRequest = {
   newPassword?: string;
   oldPassword?: string;
 };
+export type TimeRule = {
+  isActive?: boolean;
+  weekDay?: number;
+  weekCountDiv?: number;
+};
+export type ClassInfo = {
+  isActive?: boolean;
+  subjectId?: string;
+};
+export type ClassPlan = {
+  isActive?: boolean;
+  attachedObjects?: Record<string, unknown>;
+  timeLayoutId?: string;
+  timeRule?: TimeRule;
+  classes?: ClassInfo[];
+  name?: string;
+  isOverlay?: boolean;
+  overlaySourceId?: string;
+  overlaySetupTime?: string;
+  isEnabled?: boolean;
+  associatedGroup?: string;
+};
 export type CommandTypes = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 export type SendNotification = {
   messageMask?: string;
@@ -242,28 +264,6 @@ export type TimeLayout = {
   attachedObjects?: Record<string, unknown>;
   name?: string;
   layouts?: TimeLayoutItem[];
-};
-export type TimeRule = {
-  isActive?: boolean;
-  weekDay?: number;
-  weekCountDiv?: number;
-};
-export type ClassInfo = {
-  isActive?: boolean;
-  subjectId?: string;
-};
-export type ClassPlan = {
-  isActive?: boolean;
-  attachedObjects?: Record<string, unknown>;
-  timeLayoutId?: string;
-  timeRule?: TimeRule;
-  classes?: ClassInfo[];
-  name?: string;
-  isOverlay?: boolean;
-  overlaySourceId?: string;
-  overlaySetupTime?: string;
-  isEnabled?: boolean;
-  associatedGroup?: string;
 };
 export type Subject = {
   isActive?: boolean;
@@ -1099,6 +1099,224 @@ declare global {
       >(
         config: Config
       ): Alova2Method<InfoResponse, 'identity.post_api_v1_identity_manage_info', Config>;
+    };
+    classplans: {
+      /**
+       * ---
+       *
+       * [GET]
+       *
+       * **path:** /api/v1/profiles/classPlans
+       *
+       * ---
+       *
+       * **Query Parameters**
+       * ```ts
+       * type QueryParameters = {
+       *   pageIndex?: number
+       *   pageSize?: number
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      get_api_v1_profiles_classplans<
+        Config extends Alova2MethodConfig<unknown> & {
+          params: {
+            pageIndex?: number;
+            pageSize?: number;
+          };
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'classplans.get_api_v1_profiles_classplans', Config>;
+      /**
+       * ---
+       *
+       * [PUT]
+       *
+       * **path:** /api/v1/profiles/classPlans
+       *
+       * ---
+       *
+       * **RequestBody**
+       * ```ts
+       * type RequestBody = {
+       *   isActive?: boolean
+       *   attachedObjects?: Record<string, unknown>
+       *   timeLayoutId?: string
+       *   timeRule?: {
+       *     isActive?: boolean
+       *     weekDay?: number
+       *     weekCountDiv?: number
+       *   }
+       *   classes?: Array<{
+       *     isActive?: boolean
+       *     subjectId?: string
+       *   }>
+       *   name?: string
+       *   isOverlay?: boolean
+       *   overlaySourceId?: string
+       *   overlaySetupTime?: string
+       *   isEnabled?: boolean
+       *   associatedGroup?: string
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      put_api_v1_profiles_classplans<
+        Config extends Alova2MethodConfig<unknown> & {
+          data: ClassPlan;
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'classplans.put_api_v1_profiles_classplans', Config>;
+      /**
+       * ---
+       *
+       * [GET]
+       *
+       * **path:** /api/v1/profiles/classPlans/{id}
+       *
+       * ---
+       *
+       * **Path Parameters**
+       * ```ts
+       * type PathParameters = {
+       *   // [required]
+       *   id: string
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      get_api_v1_profiles_classplans_id<
+        Config extends Alova2MethodConfig<unknown> & {
+          pathParams: {
+            /**
+             * [required]
+             */
+            id: string;
+          };
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'classplans.get_api_v1_profiles_classplans_id', Config>;
+      /**
+       * ---
+       *
+       * [PUT]
+       *
+       * **path:** /api/v1/profiles/classPlans/{id}
+       *
+       * ---
+       *
+       * **Path Parameters**
+       * ```ts
+       * type PathParameters = {
+       *   // [required]
+       *   id: string
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **RequestBody**
+       * ```ts
+       * type RequestBody = {
+       *   isActive?: boolean
+       *   attachedObjects?: Record<string, unknown>
+       *   timeLayoutId?: string
+       *   timeRule?: {
+       *     isActive?: boolean
+       *     weekDay?: number
+       *     weekCountDiv?: number
+       *   }
+       *   classes?: Array<{
+       *     isActive?: boolean
+       *     subjectId?: string
+       *   }>
+       *   name?: string
+       *   isOverlay?: boolean
+       *   overlaySourceId?: string
+       *   overlaySetupTime?: string
+       *   isEnabled?: boolean
+       *   associatedGroup?: string
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      put_api_v1_profiles_classplans_id<
+        Config extends Alova2MethodConfig<unknown> & {
+          pathParams: {
+            /**
+             * [required]
+             */
+            id: string;
+          };
+          data: ClassPlan;
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'classplans.put_api_v1_profiles_classplans_id', Config>;
+      /**
+       * ---
+       *
+       * [DELETE]
+       *
+       * **path:** /api/v1/profiles/classPlans/{id}
+       *
+       * ---
+       *
+       * **Path Parameters**
+       * ```ts
+       * type PathParameters = {
+       *   // [required]
+       *   id: string
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      delete_api_v1_profiles_classplans_id<
+        Config extends Alova2MethodConfig<unknown> & {
+          pathParams: {
+            /**
+             * [required]
+             */
+            id: string;
+          };
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'classplans.delete_api_v1_profiles_classplans_id', Config>;
     };
     clientcommanddeliver: {
       /**
@@ -2292,6 +2510,212 @@ declare global {
       >(
         config: Config
       ): Alova2Method<unknown, 'subjects.delete_api_v1_profiles_subjects_id', Config>;
+    };
+    timelayouts: {
+      /**
+       * ---
+       *
+       * [GET]
+       *
+       * **path:** /api/v1/profiles/timeLayouts
+       *
+       * ---
+       *
+       * **Query Parameters**
+       * ```ts
+       * type QueryParameters = {
+       *   pageIndex?: number
+       *   pageSize?: number
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      get_api_v1_profiles_timelayouts<
+        Config extends Alova2MethodConfig<unknown> & {
+          params: {
+            pageIndex?: number;
+            pageSize?: number;
+          };
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'timelayouts.get_api_v1_profiles_timelayouts', Config>;
+      /**
+       * ---
+       *
+       * [PUT]
+       *
+       * **path:** /api/v1/profiles/timeLayouts
+       *
+       * ---
+       *
+       * **RequestBody**
+       * ```ts
+       * type RequestBody = {
+       *   isActive?: boolean
+       *   attachedObjects?: Record<string, unknown>
+       *   name?: string
+       *   layouts?: Array<{
+       *     isActive?: boolean
+       *     attachedObjects?: Record<string, unknown>
+       *     startSecond?: string
+       *     endSecond?: string
+       *     timeType?: number
+       *     isHideDefault?: boolean
+       *     defaultClassId?: string
+       *   }>
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      put_api_v1_profiles_timelayouts<
+        Config extends Alova2MethodConfig<unknown> & {
+          data: TimeLayout;
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'timelayouts.put_api_v1_profiles_timelayouts', Config>;
+      /**
+       * ---
+       *
+       * [GET]
+       *
+       * **path:** /api/v1/profiles/timeLayouts/{id}
+       *
+       * ---
+       *
+       * **Path Parameters**
+       * ```ts
+       * type PathParameters = {
+       *   // [required]
+       *   id: string
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      get_api_v1_profiles_timelayouts_id<
+        Config extends Alova2MethodConfig<unknown> & {
+          pathParams: {
+            /**
+             * [required]
+             */
+            id: string;
+          };
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'timelayouts.get_api_v1_profiles_timelayouts_id', Config>;
+      /**
+       * ---
+       *
+       * [PUT]
+       *
+       * **path:** /api/v1/profiles/timeLayouts/{id}
+       *
+       * ---
+       *
+       * **Path Parameters**
+       * ```ts
+       * type PathParameters = {
+       *   // [required]
+       *   id: string
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **RequestBody**
+       * ```ts
+       * type RequestBody = {
+       *   isActive?: boolean
+       *   attachedObjects?: Record<string, unknown>
+       *   name?: string
+       *   layouts?: Array<{
+       *     isActive?: boolean
+       *     attachedObjects?: Record<string, unknown>
+       *     startSecond?: string
+       *     endSecond?: string
+       *     timeType?: number
+       *     isHideDefault?: boolean
+       *     defaultClassId?: string
+       *   }>
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      put_api_v1_profiles_timelayouts_id<
+        Config extends Alova2MethodConfig<unknown> & {
+          pathParams: {
+            /**
+             * [required]
+             */
+            id: string;
+          };
+          data: TimeLayout;
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'timelayouts.put_api_v1_profiles_timelayouts_id', Config>;
+      /**
+       * ---
+       *
+       * [DELETE]
+       *
+       * **path:** /api/v1/profiles/timeLayouts/{id}
+       *
+       * ---
+       *
+       * **Path Parameters**
+       * ```ts
+       * type PathParameters = {
+       *   // [required]
+       *   id: string
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      delete_api_v1_profiles_timelayouts_id<
+        Config extends Alova2MethodConfig<unknown> & {
+          pathParams: {
+            /**
+             * [required]
+             */
+            id: string;
+          };
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'timelayouts.delete_api_v1_profiles_timelayouts_id', Config>;
     };
     usersinfo: {
       /**

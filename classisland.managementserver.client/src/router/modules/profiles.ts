@@ -23,7 +23,16 @@ const routes: Array<RouteRecordRaw> = [
           title: '课表',
           icon: renderIcon(TableOutlined),
         },
-        component: () => import('@/views/profiles/subjects/index.vue'),
+        component: () => import('@/views/profiles/classplans/index.vue'),
+      },
+      {
+        path: '/profiles/classplans/:id',
+        name: `${routeName}_classPlans_editor`,
+        meta: {
+          title: '编辑课表',
+          hidden: true,
+        },
+        component: () => import('@/views/profiles/classplans/editor.vue'),
       },
       {
         path: '/profiles/timetables',

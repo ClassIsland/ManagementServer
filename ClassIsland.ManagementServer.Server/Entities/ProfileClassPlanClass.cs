@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using ClassIsland.Shared.Interfaces;
 
 namespace ClassIsland.ManagementServer.Server.Entities;
@@ -17,9 +18,9 @@ public partial class ProfileClassPlanClass : IDbAttachableObject
     public Guid ParentId { get; set; }
 
     public Guid SubjectId { get; set; }
-
+    
     public virtual ProfileClassplan Parent { get; set; } = new();
-
+    
     public virtual ProfileSubject Subject { get; set; } = new();
 
     [Column(TypeName = "json")] public Dictionary<string, object?> AttachedObjects { get; set; } = new();
