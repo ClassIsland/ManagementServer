@@ -17,13 +17,15 @@ namespace ClassIsland.ManagementServer.Server.Controllers.Clients;
 public class ObjectsDeliveryController(
     ManagementServerContext dataContext,
     ObjectsUpdateNotifyService objectsUpdateNotifyService,
-    ObjectsAssigneeService objectsAssigneeService) : ControllerBase
+    ObjectsAssigneeService objectsAssigneeService,
+    ProfileEntitiesService profileEntitiesService) : ControllerBase
 {
     private ManagementServerContext DbContext { get; } = dataContext;
     
     private ObjectsUpdateNotifyService ObjectsUpdateNotifyService { get; } = objectsUpdateNotifyService;
     
     private ObjectsAssigneeService ObjectsAssigneeService { get; } = objectsAssigneeService;
+    public ProfileEntitiesService ProfileEntitiesService { get; } = profileEntitiesService;
 
     private static readonly JsonSerializerOptions JsonOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
     
@@ -35,16 +37,13 @@ public class ObjectsDeliveryController(
             return NotFound();
         var assignees = await ObjectsAssigneeService.GetClientAssigningObjects(client, ObjectTypes.ProfileSubject);
         var subjects = new ObservableDictionary<string, Subject>();
-        foreach (var subject in assignees.Select(i => DbContext.ProfileSubjects.FirstOrDefault(x => x.Id == i.ObjectId)).OfType<ProfileSubject>())
+        foreach (var i in assignees)
         {
-            subjects.Add(subject.Id.ToString(), new Subject()
+            var subject = await ProfileEntitiesService.GetSubjectEntity(i.ObjectId);
+            if (subject != null)
             {
-                Name = subject.Name,
-                Initial = subject.Initials,
-                IsOutDoor = subject.IsOutDoor,
-                TeacherName = "",
-                AttachedObjects = subject.AttachedObjects
-            });
+                subjects.Add(i.ObjectId.ToString(), subject);
+            }
         }
 
         return Ok(new Profile()
@@ -69,28 +68,10 @@ public class ObjectsDeliveryController(
         var timeLayouts = new ObservableDictionary<string, TimeLayout>();
         foreach (var i in assignees)
         {
-            var tl = DbContext.ProfileTimelayouts.FirstOrDefault(x => x.Id == i.ObjectId);
+            var tl = await ProfileEntitiesService.GetTimeLayoutEntity(i.ObjectId);
             if (tl == null)
                 continue;
-            var tp = new ObservableCollection<TimeLayoutItem>(DbContext.ProfileTimelayoutTimepoints
-                .Where(x => x.ParentId == tl.Id).OrderBy(x => x.Index).Select(x => x).ToList()
-                .Select(x =>
-                    new TimeLayoutItem()
-                    {
-                        StartSecond = ConvertTimeOnly(x.Start),
-                        EndSecond = ConvertTimeOnly(x.End),
-                        TimeType = x.TimeType,
-                        DefaultClassId = x.DefaultSubjectId ?? "",
-                        IsHideDefault = x.IsHideDefault,
-                        AttachedObjects = x.AttachedObjects
-                    }
-                ));
-            timeLayouts.Add(tl.Id.ToString(), new TimeLayout()
-            {
-                Name = tl.Name,
-                Layouts = tp,
-                AttachedObjects = tl.AttachedObjects
-            });
+            timeLayouts.Add(i.ObjectId.ToString(), tl);
         }
 
         return Ok(new Profile()
@@ -109,32 +90,11 @@ public class ObjectsDeliveryController(
         var classPlans = new ObservableDictionary<string, ClassPlan>();
         foreach (var i in assignees)
         {
-            var cp = DbContext.ProfileClassplans.FirstOrDefault(x => x.Id == i.ObjectId);
-            if (cp == null)
-                continue;
-            var c = new ObservableCollection<ClassInfo>(DbContext.ProfileClassplanClasses    
-                .Where(x => x.ParentId == cp.Id).OrderBy(x => x.Index).Select(x => x).ToList()
-                .Select(x =>
-                    new ClassInfo()
-                    {
-                        SubjectId = x.SubjectId.ToString(),
-                        // TODO: AttachedObjects =
-                        //     JsonSerializer.Deserialize<Dictionary<string, object?>>(x.AttachedObjects ?? "{}",
-                        //         JsonOptions) ?? new()
-                    }
-                ));
-            classPlans.Add(cp.Id.ToString(), new ClassPlan()
+            var cp = await ProfileEntitiesService.GetClassPlanEntity(i.ObjectId);
+            if (cp != null)
             {
-                Name = cp.Name,
-                TimeRule = new TimeRule()
-                {
-                    WeekDay = cp.WeekDay,
-                    WeekCountDiv = cp.WeekDiv
-                },
-                TimeLayoutId = cp.TimeLayoutId.ToString(),
-                Classes = c,
-                AttachedObjects = cp.AttachedObjects
-            });
+                classPlans.Add(i.ObjectId.ToString(), cp);
+            }
         }
 
         return Ok(new Profile()

@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.Text.Json;
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
@@ -8,7 +9,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ClassIsland.ManagementServer.Server.Services;
 
-public class ProfileEntitiesService(ManagementServerContext context, 
+public class ProfileEntitiesService(
+    ManagementServerContext context,
     ObjectsUpdateNotifyService objectsUpdateNotifyService,
     ILogger<ProfileEntitiesService> logger)
 {
@@ -39,9 +41,10 @@ public class ProfileEntitiesService(ManagementServerContext context,
         {
             await DbContext.ProfileSubjects.AddAsync(o);
         }
+
         await ObjectsUpdateNotifyService.NotifyObjectUpdatingAsync(id, ObjectTypes.ProfileSubject);
     }
-    
+
     public async Task SetTimeLayoutEntity(Guid id, TimeLayout timeLayout, bool replace)
     {
         Logger.LogDebug("处理时间表：{}（{}）", id, timeLayout.Name);
@@ -75,12 +78,13 @@ public class ProfileEntitiesService(ManagementServerContext context,
                 TimeType = p.TimeType,
                 DefaultSubjectId = p.DefaultClassId,
                 IsHideDefault = p.IsHideDefault,
-                Index = index ++
+                Index = index++
             });
         }
+
         await ObjectsUpdateNotifyService.NotifyObjectUpdatingAsync(id, ObjectTypes.ProfileTimeLayout);
     }
-    
+
     public async Task SetClassPlanEntity(Guid id, ClassPlan classPlan, bool replace)
     {
         Logger.LogDebug("处理课表：{}（{}）", id, classPlan.Name);
@@ -91,7 +95,10 @@ public class ProfileEntitiesService(ManagementServerContext context,
             AttachedObjects = classPlan.AttachedObjects,
             WeekDay = classPlan.TimeRule.WeekDay,
             WeekDiv = classPlan.TimeRule.WeekCountDiv,
-            TimeLayout = await DbContext.ProfileTimelayouts.FirstOrDefaultAsync(x => x.Id == GuidHelpers.TryParseGuidOrEmpty(classPlan.TimeLayoutId)) ?? throw new Exception("TimeLayout not found"),
+            TimeLayout =
+                await DbContext.ProfileTimelayouts.FirstOrDefaultAsync(x =>
+                    x.Id == GuidHelpers.TryParseGuidOrEmpty(classPlan.TimeLayoutId)) ??
+                throw new Exception("TimeLayout not found"),
             IsEnabled = classPlan.IsEnabled
         };
         if (await DbContext.ProfileClassplans.AnyAsync(x => x.Id == id))
@@ -105,11 +112,14 @@ public class ProfileEntitiesService(ManagementServerContext context,
         {
             await DbContext.ProfileClassplans.AddAsync(o);
         }
+
         var index = 0;
         foreach (var p in classPlan.Classes)
         {
             Logger.LogDebug("处理课程：{}", p.SubjectId);
-            var subject = await DbContext.ProfileSubjects.FirstOrDefaultAsync(x => x.Id == GuidHelpers.TryParseGuidOrEmpty(p.SubjectId));
+            var subject =
+                await DbContext.ProfileSubjects.FirstOrDefaultAsync(x =>
+                    x.Id == GuidHelpers.TryParseGuidOrEmpty(p.SubjectId));
             if (subject == null)
                 continue;
             await DbContext.ProfileClassplanClasses.AddAsync(new ProfileClassPlanClass()
@@ -117,10 +127,100 @@ public class ProfileEntitiesService(ManagementServerContext context,
                 Parent = o,
                 // AttachedObjects = JsonSerializer.Serialize(p.AttachedObjects),  // TODO: 等到ClassIsland完成课程层面的附加信息开发后取消注释这个
                 Subject = subject,
-                Index = index ++
+                Index = index++
             });
         }
+
         await ObjectsUpdateNotifyService.NotifyObjectUpdatingAsync(id, ObjectTypes.ProfileClassPlan);
     }
+    
+    private DateTime ConvertTimeOnly(TimeOnly t)
+    {
+        var now = DateTime.Now;
+        return new DateTime(now.Year, now.Month, now.Day, t.Hour, t.Minute, t.Second);
+    }
 
+    public async Task<ClassPlan?> GetClassPlanEntity(Guid id)
+    {
+        Logger.LogDebug("获取课表：{}", id);
+        var cp = await DbContext.ProfileClassplans.FirstOrDefaultAsync(x => x.Id == id);
+        if (cp == null)
+            return null;
+        var c = new ObservableCollection<ClassInfo>((
+                await DbContext.ProfileClassplanClasses
+                .Where(x => x.ParentId == cp.Id)
+                .OrderBy(x => x.Index)
+                .Select(x => x)
+                .ToListAsync())
+            .Select(x =>
+                new ClassInfo()
+                {
+                    SubjectId = x.SubjectId.ToString(),
+                    // TODO: AttachedObjects =
+                    //     JsonSerializer.Deserialize<Dictionary<string, object?>>(x.AttachedObjects ?? "{}",
+                    //         JsonOptions) ?? new()
+                }
+            )
+        );
+        var classPlan = new ClassPlan()
+        {
+            Name = cp.Name,
+            TimeRule = new TimeRule()
+            {
+                WeekDay = cp.WeekDay,
+                WeekCountDiv = cp.WeekDiv
+            },
+            TimeLayoutId = cp.TimeLayoutId.ToString(),
+            Classes = c,
+            AttachedObjects = cp.AttachedObjects
+        };
+        return classPlan;
+    }
+
+    public async Task<TimeLayout?> GetTimeLayoutEntity(Guid id)
+    {
+        Logger.LogDebug("获取时间表：{}", id);
+        var tl = await DbContext.ProfileTimelayouts.FirstOrDefaultAsync(x => x.Id == id);
+        if (tl == null)
+            return null;
+        var tp = new ObservableCollection<TimeLayoutItem>((
+                await DbContext.ProfileTimelayoutTimepoints
+                .Where(x => x.ParentId == tl.Id)
+                .OrderBy(x => x.Index)
+                .Select(x => x)
+                .ToListAsync())
+            .Select(x =>
+                new TimeLayoutItem()
+                {
+                    StartSecond = ConvertTimeOnly(x.Start),
+                    EndSecond = ConvertTimeOnly(x.End),
+                    TimeType = x.TimeType,
+                    DefaultClassId = x.DefaultSubjectId ?? "",
+                    IsHideDefault = x.IsHideDefault,
+                    AttachedObjects = x.AttachedObjects
+                }
+            ));
+        return new TimeLayout()
+        {
+            Name = tl.Name,
+            Layouts = tp,
+            AttachedObjects = tl.AttachedObjects
+        };
+    }
+    
+    public async Task<Subject?> GetSubjectEntity(Guid id)
+    {
+        Logger.LogDebug("获取科目：{}", id);
+        var s = await DbContext.ProfileSubjects.FirstOrDefaultAsync(x => x.Id == id);
+        if (s == null)
+            return null;
+        return new Subject()
+        {
+            Name = s.Name,
+            Initial = s.Initials,
+            IsOutDoor = s.IsOutDoor,
+            TeacherName = "",
+            AttachedObjects = s.AttachedObjects
+        };
+    }
 }
