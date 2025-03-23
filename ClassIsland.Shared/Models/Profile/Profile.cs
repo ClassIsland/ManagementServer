@@ -81,14 +81,7 @@ public class Profile : ObservableRecipient
     /// <param name="subjectId">要覆写成的科目ID</param>
     public void OverwriteAllClassPlanSubject(string timeLayoutId, TimeLayoutItem timePoint, string subjectId)
     {
-        foreach (var classPlan in from i in ClassPlans where i.Value.TimeLayoutId == timeLayoutId select i.Value)
-        {
-            classPlan.RefreshClassesList();
-            foreach (var i in from i in classPlan.Classes where i.CurrentTimeLayoutItem == timePoint select i)
-            {
-                i.SubjectId = subjectId;
-            }
-        }
+        
     }
 
     /// <summary>

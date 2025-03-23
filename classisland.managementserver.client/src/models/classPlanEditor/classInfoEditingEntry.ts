@@ -4,4 +4,5 @@ export interface IClassInfoEditingEntry {
   timePoint: TimeLayoutItem,
   classInfo: ClassInfo,
   subjectName: string
+  // subjectId: string
 }

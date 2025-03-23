@@ -101,10 +101,12 @@ public class ProfileEntitiesService(
                 throw new Exception("TimeLayout not found"),
             IsEnabled = classPlan.IsEnabled
         };
-        if (await DbContext.ProfileClassplans.AnyAsync(x => x.Id == id))
+        var cp = await DbContext.ProfileClassplans.FirstOrDefaultAsync(x => x.Id == id);
+        if (cp != null)
         {
             if (!replace)
                 return;
+            DbContext.Entry(cp).State = EntityState.Detached;
             DbContext.Entry(o).State = EntityState.Modified;
             await DbContext.ProfileClassplanClasses.Where(x => x.ParentId == id).ExecuteDeleteAsync();
         }

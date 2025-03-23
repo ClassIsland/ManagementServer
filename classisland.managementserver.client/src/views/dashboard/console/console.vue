@@ -6,7 +6,9 @@
     </n-grid>
 
     <!--导航卡片-->
-
+    <n-card title="ClassIsland 集控控制台">
+      <span>欢迎使用 ClassIsland 集控控制台！</span>
+    </n-card>
 
   </div>
 </template>

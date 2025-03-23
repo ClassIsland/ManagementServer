@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace ClassIsland.Shared.Models.Profile;
@@ -223,7 +224,9 @@ public class ClassPlan : AttachableSettingsObject
     /// <summary>
     /// 当前课表的时间表
     /// </summary>
-    [JsonIgnore] public TimeLayout TimeLayout => TimeLayouts[TimeLayoutId];
+    [JsonIgnore] 
+    
+    public TimeLayout TimeLayout => TimeLayouts[TimeLayoutId] ?? new TimeLayout();
 
     /// <summary>
     /// 当前课表的时间表ID
@@ -284,54 +287,12 @@ public class ClassPlan : AttachableSettingsObject
 
     internal void RefreshClassesList(bool isDiffMode=false)
     {
-        //App.GetService<ILogger<ClassPlan>>().LogTrace("Calling Refresh ClassesList: \n{}", new StackTrace());
-        // 对齐长度
-        if (TimeLayoutId == null || !TimeLayouts.ContainsKey(TimeLayoutId))
-        {
-            return;
-        }
         
-        var c = (from i in TimeLayout.Layouts where i.TimeType == 0 select i).ToList();
-        var l = c.Count;
-        //Debug.WriteLine(l);
-        if (Classes.Count < l)
-        {
-            var d = l - Classes.Count;
-            for (var i = 0; i < d; i++)
-            {
-                Classes.Add(new ClassInfo());
-            }
-        }
-        else if (Classes.Count > l) 
-        {
-            var d = Classes.Count - l;
-            for (var i = 0; i < d; i++)
-            {
-                Classes.RemoveAt(Classes.Count - 1);
-            }
-
-        }
-
-        for (var i = 0; i < Classes.Count; i++)
-        {
-            Classes[i].Index = i;
-            Classes[i].CurrentTimeLayout = TimeLayout;
-            if (Classes[i].SubjectId == "" && Classes[i].CurrentTimeLayoutItem.DefaultClassId != "")
-            {
-                Classes[i].SubjectId = Classes[i].CurrentTimeLayoutItem.DefaultClassId;
-            }
-        }
-
-        LastTimeLayoutCount = TimeLayout.Layouts.Count;
     }
 
     internal void RemoveTimePointSafe(TimeLayoutItem timePoint)
     {
-        foreach (var i in from i in Classes where i.CurrentTimeLayoutItem == timePoint select i)
-        {
-            Classes.Remove(i);
-        }
-        RefreshClassesList();
+        
     }
 
     /// <summary>

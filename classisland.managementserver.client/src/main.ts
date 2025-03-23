@@ -1,5 +1,6 @@
 import './styles/tailwind.css';
 import './styles/index.less';
+import 'vuetify/styles'
 import { createApp } from 'vue';
 import { setupNaiveDiscreteApi, setupNaive, setupDirectives } from '@/plugins';
 import App from './App.vue';
