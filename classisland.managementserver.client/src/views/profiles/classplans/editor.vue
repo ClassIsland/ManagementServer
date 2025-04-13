@@ -153,7 +153,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex gap-2">
+  <div class="flex gap-2 root">
     <n-card class="proCard" :bordered="false">
       <n-data-table :data="classPlanEditingEntries"
                     :columns="mainTableColumns"
@@ -182,6 +182,10 @@ onMounted(() => {
           
           <n-button type="primary" @click="saveClassPlan">保存</n-button>
         </n-tab-pane>
+        <n-tab-pane name="assignee" tab="分配">
+          <AssigneeTable :object-id="router.currentRoute.value.params.id"
+                         :object-type="1"/>
+        </n-tab-pane>
         <n-tab-pane name="classEdit" tab="编辑科目">
           Hey Jude
         </n-tab-pane>
@@ -191,5 +195,9 @@ onMounted(() => {
 </template>
 
 <style scoped lang="less">
+.schedule-container {
+}
 
+.root {
+}
 </style>

@@ -7,9 +7,5 @@ export const columns: BasicColumn<ClassPlan>[] = [
   {
     title: '名称',
     key: 'name',
-  },
-  {
-    title: '时间表',
-    key: 'timeLayout'
   }
 ];

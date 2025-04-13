@@ -15,6 +15,11 @@
       @update:checked-row-keys="onCheckedRow"
     />
   </n-card>
+  <n-drawer v-model:show="isEditingDrawerActive" :width="400" placement="right">
+    <n-drawer-content title="客户端编辑">
+      
+    </n-drawer-content>
+  </n-drawer>
 </template>
 
 <script lang="ts" setup>
@@ -28,6 +33,8 @@ import { DeleteOutlined, EditOutlined } from '@vicons/antd';
 const message = useMessage();
 const dialog = useDialog();
 const actionRef = ref();
+const editingClient = ref();
+const isEditingDrawerActive = ref(false);
 
 const params = reactive({
   pageSize: 5,
@@ -56,13 +63,13 @@ function createActions(record) {
       icon: DeleteOutlined,
       onClick: handleDelete.bind(null, record),
       // 根据权限控制是否显示: 有权限，会显示，支持多个
-      auth: ['basic_list'],
+      // auth: ['basic_list'],
     },
     {
       label: '编辑',
       icon: EditOutlined,
       onClick: handleEdit.bind(null, record),
-      auth: ['basic_list'],
+      // auth: ['basic_list'],
     },
   ];
 }
@@ -95,8 +102,8 @@ function handleDelete(record) {
 }
 
 function handleEdit(record) {
-  console.log(record);
-  message.success('您点击了编辑按钮');
+  editingClient.value = record;
+  isEditingDrawerActive.value = true;
 }
 
 function addClient() {

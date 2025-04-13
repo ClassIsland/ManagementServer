@@ -23,9 +23,9 @@ const createFunctionalProxy = (array: (string | symbol)[], alovaInstance: Alova<
   return new Proxy(function () {}, {
     get(_, property) {
       // record the target property, so that it can get the completed accessing paths
-      array.push(property);
+      const newArray = [...array, property];
       // always return a new proxy to continue recording accessing paths.
-      return createFunctionalProxy(array, alovaInstance, configMap);
+      return createFunctionalProxy(newArray, alovaInstance, configMap);
     },
     apply(_, __, [config]) {
       const apiPathKey = array.join('.') as keyof typeof apiDefinitions;

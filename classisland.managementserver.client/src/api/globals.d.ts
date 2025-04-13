@@ -90,9 +90,9 @@ type Alova2Method<
 
 export type Setting = {
   id?: string;
-  name?: string;
-  description?: string;
-  settings?: string;
+  name?: string | null;
+  description?: string | null;
+  settings?: string | null;
 };
 export type ObjectTypes = 0 | 1 | 2 | 3 | 4 | 5;
 export type AssigneeTypes = 0 | 1 | 2 | 3;
@@ -106,13 +106,13 @@ export type ObjectUpdate = {
 };
 export type ClientGroup = {
   id?: number;
-  name?: string;
-  clients?: Client[];
-  objectsAssignees?: ObjectsAssignee[];
+  name?: string | null;
+  clients?: Client[] | null;
+  objectsAssignees?: ObjectsAssignee[] | null;
 };
 export type Client = {
   cuid?: string;
-  id?: string;
+  id?: string | null;
   registerTime?: string;
   groupId?: number;
   policyVersion?: number;
@@ -121,72 +121,72 @@ export type Client = {
   defaultSettingsVersion?: number;
   classPlanVersion?: number;
   group?: ClientGroup;
-  objectUpdates?: ObjectUpdate[];
-  objectsAssignees?: ObjectsAssignee[];
+  objectUpdates?: ObjectUpdate[] | null;
+  objectsAssignees?: ObjectsAssignee[] | null;
 };
 export type ObjectsAssignee = {
   id?: number;
   objectId?: string;
   objectType?: ObjectTypes;
-  targetClientId?: string;
-  targetClientCuid?: string;
-  targetGroupId?: number;
+  targetClientId?: string | null;
+  targetClientCuid?: string | null;
+  targetGroupId?: number | null;
   assigneeType?: AssigneeTypes;
   targetClientCu?: Client;
   targetGroup?: ClientGroup;
 };
 export type RegisterRequest = {
-  email?: string;
-  password?: string;
+  email?: string | null;
+  password?: string | null;
 };
 export type AccessTokenResponse = {
-  tokenType?: string;
-  accessToken?: string;
+  tokenType?: string | null;
+  accessToken?: string | null;
   expiresIn?: number;
-  refreshToken?: string;
+  refreshToken?: string | null;
 };
 export type LoginRequest = {
-  email?: string;
-  password?: string;
-  twoFactorCode?: string;
-  twoFactorRecoveryCode?: string;
+  email?: string | null;
+  password?: string | null;
+  twoFactorCode?: string | null;
+  twoFactorRecoveryCode?: string | null;
 };
 export type RefreshRequest = {
-  refreshToken?: string;
+  refreshToken?: string | null;
 };
 export type ResendConfirmationEmailRequest = {
-  email?: string;
+  email?: string | null;
 };
 export type ForgotPasswordRequest = {
-  email?: string;
+  email?: string | null;
 };
 export type ResetPasswordRequest = {
-  email?: string;
-  resetCode?: string;
-  newPassword?: string;
+  email?: string | null;
+  resetCode?: string | null;
+  newPassword?: string | null;
 };
 export type TwoFactorResponse = {
-  sharedKey?: string;
+  sharedKey?: string | null;
   recoveryCodesLeft?: number;
-  recoveryCodes?: string[];
+  recoveryCodes?: string[] | null;
   isTwoFactorEnabled?: boolean;
   isMachineRemembered?: boolean;
 };
 export type TwoFactorRequest = {
-  enable?: boolean;
-  twoFactorCode?: string;
+  enable?: boolean | null;
+  twoFactorCode?: string | null;
   resetSharedKey?: boolean;
   resetRecoveryCodes?: boolean;
   forgetMachine?: boolean;
 };
 export type InfoResponse = {
-  email?: string;
+  email?: string | null;
   isEmailConfirmed?: boolean;
 };
 export type InfoRequest = {
-  newEmail?: string;
-  newPassword?: string;
-  oldPassword?: string;
+  newEmail?: string | null;
+  newPassword?: string | null;
+  oldPassword?: string | null;
 };
 export type TimeRule = {
   isActive?: boolean;
@@ -195,25 +195,25 @@ export type TimeRule = {
 };
 export type ClassInfo = {
   isActive?: boolean;
-  subjectId?: string;
+  subjectId?: string | null;
 };
 export type ClassPlan = {
   isActive?: boolean;
-  attachedObjects?: Record<string, unknown>;
-  timeLayoutId?: string;
+  attachedObjects?: Record<string, unknown | null> | null;
+  timeLayoutId?: string | null;
   timeRule?: TimeRule;
-  classes?: ClassInfo[];
-  name?: string;
+  classes?: ClassInfo[] | null;
+  name?: string | null;
   isOverlay?: boolean;
-  overlaySourceId?: string;
+  overlaySourceId?: string | null;
   overlaySetupTime?: string;
   isEnabled?: boolean;
-  associatedGroup?: string;
+  associatedGroup?: string | null;
 };
 export type CommandTypes = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 export type SendNotification = {
-  messageMask?: string;
-  messageContent?: string;
+  messageMask?: string | null;
+  messageContent?: string | null;
   overlayIconLeft?: number;
   overlayIconRight?: number;
   isEmergency?: boolean;
@@ -225,12 +225,12 @@ export type SendNotification = {
   repeatCounts?: number;
 };
 export type SendNotificationRequest = {
-  targets?: ObjectsAssignee[];
+  targets?: ObjectsAssignee[] | null;
   type?: CommandTypes;
   payload?: SendNotification;
 };
 export type RestartAppRequest = {
-  targets?: ObjectsAssignee[];
+  targets?: ObjectsAssignee[] | null;
   type?: CommandTypes;
 };
 export type ManagementPolicy = {
@@ -246,52 +246,52 @@ export type ManagementPolicy = {
 };
 export type Policy = {
   id?: string;
-  name?: string;
+  name?: string | null;
   isEnabled?: boolean;
   content?: ManagementPolicy;
 };
 export type TimeLayoutItem = {
   isActive?: boolean;
-  attachedObjects?: Record<string, unknown>;
+  attachedObjects?: Record<string, unknown | null> | null;
   startSecond?: string;
   endSecond?: string;
   timeType?: number;
   isHideDefault?: boolean;
-  defaultClassId?: string;
+  defaultClassId?: string | null;
 };
 export type TimeLayout = {
   isActive?: boolean;
-  attachedObjects?: Record<string, unknown>;
-  name?: string;
-  layouts?: TimeLayoutItem[];
+  attachedObjects?: Record<string, unknown | null> | null;
+  name?: string | null;
+  layouts?: TimeLayoutItem[] | null;
 };
 export type Subject = {
   isActive?: boolean;
-  attachedObjects?: Record<string, unknown>;
-  name?: string;
-  initial?: string;
-  teacherName?: string;
+  attachedObjects?: Record<string, unknown | null> | null;
+  name?: string | null;
+  initial?: string | null;
+  teacherName?: string | null;
   isOutDoor?: boolean;
 };
 export type ClassPlanGroup = {
   isActive?: boolean;
-  name?: string;
+  name?: string | null;
   isGlobal?: boolean;
 };
 export type TempClassPlanGroupType = 0 | 1;
 export type Profile = {
   isActive?: boolean;
-  name?: string;
-  timeLayouts?: Record<string, TimeLayout>;
-  classPlans?: Record<string, ClassPlan>;
-  subjects?: Record<string, Subject>;
+  name?: string | null;
+  timeLayouts?: Record<string, TimeLayout> | null;
+  classPlans?: Record<string, ClassPlan> | null;
+  subjects?: Record<string, Subject> | null;
   isOverlayClassPlanEnabled?: boolean;
-  overlayClassPlanId?: string;
-  tempClassPlanId?: string;
+  overlayClassPlanId?: string | null;
+  tempClassPlanId?: string | null;
   tempClassPlanSetupTime?: string;
-  classPlanGroups?: Record<string, ClassPlanGroup>;
-  selectedClassPlanGroupId?: string;
-  tempClassPlanGroupId?: string;
+  classPlanGroups?: Record<string, ClassPlanGroup> | null;
+  selectedClassPlanGroupId?: string | null;
+  tempClassPlanGroupId?: string | null;
   tempClassPlanGroupExpireTime?: string;
   isTempClassPlanGroupEnabled?: boolean;
   tempClassPlanGroupType?: TempClassPlanGroupType;
@@ -312,19 +312,19 @@ export type ProfileTimeLayoutTimePoint = {
   start?: TimeOnly;
   end?: TimeOnly;
   timeType?: number;
-  defaultSubjectId?: string;
+  defaultSubjectId?: string | null;
   isHideDefault?: boolean;
   parent?: ProfileTimeLayout;
-  attachedObjects?: Record<string, unknown>;
+  attachedObjects?: Record<string, unknown | null> | null;
 };
 export type ProfileTimeLayout = {
   id?: string;
-  name?: string;
-  groupId?: string;
+  name?: string | null;
+  groupId?: string | null;
   group?: ProfileGroup;
-  profileClassPlans?: ProfileClassplan[];
-  profileTimelayoutTimepoints?: ProfileTimeLayoutTimePoint[];
-  attachedObjects?: Record<string, unknown>;
+  profileClassPlans?: ProfileClassplan[] | null;
+  profileTimelayoutTimepoints?: ProfileTimeLayoutTimePoint[] | null;
+  attachedObjects?: Record<string, unknown | null> | null;
 };
 export type ProfileClassPlanClass = {
   internalId?: number;
@@ -333,38 +333,38 @@ export type ProfileClassPlanClass = {
   subjectId?: string;
   parent?: ProfileClassplan;
   subject?: ProfileSubject;
-  attachedObjects?: Record<string, unknown>;
+  attachedObjects?: Record<string, unknown | null> | null;
 };
 export type ProfileClassplan = {
   id?: string;
-  name?: string;
-  groupId?: string;
+  name?: string | null;
+  groupId?: string | null;
   weekDay?: number;
   weekDiv?: number;
   timeLayoutId?: string;
   isEnabled?: boolean;
   group?: ProfileGroup;
-  profileClassPlanClasses?: ProfileClassPlanClass[];
+  profileClassPlanClasses?: ProfileClassPlanClass[] | null;
   timeLayout?: ProfileTimeLayout;
-  attachedObjects?: Record<string, unknown>;
+  attachedObjects?: Record<string, unknown | null> | null;
 };
 export type ProfileGroup = {
   id?: string;
-  name?: string;
-  description?: string;
-  profileClassplans?: ProfileClassplan[];
-  profileSubjects?: ProfileSubject[];
-  profileTimelayouts?: ProfileTimeLayout[];
+  name?: string | null;
+  description?: string | null;
+  profileClassplans?: ProfileClassplan[] | null;
+  profileSubjects?: ProfileSubject[] | null;
+  profileTimelayouts?: ProfileTimeLayout[] | null;
 };
 export type ProfileSubject = {
   id?: string;
-  groupId?: string;
-  name?: string;
-  initials?: string;
+  groupId?: string | null;
+  name?: string | null;
+  initials?: string | null;
   isOutDoor?: boolean;
   group?: ProfileGroup;
-  profileClassplanClasses?: ProfileClassPlanClass[];
-  attachedObjects?: Record<string, unknown>;
+  profileClassplanClasses?: ProfileClassPlanClass[] | null;
+  attachedObjects?: Record<string, unknown | null> | null;
 };
 declare global {
   interface Apis {
@@ -399,9 +399,9 @@ declare global {
        * ```ts
        * type RequestBody = {
        *   id?: string
-       *   name?: string
-       *   description?: string
-       *   settings?: string
+       *   name?: string | null
+       *   description?: string | null
+       *   settings?: string | null
        * }
        * ```
        *
@@ -478,9 +478,9 @@ declare global {
        * ```ts
        * type RequestBody = {
        *   id?: string
-       *   name?: string
-       *   description?: string
-       *   settings?: string
+       *   name?: string | null
+       *   description?: string | null
+       *   settings?: string | null
        * }
        * ```
        *
@@ -547,7 +547,7 @@ declare global {
        *
        * [GET]
        *
-       * **path:** /api/v1/assignees/{id}
+       * **path:** /api/v1/assignees/all/{id}
        *
        * ---
        *
@@ -566,7 +566,7 @@ declare global {
        * type Response = unknown
        * ```
        */
-      get_api_v1_assignees_id<
+      get_api_v1_assignees_all_id<
         Config extends Alova2MethodConfig<unknown> & {
           pathParams: {
             /**
@@ -577,13 +577,13 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'assignees.get_api_v1_assignees_id', Config>;
+      ): Alova2Method<unknown, 'assignees.get_api_v1_assignees_all_id', Config>;
       /**
        * ---
        *
        * [POST]
        *
-       * **path:** /api/v1/assignees/{id}
+       * **path:** /api/v1/assignees/all/{id}
        *
        * ---
        *
@@ -603,13 +603,13 @@ declare global {
        *   id?: number
        *   objectId?: string
        *   objectType?: 0 | 1 | 2 | 3 | 4 | 5
-       *   targetClientId?: string
-       *   targetClientCuid?: string
-       *   targetGroupId?: number
+       *   targetClientId?: string | null
+       *   targetClientCuid?: string | null
+       *   targetGroupId?: number | null
        *   assigneeType?: 0 | 1 | 2 | 3
        *   targetClientCu?: {
        *     cuid?: string
-       *     id?: string
+       *     id?: string | null
        *     registerTime?: string
        *     groupId?: number
        *     policyVersion?: number
@@ -619,9 +619,9 @@ declare global {
        *     classPlanVersion?: number
        *     group?: {
        *       id?: number
-       *       name?: string
-       *       clients?: Array<Client>
-       *       objectsAssignees?: Array<ObjectsAssignee>
+       *       name?: string | null
+       *       clients?: Array<Client> | null
+       *       objectsAssignees?: Array<ObjectsAssignee> | null
        *     }
        *     objectUpdates?: Array<{
        *       id?: number
@@ -630,8 +630,8 @@ declare global {
        *       targetCuid?: string
        *       updateTime?: string
        *       targetClient?: Client
-       *     }>
-       *     objectsAssignees?: Array<ObjectsAssignee>
+       *     }> | null
+       *     objectsAssignees?: Array<ObjectsAssignee> | null
        *   }
        *   targetGroup?: ClientGroup
        * }
@@ -644,7 +644,7 @@ declare global {
        * type Response = unknown
        * ```
        */
-      post_api_v1_assignees_id<
+      post_api_v1_assignees_all_id<
         Config extends Alova2MethodConfig<unknown> & {
           pathParams: {
             /**
@@ -656,13 +656,13 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'assignees.post_api_v1_assignees_id', Config>;
+      ): Alova2Method<unknown, 'assignees.post_api_v1_assignees_all_id', Config>;
       /**
        * ---
        *
        * [DELETE]
        *
-       * **path:** /api/v1/assignees/{id}
+       * **path:** /api/v1/assignees/all/{id}
        *
        * ---
        *
@@ -681,7 +681,7 @@ declare global {
        * type Response = unknown
        * ```
        */
-      delete_api_v1_assignees_id<
+      delete_api_v1_assignees_all_id<
         Config extends Alova2MethodConfig<unknown> & {
           pathParams: {
             /**
@@ -692,13 +692,13 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'assignees.delete_api_v1_assignees_id', Config>;
+      ): Alova2Method<unknown, 'assignees.delete_api_v1_assignees_all_id', Config>;
       /**
        * ---
        *
        * [POST]
        *
-       * **path:** /api/v1/assignees
+       * **path:** /api/v1/assignees/all
        *
        * ---
        *
@@ -708,13 +708,13 @@ declare global {
        *   id?: number
        *   objectId?: string
        *   objectType?: 0 | 1 | 2 | 3 | 4 | 5
-       *   targetClientId?: string
-       *   targetClientCuid?: string
-       *   targetGroupId?: number
+       *   targetClientId?: string | null
+       *   targetClientCuid?: string | null
+       *   targetGroupId?: number | null
        *   assigneeType?: 0 | 1 | 2 | 3
        *   targetClientCu?: {
        *     cuid?: string
-       *     id?: string
+       *     id?: string | null
        *     registerTime?: string
        *     groupId?: number
        *     policyVersion?: number
@@ -724,9 +724,9 @@ declare global {
        *     classPlanVersion?: number
        *     group?: {
        *       id?: number
-       *       name?: string
-       *       clients?: Array<Client>
-       *       objectsAssignees?: Array<ObjectsAssignee>
+       *       name?: string | null
+       *       clients?: Array<Client> | null
+       *       objectsAssignees?: Array<ObjectsAssignee> | null
        *     }
        *     objectUpdates?: Array<{
        *       id?: number
@@ -735,8 +735,8 @@ declare global {
        *       targetCuid?: string
        *       updateTime?: string
        *       targetClient?: Client
-       *     }>
-       *     objectsAssignees?: Array<ObjectsAssignee>
+       *     }> | null
+       *     objectsAssignees?: Array<ObjectsAssignee> | null
        *   }
        *   targetGroup?: ClientGroup
        * }
@@ -749,13 +749,69 @@ declare global {
        * type Response = unknown
        * ```
        */
-      post_api_v1_assignees<
+      post_api_v1_assignees_all<
         Config extends Alova2MethodConfig<unknown> & {
           data: ObjectsAssignee;
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'assignees.post_api_v1_assignees', Config>;
+      ): Alova2Method<unknown, 'assignees.post_api_v1_assignees_all', Config>;
+      /**
+       * ---
+       *
+       * [GET]
+       *
+       * **path:** /api/v1/assignees/by-object/{objectType}/{id}
+       *
+       * ---
+       *
+       * **Path Parameters**
+       * ```ts
+       * type PathParameters = {
+       *   // [required]
+       *   objectType: number
+       *   // [required]
+       *   id: string
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Query Parameters**
+       * ```ts
+       * type QueryParameters = {
+       *   pageIndex?: number
+       *   pageSize?: number
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      get_api_v1_assignees_by_object_objecttype_id<
+        Config extends Alova2MethodConfig<unknown> & {
+          pathParams: {
+            /**
+             * [required]
+             */
+            objectType: number;
+            /**
+             * [required]
+             */
+            id: string;
+          };
+          params: {
+            pageIndex?: number;
+            pageSize?: number;
+          };
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'assignees.get_api_v1_assignees_by_object_objecttype_id', Config>;
     };
     identity: {
       /**
@@ -770,8 +826,8 @@ declare global {
        * **RequestBody**
        * ```ts
        * type RequestBody = {
-       *   email?: string
-       *   password?: string
+       *   email?: string | null
+       *   password?: string | null
        * }
        * ```
        *
@@ -811,10 +867,10 @@ declare global {
        * **RequestBody**
        * ```ts
        * type RequestBody = {
-       *   email?: string
-       *   password?: string
-       *   twoFactorCode?: string
-       *   twoFactorRecoveryCode?: string
+       *   email?: string | null
+       *   password?: string | null
+       *   twoFactorCode?: string | null
+       *   twoFactorRecoveryCode?: string | null
        * }
        * ```
        *
@@ -823,10 +879,10 @@ declare global {
        * **Response**
        * ```ts
        * type Response = {
-       *   tokenType?: string
-       *   accessToken?: string
+       *   tokenType?: string | null
+       *   accessToken?: string | null
        *   expiresIn?: number
-       *   refreshToken?: string
+       *   refreshToken?: string | null
        * }
        * ```
        */
@@ -853,7 +909,7 @@ declare global {
        * **RequestBody**
        * ```ts
        * type RequestBody = {
-       *   refreshToken?: string
+       *   refreshToken?: string | null
        * }
        * ```
        *
@@ -862,10 +918,10 @@ declare global {
        * **Response**
        * ```ts
        * type Response = {
-       *   tokenType?: string
-       *   accessToken?: string
+       *   tokenType?: string | null
+       *   accessToken?: string | null
        *   expiresIn?: number
-       *   refreshToken?: string
+       *   refreshToken?: string | null
        * }
        * ```
        */
@@ -924,7 +980,7 @@ declare global {
        * **RequestBody**
        * ```ts
        * type RequestBody = {
-       *   email?: string
+       *   email?: string | null
        * }
        * ```
        *
@@ -954,7 +1010,7 @@ declare global {
        * **RequestBody**
        * ```ts
        * type RequestBody = {
-       *   email?: string
+       *   email?: string | null
        * }
        * ```
        *
@@ -984,9 +1040,9 @@ declare global {
        * **RequestBody**
        * ```ts
        * type RequestBody = {
-       *   email?: string
-       *   resetCode?: string
-       *   newPassword?: string
+       *   email?: string | null
+       *   resetCode?: string | null
+       *   newPassword?: string | null
        * }
        * ```
        *
@@ -1016,8 +1072,8 @@ declare global {
        * **RequestBody**
        * ```ts
        * type RequestBody = {
-       *   enable?: boolean
-       *   twoFactorCode?: string
+       *   enable?: boolean | null
+       *   twoFactorCode?: string | null
        *   resetSharedKey?: boolean
        *   resetRecoveryCodes?: boolean
        *   forgetMachine?: boolean
@@ -1029,9 +1085,9 @@ declare global {
        * **Response**
        * ```ts
        * type Response = {
-       *   sharedKey?: string
+       *   sharedKey?: string | null
        *   recoveryCodesLeft?: number
-       *   recoveryCodes?: string[]
+       *   recoveryCodes?: string[] | null
        *   isTwoFactorEnabled?: boolean
        *   isMachineRemembered?: boolean
        * }
@@ -1056,7 +1112,7 @@ declare global {
        * **Response**
        * ```ts
        * type Response = {
-       *   email?: string
+       *   email?: string | null
        *   isEmailConfirmed?: boolean
        * }
        * ```
@@ -1076,9 +1132,9 @@ declare global {
        * **RequestBody**
        * ```ts
        * type RequestBody = {
-       *   newEmail?: string
-       *   newPassword?: string
-       *   oldPassword?: string
+       *   newEmail?: string | null
+       *   newPassword?: string | null
+       *   oldPassword?: string | null
        * }
        * ```
        *
@@ -1087,7 +1143,7 @@ declare global {
        * **Response**
        * ```ts
        * type Response = {
-       *   email?: string
+       *   email?: string | null
        *   isEmailConfirmed?: boolean
        * }
        * ```
@@ -1148,8 +1204,8 @@ declare global {
        * ```ts
        * type RequestBody = {
        *   isActive?: boolean
-       *   attachedObjects?: Record<string, unknown>
-       *   timeLayoutId?: string
+       *   attachedObjects?: Record<string, unknown | null> | null
+       *   timeLayoutId?: string | null
        *   timeRule?: {
        *     isActive?: boolean
        *     weekDay?: number
@@ -1157,14 +1213,14 @@ declare global {
        *   }
        *   classes?: Array<{
        *     isActive?: boolean
-       *     subjectId?: string
-       *   }>
-       *   name?: string
+       *     subjectId?: string | null
+       *   }> | null
+       *   name?: string | null
        *   isOverlay?: boolean
-       *   overlaySourceId?: string
+       *   overlaySourceId?: string | null
        *   overlaySetupTime?: string
        *   isEnabled?: boolean
-       *   associatedGroup?: string
+       *   associatedGroup?: string | null
        * }
        * ```
        *
@@ -1241,8 +1297,8 @@ declare global {
        * ```ts
        * type RequestBody = {
        *   isActive?: boolean
-       *   attachedObjects?: Record<string, unknown>
-       *   timeLayoutId?: string
+       *   attachedObjects?: Record<string, unknown | null> | null
+       *   timeLayoutId?: string | null
        *   timeRule?: {
        *     isActive?: boolean
        *     weekDay?: number
@@ -1250,14 +1306,14 @@ declare global {
        *   }
        *   classes?: Array<{
        *     isActive?: boolean
-       *     subjectId?: string
-       *   }>
-       *   name?: string
+       *     subjectId?: string | null
+       *   }> | null
+       *   name?: string | null
        *   isOverlay?: boolean
-       *   overlaySourceId?: string
+       *   overlaySourceId?: string | null
        *   overlaySetupTime?: string
        *   isEnabled?: boolean
-       *   associatedGroup?: string
+       *   associatedGroup?: string | null
        * }
        * ```
        *
@@ -1335,13 +1391,13 @@ declare global {
        *     id?: number
        *     objectId?: string
        *     objectType?: 0 | 1 | 2 | 3 | 4 | 5
-       *     targetClientId?: string
-       *     targetClientCuid?: string
-       *     targetGroupId?: number
+       *     targetClientId?: string | null
+       *     targetClientCuid?: string | null
+       *     targetGroupId?: number | null
        *     assigneeType?: 0 | 1 | 2 | 3
        *     targetClientCu?: {
        *       cuid?: string
-       *       id?: string
+       *       id?: string | null
        *       registerTime?: string
        *       groupId?: number
        *       policyVersion?: number
@@ -1351,9 +1407,9 @@ declare global {
        *       classPlanVersion?: number
        *       group?: {
        *         id?: number
-       *         name?: string
-       *         clients?: Array<Client>
-       *         objectsAssignees?: Array<ObjectsAssignee>
+       *         name?: string | null
+       *         clients?: Array<Client> | null
+       *         objectsAssignees?: Array<ObjectsAssignee> | null
        *       }
        *       objectUpdates?: Array<{
        *         id?: number
@@ -1362,15 +1418,15 @@ declare global {
        *         targetCuid?: string
        *         updateTime?: string
        *         targetClient?: Client
-       *       }>
-       *       objectsAssignees?: Array<ObjectsAssignee>
+       *       }> | null
+       *       objectsAssignees?: Array<ObjectsAssignee> | null
        *     }
        *     targetGroup?: ClientGroup
-       *   }>
+       *   }> | null
        *   type?: 0 | 1 | 2 | 3 | 4 | 5 | 6
        *   payload?: {
-       *     messageMask?: string
-       *     messageContent?: string
+       *     messageMask?: string | null
+       *     messageContent?: string | null
        *     overlayIconLeft?: number
        *     overlayIconRight?: number
        *     isEmergency?: boolean
@@ -1414,13 +1470,13 @@ declare global {
        *     id?: number
        *     objectId?: string
        *     objectType?: 0 | 1 | 2 | 3 | 4 | 5
-       *     targetClientId?: string
-       *     targetClientCuid?: string
-       *     targetGroupId?: number
+       *     targetClientId?: string | null
+       *     targetClientCuid?: string | null
+       *     targetGroupId?: number | null
        *     assigneeType?: 0 | 1 | 2 | 3
        *     targetClientCu?: {
        *       cuid?: string
-       *       id?: string
+       *       id?: string | null
        *       registerTime?: string
        *       groupId?: number
        *       policyVersion?: number
@@ -1430,9 +1486,9 @@ declare global {
        *       classPlanVersion?: number
        *       group?: {
        *         id?: number
-       *         name?: string
-       *         clients?: Array<Client>
-       *         objectsAssignees?: Array<ObjectsAssignee>
+       *         name?: string | null
+       *         clients?: Array<Client> | null
+       *         objectsAssignees?: Array<ObjectsAssignee> | null
        *       }
        *       objectUpdates?: Array<{
        *         id?: number
@@ -1441,11 +1497,11 @@ declare global {
        *         targetCuid?: string
        *         updateTime?: string
        *         targetClient?: Client
-       *       }>
-       *       objectsAssignees?: Array<ObjectsAssignee>
+       *       }> | null
+       *       objectsAssignees?: Array<ObjectsAssignee> | null
        *     }
        *     targetGroup?: ClientGroup
-       *   }>
+       *   }> | null
        *   type?: 0 | 1 | 2 | 3 | 4 | 5 | 6
        * }
        * ```
@@ -1559,7 +1615,7 @@ declare global {
        *   'Group.Name'?: string
        *   'Group.Clients'?: Array<{
        *     cuid?: string
-       *     id?: string
+       *     id?: string | null
        *     registerTime?: string
        *     groupId?: number
        *     policyVersion?: number
@@ -1569,9 +1625,9 @@ declare global {
        *     classPlanVersion?: number
        *     group?: {
        *       id?: number
-       *       name?: string
-       *       clients?: Array<Client>
-       *       objectsAssignees?: Array<ObjectsAssignee>
+       *       name?: string | null
+       *       clients?: Array<Client> | null
+       *       objectsAssignees?: Array<ObjectsAssignee> | null
        *     }
        *     objectUpdates?: Array<{
        *       id?: number
@@ -1580,20 +1636,20 @@ declare global {
        *       targetCuid?: string
        *       updateTime?: string
        *       targetClient?: Client
-       *     }>
-       *     objectsAssignees?: Array<ObjectsAssignee>
+       *     }> | null
+       *     objectsAssignees?: Array<ObjectsAssignee> | null
        *   }>
        *   'Group.ObjectsAssignees'?: Array<{
        *     id?: number
        *     objectId?: string
        *     objectType?: 0 | 1 | 2 | 3 | 4 | 5
-       *     targetClientId?: string
-       *     targetClientCuid?: string
-       *     targetGroupId?: number
+       *     targetClientId?: string | null
+       *     targetClientCuid?: string | null
+       *     targetGroupId?: number | null
        *     assigneeType?: 0 | 1 | 2 | 3
        *     targetClientCu?: {
        *       cuid?: string
-       *       id?: string
+       *       id?: string | null
        *       registerTime?: string
        *       groupId?: number
        *       policyVersion?: number
@@ -1603,9 +1659,9 @@ declare global {
        *       classPlanVersion?: number
        *       group?: {
        *         id?: number
-       *         name?: string
-       *         clients?: Array<Client>
-       *         objectsAssignees?: Array<ObjectsAssignee>
+       *         name?: string | null
+       *         clients?: Array<Client> | null
+       *         objectsAssignees?: Array<ObjectsAssignee> | null
        *       }
        *       objectUpdates?: Array<{
        *         id?: number
@@ -1614,8 +1670,8 @@ declare global {
        *         targetCuid?: string
        *         updateTime?: string
        *         targetClient?: Client
-       *       }>
-       *       objectsAssignees?: Array<ObjectsAssignee>
+       *       }> | null
+       *       objectsAssignees?: Array<ObjectsAssignee> | null
        *     }
        *     targetGroup?: ClientGroup
        *   }>
@@ -1966,7 +2022,7 @@ declare global {
        * ```ts
        * type RequestBody = {
        *   id?: string
-       *   name?: string
+       *   name?: string | null
        *   isEnabled?: boolean
        *   content?: {
        *     isActive?: boolean
@@ -2055,7 +2111,7 @@ declare global {
        * ```ts
        * type RequestBody = {
        *   id?: string
-       *   name?: string
+       *   name?: string | null
        *   isEnabled?: boolean
        *   content?: {
        *     isActive?: boolean
@@ -2151,30 +2207,30 @@ declare global {
        * ```ts
        * type RequestBody = {
        *   isActive?: boolean
-       *   name?: string
+       *   name?: string | null
        *   timeLayouts?: Record<
        *     string,
        *     {
        *       isActive?: boolean
-       *       attachedObjects?: Record<string, unknown>
-       *       name?: string
+       *       attachedObjects?: Record<string, unknown | null> | null
+       *       name?: string | null
        *       layouts?: Array<{
        *         isActive?: boolean
-       *         attachedObjects?: Record<string, unknown>
+       *         attachedObjects?: Record<string, unknown | null> | null
        *         startSecond?: string
        *         endSecond?: string
        *         timeType?: number
        *         isHideDefault?: boolean
-       *         defaultClassId?: string
-       *       }>
+       *         defaultClassId?: string | null
+       *       }> | null
        *     }
-       *   >
+       *   > | null
        *   classPlans?: Record<
        *     string,
        *     {
        *       isActive?: boolean
-       *       attachedObjects?: Record<string, unknown>
-       *       timeLayoutId?: string
+       *       attachedObjects?: Record<string, unknown | null> | null
+       *       timeLayoutId?: string | null
        *       timeRule?: {
        *         isActive?: boolean
        *         weekDay?: number
@@ -2182,41 +2238,41 @@ declare global {
        *       }
        *       classes?: Array<{
        *         isActive?: boolean
-       *         subjectId?: string
-       *       }>
-       *       name?: string
+       *         subjectId?: string | null
+       *       }> | null
+       *       name?: string | null
        *       isOverlay?: boolean
-       *       overlaySourceId?: string
+       *       overlaySourceId?: string | null
        *       overlaySetupTime?: string
        *       isEnabled?: boolean
-       *       associatedGroup?: string
+       *       associatedGroup?: string | null
        *     }
-       *   >
+       *   > | null
        *   subjects?: Record<
        *     string,
        *     {
        *       isActive?: boolean
-       *       attachedObjects?: Record<string, unknown>
-       *       name?: string
-       *       initial?: string
-       *       teacherName?: string
+       *       attachedObjects?: Record<string, unknown | null> | null
+       *       name?: string | null
+       *       initial?: string | null
+       *       teacherName?: string | null
        *       isOutDoor?: boolean
        *     }
-       *   >
+       *   > | null
        *   isOverlayClassPlanEnabled?: boolean
-       *   overlayClassPlanId?: string
-       *   tempClassPlanId?: string
+       *   overlayClassPlanId?: string | null
+       *   tempClassPlanId?: string | null
        *   tempClassPlanSetupTime?: string
        *   classPlanGroups?: Record<
        *     string,
        *     {
        *       isActive?: boolean
-       *       name?: string
+       *       name?: string | null
        *       isGlobal?: boolean
        *     }
-       *   >
-       *   selectedClassPlanGroupId?: string
-       *   tempClassPlanGroupId?: string
+       *   > | null
+       *   selectedClassPlanGroupId?: string | null
+       *   tempClassPlanGroupId?: string | null
        *   tempClassPlanGroupExpireTime?: string
        *   isTempClassPlanGroupEnabled?: boolean
        *   tempClassPlanGroupType?: 0 | 1
@@ -2289,18 +2345,18 @@ declare global {
        * ```ts
        * type RequestBody = {
        *   id?: string
-       *   groupId?: string
-       *   name?: string
-       *   initials?: string
+       *   groupId?: string | null
+       *   name?: string | null
+       *   initials?: string | null
        *   isOutDoor?: boolean
        *   group?: {
        *     id?: string
-       *     name?: string
-       *     description?: string
+       *     name?: string | null
+       *     description?: string | null
        *     profileClassplans?: Array<{
        *       id?: string
-       *       name?: string
-       *       groupId?: string
+       *       name?: string | null
+       *       groupId?: string | null
        *       weekDay?: number
        *       weekDiv?: number
        *       timeLayoutId?: string
@@ -2313,14 +2369,14 @@ declare global {
        *         subjectId?: string
        *         parent?: ProfileClassplan
        *         subject?: ProfileSubject
-       *         attachedObjects?: Record<string, unknown>
-       *       }>
+       *         attachedObjects?: Record<string, unknown | null> | null
+       *       }> | null
        *       timeLayout?: {
        *         id?: string
-       *         name?: string
-       *         groupId?: string
+       *         name?: string | null
+       *         groupId?: string | null
        *         group?: ProfileGroup
-       *         profileClassPlans?: Array<ProfileClassplan>
+       *         profileClassPlans?: Array<ProfileClassplan> | null
        *         profileTimelayoutTimepoints?: Array<{
        *           internalId?: number
        *           parentId?: string
@@ -2336,20 +2392,20 @@ declare global {
        *           }
        *           end?: TimeOnly
        *           timeType?: number
-       *           defaultSubjectId?: string
+       *           defaultSubjectId?: string | null
        *           isHideDefault?: boolean
        *           parent?: ProfileTimeLayout
-       *           attachedObjects?: Record<string, unknown>
-       *         }>
-       *         attachedObjects?: Record<string, unknown>
+       *           attachedObjects?: Record<string, unknown | null> | null
+       *         }> | null
+       *         attachedObjects?: Record<string, unknown | null> | null
        *       }
-       *       attachedObjects?: Record<string, unknown>
-       *     }>
-       *     profileSubjects?: Array<ProfileSubject>
-       *     profileTimelayouts?: Array<ProfileTimeLayout>
+       *       attachedObjects?: Record<string, unknown | null> | null
+       *     }> | null
+       *     profileSubjects?: Array<ProfileSubject> | null
+       *     profileTimelayouts?: Array<ProfileTimeLayout> | null
        *   }
-       *   profileClassplanClasses?: Array<ProfileClassPlanClass>
-       *   attachedObjects?: Record<string, unknown>
+       *   profileClassplanClasses?: Array<ProfileClassPlanClass> | null
+       *   attachedObjects?: Record<string, unknown | null> | null
        * }
        * ```
        *
@@ -2390,18 +2446,18 @@ declare global {
        * ```ts
        * type RequestBody = {
        *   id?: string
-       *   groupId?: string
-       *   name?: string
-       *   initials?: string
+       *   groupId?: string | null
+       *   name?: string | null
+       *   initials?: string | null
        *   isOutDoor?: boolean
        *   group?: {
        *     id?: string
-       *     name?: string
-       *     description?: string
+       *     name?: string | null
+       *     description?: string | null
        *     profileClassplans?: Array<{
        *       id?: string
-       *       name?: string
-       *       groupId?: string
+       *       name?: string | null
+       *       groupId?: string | null
        *       weekDay?: number
        *       weekDiv?: number
        *       timeLayoutId?: string
@@ -2414,14 +2470,14 @@ declare global {
        *         subjectId?: string
        *         parent?: ProfileClassplan
        *         subject?: ProfileSubject
-       *         attachedObjects?: Record<string, unknown>
-       *       }>
+       *         attachedObjects?: Record<string, unknown | null> | null
+       *       }> | null
        *       timeLayout?: {
        *         id?: string
-       *         name?: string
-       *         groupId?: string
+       *         name?: string | null
+       *         groupId?: string | null
        *         group?: ProfileGroup
-       *         profileClassPlans?: Array<ProfileClassplan>
+       *         profileClassPlans?: Array<ProfileClassplan> | null
        *         profileTimelayoutTimepoints?: Array<{
        *           internalId?: number
        *           parentId?: string
@@ -2437,20 +2493,20 @@ declare global {
        *           }
        *           end?: TimeOnly
        *           timeType?: number
-       *           defaultSubjectId?: string
+       *           defaultSubjectId?: string | null
        *           isHideDefault?: boolean
        *           parent?: ProfileTimeLayout
-       *           attachedObjects?: Record<string, unknown>
-       *         }>
-       *         attachedObjects?: Record<string, unknown>
+       *           attachedObjects?: Record<string, unknown | null> | null
+       *         }> | null
+       *         attachedObjects?: Record<string, unknown | null> | null
        *       }
-       *       attachedObjects?: Record<string, unknown>
-       *     }>
-       *     profileSubjects?: Array<ProfileSubject>
-       *     profileTimelayouts?: Array<ProfileTimeLayout>
+       *       attachedObjects?: Record<string, unknown | null> | null
+       *     }> | null
+       *     profileSubjects?: Array<ProfileSubject> | null
+       *     profileTimelayouts?: Array<ProfileTimeLayout> | null
        *   }
-       *   profileClassplanClasses?: Array<ProfileClassPlanClass>
-       *   attachedObjects?: Record<string, unknown>
+       *   profileClassplanClasses?: Array<ProfileClassPlanClass> | null
+       *   attachedObjects?: Record<string, unknown | null> | null
        * }
        * ```
        *
@@ -2559,17 +2615,17 @@ declare global {
        * ```ts
        * type RequestBody = {
        *   isActive?: boolean
-       *   attachedObjects?: Record<string, unknown>
-       *   name?: string
+       *   attachedObjects?: Record<string, unknown | null> | null
+       *   name?: string | null
        *   layouts?: Array<{
        *     isActive?: boolean
-       *     attachedObjects?: Record<string, unknown>
+       *     attachedObjects?: Record<string, unknown | null> | null
        *     startSecond?: string
        *     endSecond?: string
        *     timeType?: number
        *     isHideDefault?: boolean
-       *     defaultClassId?: string
-       *   }>
+       *     defaultClassId?: string | null
+       *   }> | null
        * }
        * ```
        *
@@ -2646,17 +2702,17 @@ declare global {
        * ```ts
        * type RequestBody = {
        *   isActive?: boolean
-       *   attachedObjects?: Record<string, unknown>
-       *   name?: string
+       *   attachedObjects?: Record<string, unknown | null> | null
+       *   name?: string | null
        *   layouts?: Array<{
        *     isActive?: boolean
-       *     attachedObjects?: Record<string, unknown>
+       *     attachedObjects?: Record<string, unknown | null> | null
        *     startSecond?: string
        *     endSecond?: string
        *     timeType?: number
        *     isHideDefault?: boolean
-       *     defaultClassId?: string
-       *   }>
+       *     defaultClassId?: string | null
+       *   }> | null
        * }
        * ```
        *

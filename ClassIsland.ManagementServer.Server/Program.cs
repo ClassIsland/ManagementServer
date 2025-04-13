@@ -4,10 +4,12 @@ using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Models.Identity;
 using ClassIsland.ManagementServer.Server.Services;
 using ClassIsland.ManagementServer.Server.Services.Grpc;
+using ClassIsland.ManagementServer.Server.Services.Logging;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Console;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,6 +47,7 @@ builder.WebHost.ConfigureKestrel((context, options) =>
 {
     
 });
+builder.Logging.AddConsoleFormatter<ClassIslandConsoleFormatter, ConsoleFormatterOptions>();
 builder.Services.AddIdentityApiEndpoints<User>()
     .AddEntityFrameworkStores<ManagementServerContext>()
     .AddDefaultTokenProviders();
