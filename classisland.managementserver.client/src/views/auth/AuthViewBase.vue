@@ -29,7 +29,9 @@ import {websiteConfig} from "@/config/website.config";
   
   &-container {
     flex: 1;
-    margin: 0 auto;
+    margin-top: 0;
+    margin-right: auto;
+    margin-left: 100px;
     flex-grow: 0;
     align-self: center;
     max-width: 384px;
@@ -39,7 +41,7 @@ import {websiteConfig} from "@/config/website.config";
       align-self: stretch;
       max-width: 100vw;
       min-width: 100vw;
-      margin: 0;
+      margin: 0 !important;
     }
   }
   &-top {
@@ -75,10 +77,11 @@ import {websiteConfig} from "@/config/website.config";
 
 @media (min-width: 640px) {
   .view-account {
-    background-image: url('../../assets/images/login.svg');
+    background-image: url('../../assets/Banner-Web-24.png'), linear-gradient(135deg, #041515, #111, #111);
     background-repeat: no-repeat;
     background-position: 50%;
-    background-size: 100%;
+    background-size: auto 100%;
+    background-clip: border-box;
   }
 
 } 
