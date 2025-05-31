@@ -31,11 +31,13 @@ public class ProfileEntitiesService(
             AttachedObjects = subject.AttachedObjects,
             IsOutDoor = subject.IsOutDoor
         };
-        if (await DbContext.ProfileSubjects.AnyAsync(x => x.Id == id))
+        var raw = await DbContext.ProfileSubjects.FirstOrDefaultAsync(x => x.Id == id);
+        if (raw != null)
         {
             if (!replace)
                 return;
             DbContext.Entry(o).State = EntityState.Modified;
+            o.CreatedTime = raw.CreatedTime;
         }
         else
         {
@@ -54,12 +56,14 @@ public class ProfileEntitiesService(
             Name = timeLayout.Name,
             AttachedObjects = timeLayout.AttachedObjects
         };
-        if (await DbContext.ProfileTimelayouts.AnyAsync(x => x.Id == id))
+        var raw = await DbContext.ProfileTimelayouts.FirstOrDefaultAsync(x => x.Id == id);
+        if (raw != null)
         {
             if (!replace)
                 return;
             DbContext.Entry(o).State = EntityState.Modified;
-            DbContext.ProfileTimelayoutTimepoints.Where(x => x.ParentId == id).ExecuteDelete();
+            await DbContext.ProfileTimelayoutTimepoints.Where(x => x.ParentId == id).ExecuteDeleteAsync();
+            o.CreatedTime = raw.CreatedTime;
         }
         else
         {
@@ -78,7 +82,8 @@ public class ProfileEntitiesService(
                 TimeType = p.TimeType,
                 DefaultSubjectId = p.DefaultClassId,
                 IsHideDefault = p.IsHideDefault,
-                Index = index++
+                Index = index++,
+                CreatedTime = raw?.CreatedTime ?? DateTime.Now
             });
         }
 
@@ -109,6 +114,7 @@ public class ProfileEntitiesService(
             DbContext.Entry(cp).State = EntityState.Detached;
             DbContext.Entry(o).State = EntityState.Modified;
             await DbContext.ProfileClassplanClasses.Where(x => x.ParentId == id).ExecuteDeleteAsync();
+            o.CreatedTime = cp.CreatedTime;
         }
         else
         {
@@ -129,7 +135,8 @@ public class ProfileEntitiesService(
                 Parent = o,
                 // AttachedObjects = JsonSerializer.Serialize(p.AttachedObjects),  // TODO: 等到ClassIsland完成课程层面的附加信息开发后取消注释这个
                 Subject = subject,
-                Index = index++
+                Index = index++,
+                CreatedTime = cp?.CreatedTime ?? DateTime.Now
             });
         }
 

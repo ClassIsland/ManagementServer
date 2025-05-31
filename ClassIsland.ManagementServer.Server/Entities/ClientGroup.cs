@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using ClassIsland.ManagementServer.Server.Abstractions.Entities;
 
 namespace ClassIsland.ManagementServer.Server.Entities;
 
 /// <summary>
 /// 代表一个客户端分组
 /// </summary>
-public partial class ClientGroup
+public partial class ClientGroup : IObjectWithTime
 {
     /// <summary>
     /// 当前客户端组 ID
@@ -31,4 +32,14 @@ public partial class ClientGroup
     /// 客户端组的对象分配信息
     /// </summary>
     public virtual ICollection<ObjectsAssignee> ObjectsAssignees { get; set; } = new List<ObjectsAssignee>();
+    
+    /// <summary>
+    /// 创建时间
+    /// </summary>
+    public DateTime CreatedTime { get; set; } = DateTime.Now;
+    
+    /// <summary>
+    /// 上次修改时间
+    /// </summary>
+    public DateTime UpdatedTime { get; set; } = DateTime.Now;
 }

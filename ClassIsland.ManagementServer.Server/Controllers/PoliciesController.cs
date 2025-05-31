@@ -41,6 +41,7 @@ public class PoliciesController(ManagementServerContext dbContext) : ControllerB
         else
         {
             DbContext.Policies.Entry(policy).State = EntityState.Modified;
+            policy.CreatedTime = o.CreatedTime;
         }
 
         await DbContext.SaveChangesAsync();

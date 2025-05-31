@@ -1,8 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
-using ClassIsland.Shared.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
-namespace ClassIsland.ManagementServer.Server.Entities;
+namespace ClassIsland.ManagementServer.Server.Abstractions.Entities;
 
 
 public interface IDbAttachableObject

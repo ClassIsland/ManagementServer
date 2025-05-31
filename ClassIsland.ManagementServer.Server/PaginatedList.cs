@@ -1,8 +1,10 @@
+using System.Linq.Expressions;
+using ClassIsland.ManagementServer.Server.Abstractions.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClassIsland.ManagementServer.Server;
 
-public class PaginatedList<T>(List<T> items, int count, int pageIndex, int pageSize)
+public class PaginatedList<T>(List<T> items, int count, int pageIndex, int pageSize) where T : IObjectWithTime
 {
     public int PageIndex { get; private set; } = pageIndex;
     public int TotalPages { get; private set; } = (int)Math.Ceiling(count / (double)pageSize);
@@ -17,14 +19,22 @@ public class PaginatedList<T>(List<T> items, int count, int pageIndex, int pageS
 
     public bool HasNextPage => PageIndex < TotalPages;
 
-    public static async Task<PaginatedList<T>> CreateAsync(IQueryable<T> source, int pageIndex, int pageSize)
+    public static async Task<PaginatedList<T>> CreateAsync(IQueryable<T> source, int pageIndex, int pageSize
+        , bool decreasing = false, bool orderByUpdatedTime = false) 
     {
         if (pageIndex <= 0)
         {
             throw new ArgumentOutOfRangeException(nameof(pageIndex), "Page index should larger than 0");
         }
+        
         var count = await source.CountAsync();
-        var items = await source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+        var query = source;
+        query = decreasing ? query.OrderByDescending(x => orderByUpdatedTime ? x.UpdatedTime : x.CreatedTime) 
+            : query.OrderBy(x => orderByUpdatedTime ? x.UpdatedTime : x.CreatedTime);
+        var items = await query
+            .Skip((pageIndex - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
         return new PaginatedList<T>(items, count, pageIndex, pageSize);
     }
 }

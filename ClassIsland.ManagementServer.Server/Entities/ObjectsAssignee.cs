@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using ClassIsland.ManagementServer.Server.Abstractions.Entities;
 using ClassIsland.ManagementServer.Server.Enums;
 using Microsoft.VisualBasic.CompilerServices;
 
@@ -10,7 +11,7 @@ namespace ClassIsland.ManagementServer.Server.Entities;
 /// <summary>
 /// 代表一个对象分配信息
 /// </summary>
-public partial class ObjectsAssignee
+public partial class ObjectsAssignee : IObjectWithTime
 {
     /// <summary>
     /// 对象分配 ID
@@ -52,4 +53,7 @@ public partial class ObjectsAssignee
     public virtual Client? TargetClientCu { get; set; }
 
     public virtual ClientGroup? TargetGroup { get; set; }
+    
+    public DateTime CreatedTime { get; set; } = DateTime.Now;
+    public DateTime UpdatedTime { get; set; } = DateTime.Now;
 }

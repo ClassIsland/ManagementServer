@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using ClassIsland.ManagementServer.Server.Abstractions.Entities;
 using ClassIsland.Shared.Interfaces;
 
 namespace ClassIsland.ManagementServer.Server.Entities;
@@ -8,7 +9,7 @@ namespace ClassIsland.ManagementServer.Server.Entities;
 /// <summary>
 /// 代表一个档案的课表
 /// </summary>
-public partial class ProfileClassplan : IDbAttachableObject
+public partial class ProfileClassplan : IDbAttachableObject, IObjectWithTime
 {
     /// <summary>
     /// 课表 ID
@@ -52,4 +53,14 @@ public partial class ProfileClassplan : IDbAttachableObject
 
     public virtual ProfileTimeLayout TimeLayout { get; set; } = new();
     public Dictionary<string, object?> AttachedObjects { get; set; } = new();
+    
+    /// <summary>
+    /// 创建时间
+    /// </summary>
+    public DateTime CreatedTime { get; set; } = DateTime.Now;
+    
+    /// <summary>
+    /// 上次修改时间
+    /// </summary>
+    public DateTime UpdatedTime { get; set; } = DateTime.Now;
 }

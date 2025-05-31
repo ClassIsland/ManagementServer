@@ -4,6 +4,7 @@ using ClassIsland.ManagementServer.Server.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClassIsland.ManagementServer.Server.Migrations
 {
     [DbContext(typeof(ManagementServerContext))]
-    partial class ManagementServerContextModelSnapshot : ModelSnapshot
+    [Migration("20250531093217_AddTimeFields")]
+    partial class AddTimeFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -130,9 +133,6 @@ namespace ClassIsland.ManagementServer.Server.Migrations
                     b.Property<int>("AssigneeType")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<Guid>("ObjectId")
                         .HasColumnType("char(36)");
 
@@ -147,9 +147,6 @@ namespace ClassIsland.ManagementServer.Server.Migrations
 
                     b.Property<long?>("TargetGroupId")
                         .HasColumnType("bigint");
-
-                    b.Property<DateTime>("UpdatedTime")
-                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 

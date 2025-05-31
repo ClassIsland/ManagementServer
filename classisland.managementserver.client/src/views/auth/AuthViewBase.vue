@@ -77,7 +77,7 @@ import {websiteConfig} from "@/config/website.config";
 
 @media (min-width: 640px) {
   .view-account {
-    background-image: url('../../assets/Banner-Web-24.png'), linear-gradient(135deg, #041515, #111, #111);
+    background-image: linear-gradient(#00000040), url('../../assets/Banner-Web-24.png'), linear-gradient(135deg, #041515, #111, #111);
     background-repeat: no-repeat;
     background-position: 50%;
     background-size: auto 100%;

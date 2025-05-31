@@ -32,10 +32,12 @@ public class AssigneesController(ManagementServerContext dbContext,
     [HttpPost("all/{id:int}")]
     public async Task<IActionResult> Update([FromBody] ObjectsAssignee content, [FromRoute] int? id = null)
     {
-        if (DbContext.ObjectsAssignees.Any(x => x.Id == id) && id != null)
+        var raw = await DbContext.ObjectsAssignees.FirstOrDefaultAsync(x => x.Id == id);
+        if (raw != null && id != null)
         {
             content.Id = id.Value;
             DbContext.Entry(content).State = EntityState.Modified;
+            content.CreatedTime = raw.CreatedTime;
         }
         else
         {

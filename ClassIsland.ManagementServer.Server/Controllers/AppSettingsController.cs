@@ -41,6 +41,7 @@ public class AppSettingsController(ManagementServerContext dbContext) : Controll
         else
         {
             DbContext.Settings.Entry(setting).State = EntityState.Modified;
+            setting.CreatedTime = o.CreatedTime;
         }
 
         await DbContext.SaveChangesAsync();
