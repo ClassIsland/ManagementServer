@@ -38,9 +38,4 @@ public partial class ObjectUpdate
     /// 对象更新时间
     /// </summary>
     public DateTime UpdateTime { get; set; }
-
-    /// <summary>
-    /// 要更新的客户端
-    /// </summary>
-    public virtual Client TargetClient { get; set; } = new();
 }

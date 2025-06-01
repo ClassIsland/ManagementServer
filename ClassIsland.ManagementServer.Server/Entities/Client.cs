@@ -67,11 +67,6 @@ public partial class Client : IObjectWithTime
     /// 此客户端对象更新信息
     /// </summary>
     public virtual ICollection<ObjectUpdate> ObjectUpdates { get; set; } = new List<ObjectUpdate>();
-
-    /// <summary>
-    /// 此客户端的对象分配信息
-    /// </summary>
-    public virtual ICollection<ObjectsAssignee> ObjectsAssignees { get; set; } = new List<ObjectsAssignee>();
     
     /// <summary>
     /// 创建时间

@@ -1,6 +1,9 @@
+using System.Collections.ObjectModel;
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
+using ClassIsland.ManagementServer.Server.Enums;
 using ClassIsland.ManagementServer.Server.Extensions;
+using ClassIsland.ManagementServer.Server.Models.Assignees;
 using ClassIsland.ManagementServer.Server.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -53,6 +56,7 @@ public class AssigneesController(ManagementServerContext dbContext,
     public async Task<IActionResult> Update([FromBody] ObjectsAssignee content)
     {
         DbContext.ObjectsAssignees.Add(content);
+        await DbContext.SaveChangesAsync();
         await ObjectsUpdateNotifyService.NotifyClientUpdatingAsync(content.TargetClientCuid, content.TargetClientId,
             content.TargetGroupId);
         await DbContext.SaveChangesAsync();
@@ -72,7 +76,7 @@ public class AssigneesController(ManagementServerContext dbContext,
         return Ok();
     }
     
-    [HttpGet("by-object/{objectType:int}/{id:guid}")]
+    [HttpGet("by-object/assignees/{objectType:int}/{id:guid}")]
     public async Task<IActionResult> GetByObject([FromRoute] int objectType, [FromRoute] Guid id, 
         [FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 20)
     {
@@ -81,5 +85,23 @@ public class AssigneesController(ManagementServerContext dbContext,
             .OrderBy(x => x.Id)
             .ToPaginatedListAsync(pageIndex, pageSize);
         return Ok(assignees);
+    }
+    
+    [HttpGet("by-object/clients/{objectType:int}/{id:guid}")]
+    public async Task<IActionResult> GetByObjectInClientView([FromRoute] int objectType, [FromRoute] Guid id,
+        [FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 20)
+    {
+        var clients = await DbContext.Clients
+            .ToPaginatedListAsync(pageIndex, pageSize);
+        Collection<ClientAssigneeState<Client>> states = [];
+        foreach (var client in clients.Items)
+        {
+            var assignee = await DbContext.ObjectsAssignees.FirstOrDefaultAsync(x =>
+                x.AssigneeType == AssigneeTypes.ClientUid && x.TargetClientCuid == client.Cuid &&
+                (int)x.ObjectType == objectType && x.ObjectId == id);
+            states.Add(new ClientAssigneeState<Client>(AssigneeTypes.ClientUid, client, assignee));
+        }
+        
+        return Ok(states.ToPaginatedList(pageIndex, pageSize));
     }
 }

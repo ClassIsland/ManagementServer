@@ -5,10 +5,10 @@ public interface IObjectWithTime
     /// <summary>
     /// 对象创建时间
     /// </summary>
-    public DateTime CreatedTime { get; set; }
+    public DateTime CreatedTime { get; }
     
     /// <summary>
     /// 对象上次修改时间
     /// </summary>
-    public DateTime UpdatedTime { get; set; }
+    public DateTime UpdatedTime { get; }
 }

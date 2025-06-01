@@ -4,6 +4,7 @@ using ClassIsland.ManagementServer.Server.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClassIsland.ManagementServer.Server.Migrations
 {
     [DbContext(typeof(ManagementServerContext))]
-    partial class ManagementServerContextModelSnapshot : ModelSnapshot
+    [Migration("20250601110300_RemoveOutdatedFK")]
+    partial class RemoveOutdatedFK
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -97,14 +100,14 @@ namespace ClassIsland.ManagementServer.Server.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<Guid?>("ClientCuid")
-                        .HasColumnType("char(36)");
-
                     b.Property<Guid>("ObjectId")
                         .HasColumnType("char(36)");
 
                     b.Property<int>("ObjectType")
                         .HasColumnType("int");
+
+                    b.Property<Guid>("TargetClientCuid")
+                        .HasColumnType("char(36)");
 
                     b.Property<Guid>("TargetCuid")
                         .HasColumnType("char(36)");
@@ -114,7 +117,7 @@ namespace ClassIsland.ManagementServer.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClientCuid");
+                    b.HasIndex("TargetClientCuid");
 
                     b.ToTable("ObjectUpdates");
                 });
@@ -653,9 +656,13 @@ namespace ClassIsland.ManagementServer.Server.Migrations
 
             modelBuilder.Entity("ClassIsland.ManagementServer.Server.Entities.ObjectUpdate", b =>
                 {
-                    b.HasOne("ClassIsland.ManagementServer.Server.Entities.Client", null)
+                    b.HasOne("ClassIsland.ManagementServer.Server.Entities.Client", "TargetClient")
                         .WithMany("ObjectUpdates")
-                        .HasForeignKey("ClientCuid");
+                        .HasForeignKey("TargetClientCuid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TargetClient");
                 });
 
             modelBuilder.Entity("ClassIsland.ManagementServer.Server.Entities.ObjectsAssignee", b =>

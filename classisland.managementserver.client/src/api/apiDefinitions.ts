@@ -25,7 +25,14 @@ export default {
   'assignees.post_api_v1_assignees_all_id': ['POST', '/api/v1/assignees/all/{id}'],
   'assignees.delete_api_v1_assignees_all_id': ['DELETE', '/api/v1/assignees/all/{id}'],
   'assignees.post_api_v1_assignees_all': ['POST', '/api/v1/assignees/all'],
-  'assignees.get_api_v1_assignees_by_object_objecttype_id': ['GET', '/api/v1/assignees/by-object/{objectType}/{id}'],
+  'assignees.get_api_v1_assignees_by_object_assignees_objecttype_id': [
+    'GET',
+    '/api/v1/assignees/by-object/assignees/{objectType}/{id}'
+  ],
+  'assignees.get_api_v1_assignees_by_object_clients_objecttype_id': [
+    'GET',
+    '/api/v1/assignees/by-object/clients/{objectType}/{id}'
+  ],
   'identity.post_api_v1_identity_register': ['POST', '/api/v1/identity/register'],
   'identity.post_api_v1_identity_login': ['POST', '/api/v1/identity/login'],
   'identity.post_api_v1_identity_refresh': ['POST', '/api/v1/identity/refresh'],

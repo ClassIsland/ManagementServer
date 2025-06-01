@@ -1,5 +1,5 @@
 import { h } from 'vue';
-import { NAvatar, NTag } from 'naive-ui';
+import { NAvatar, NCheckbox } from 'naive-ui';
 import { BasicColumn } from '@/components/Table';
 import {ClassPlan, Client, ObjectsAssignee, Subject} from "@/api/globals";
 
@@ -33,5 +33,31 @@ export const columns: BasicColumn<ObjectsAssignee>[] = [
       }
       return "？？？"
     }
+  }
+];
+
+
+export const columnsClient: BasicColumn[] = [
+  {
+    title: '已分配',
+    key: 'hasAssignee',
+    render(record) {
+      return h(NCheckbox, {
+        checked: record.hasAssignee,
+        onUpdateChecked(checked: boolean) {
+          record.hasAssignee = checked;
+          record.updateHasAssignee();
+        }
+      });
+    },
+    width: 75
+  },
+  {
+    title: '客户端 CUID',
+    key: 'clientObject.cuid'
+  },
+  {
+    title: '客户端 ID',
+    key: 'clientObject.id'
   }
 ];

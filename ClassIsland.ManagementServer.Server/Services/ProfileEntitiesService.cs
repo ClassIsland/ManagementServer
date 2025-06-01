@@ -93,6 +93,13 @@ public class ProfileEntitiesService(
     public async Task SetClassPlanEntity(Guid id, ClassPlan classPlan, bool replace)
     {
         Logger.LogDebug("处理课表：{}（{}）", id, classPlan.Name);
+        var timeLayout = await DbContext.ProfileTimelayouts.FirstOrDefaultAsync(x =>
+            x.Id == GuidHelpers.TryParseGuidOrEmpty(classPlan.TimeLayoutId));
+        if (timeLayout == null)
+        {
+            Logger.LogWarning("课表时间表不存在：{}", classPlan.TimeLayoutId);
+            return;
+        }
         var o = new ProfileClassplan()
         {
             Id = id,
@@ -100,10 +107,7 @@ public class ProfileEntitiesService(
             AttachedObjects = classPlan.AttachedObjects,
             WeekDay = classPlan.TimeRule.WeekDay,
             WeekDiv = classPlan.TimeRule.WeekCountDiv,
-            TimeLayout =
-                await DbContext.ProfileTimelayouts.FirstOrDefaultAsync(x =>
-                    x.Id == GuidHelpers.TryParseGuidOrEmpty(classPlan.TimeLayoutId)) ??
-                throw new Exception("TimeLayout not found"),
+            TimeLayout = timeLayout,
             IsEnabled = classPlan.IsEnabled
         };
         var cp = await DbContext.ProfileClassplans.FirstOrDefaultAsync(x => x.Id == id);

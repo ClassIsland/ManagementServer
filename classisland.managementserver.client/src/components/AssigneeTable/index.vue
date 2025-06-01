@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { defineProps, ref, reactive, h } from 'vue';
 import {BasicTable, TableAction} from "@/components/Table";
-import {columns} from "./columns";
+import {columns, columnsClient} from "./columns";
 import { DeleteOutlined, EditOutlined } from '@vicons/antd';
 import { useDialog, useMessage } from 'naive-ui';
 
@@ -17,6 +17,7 @@ const assigneeFormData = ref({
 });
 const isSaving = ref(false);
 const actionRef = ref();
+const actionRefClients = ref();
 const message = useMessage();
 
 
@@ -58,7 +59,7 @@ function createActions(record) {
 }
 
 const loadDataTable = async (res) => {
-  return Apis.assignees.get_api_v1_assignees_by_object_objecttype_id({
+  return Apis.assignees.get_api_v1_assignees_by_object_assignees_objecttype_id({
     pathParams: {
       id: props.objectId,
       objectType: props.objectType
@@ -68,6 +69,45 @@ const loadDataTable = async (res) => {
       pageIndex: res.pageIndex
     }
   });
+};
+
+const loadDataTableClients = async (res) => {
+  const states = await Apis.assignees.get_api_v1_assignees_by_object_clients_objecttype_id({
+    pathParams: {
+      id: props.objectId,
+      objectType: props.objectType
+    },
+    params: {
+      pageSize: res.pageSize,
+      pageIndex: res.pageIndex
+    }
+  });
+  states.items.forEach((item) => {
+    item.updateHasAssignee = async () => {
+      if (item.hasAssignee) {
+        await Apis.assignees.post_api_v1_assignees_all({
+          pathParams: {
+          },
+          data: {
+            assigneeType: 1,
+            objectId: props.objectId,
+            objectType: props.objectType,
+            targetClientCuid: item.clientObject.cuid,
+          }
+        });
+      } else {
+        await Apis.assignees.delete_api_v1_assignees_all_id({
+          pathParams: {
+            id: item.assignee.id
+          }
+        });
+      }
+      actionRefClients.value.reload();
+      message.success("保存成功");
+    };
+  });
+  
+  return states;
 };
 
 function onCheckedRow(rowKeys) {
@@ -124,19 +164,36 @@ const actionColumn = reactive({
 </script>
 
 <template>
-  <BasicTable
-    title="分配"
-    titleTooltip="管理当前对象分配给的客户端。"
-    :columns="columns"
-    :request="loadDataTable"
-    :row-key="(row) => row.id"
-    ref="actionRef"
-    :actionColumn="actionColumn"
-    @update:checked-row-keys="onCheckedRow">
-    <template v-slot:toolbar>
-      <n-button type="primary" @click="handleAdd">添加分配</n-button>
-    </template>
-  </BasicTable>
+  <n-tabs>
+    <n-tab-pane name="all" tab="全部分配">
+      <BasicTable
+        title="分配"
+        titleTooltip="管理当前对象分配给的客户端。"
+        :columns="columns"
+        :request="loadDataTable"
+        :row-key="(row) => row.id"
+        ref="actionRef"
+        :actionColumn="actionColumn"
+        @update:checked-row-keys="onCheckedRow">
+        <template v-slot:toolbar>
+          <n-button type="primary" @click="handleAdd">添加分配</n-button>
+        </template>
+      </BasicTable>
+      
+    </n-tab-pane>
+    <n-tab-pane name="cuid" tab="客户端">
+      <BasicTable
+        title="客户端"
+        titleTooltip="管理当前对象分配给的客户端。"
+        :columns="columnsClient"
+        :request="loadDataTableClients"
+        :row-key="(row) => row.id"
+        ref="actionRefClients"
+        @update:checked-row-keys="onCheckedRow">
+      </BasicTable>
+
+    </n-tab-pane>
+  </n-tabs>
   <n-drawer v-model:show="isEditDrawerActive" :width="400" placement="right">
     <n-drawer-content title="编辑分配">
       <n-form label-placement="top" :model="assigneeFormData">

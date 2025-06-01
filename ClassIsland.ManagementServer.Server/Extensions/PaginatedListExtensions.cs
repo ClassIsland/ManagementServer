@@ -9,4 +9,9 @@ public static class PaginatedListExtensions
     {
         return await PaginatedList<T>.CreateAsync(queryable, pageIndex, pageSize, decreasing, orderByUpdatedTime);
     } 
+    
+    public static PaginatedList<T> ToPaginatedList<T>(this IList<T> list, int pageIndex, int pageSize) where T : IObjectWithTime
+    {
+        return PaginatedList<T>.CreateFromRawList(list, pageIndex, pageSize);
+    }
 }

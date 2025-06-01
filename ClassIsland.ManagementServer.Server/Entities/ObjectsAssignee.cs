@@ -49,10 +49,6 @@ public partial class ObjectsAssignee : IObjectWithTime
     /// 分配类型
     /// </summary>
     public AssigneeTypes AssigneeType { get; set; }
-
-    public virtual Client? TargetClientCu { get; set; }
-
-    public virtual ClientGroup? TargetGroup { get; set; }
     
     public DateTime CreatedTime { get; set; } = DateTime.Now;
     public DateTime UpdatedTime { get; set; } = DateTime.Now;

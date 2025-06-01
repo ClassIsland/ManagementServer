@@ -1,6 +1,7 @@
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
 using ClassIsland.ManagementServer.Server.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace ClassIsland.ManagementServer.Server.Services;
 
@@ -27,11 +28,11 @@ public class ObjectsUpdateNotifyService(ManagementServerContext context, Objects
     
     public async Task NotifyClientUpdatingAsync(Guid? cuid=null, string? id=null, long? group=null)
     {
-        var clients = DbContext.Clients.Where(x =>
+        var clients = await DbContext.Clients.Where(x =>
             (cuid != null && x.Cuid == cuid) ||
             (id != null && x.Id == id) ||
             (group != null && x.GroupId == group)
-        ).Select(x => x).ToList();
+        ).Select(x => x).ToListAsync();
         foreach (var i in clients)
         {
             await DbContext.ObjectUpdates.AddAsync(new ObjectUpdate()

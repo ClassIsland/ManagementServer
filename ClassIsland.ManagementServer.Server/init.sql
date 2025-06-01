@@ -246,7 +246,7 @@ CREATE INDEX `fk_profile_timelayout_timepoint_profile_timelayouts_1` ON `profile
 
 CREATE INDEX `fk_profile_timelayouts_profile_groups_1` ON `profile_timelayouts` (`group_id`);
 
-INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
+INSERT INTO __efmigrationshistory_ (`MigrationId`, `ProductVersion`)
 VALUES ('20240608143223_init', '8.0.6');
 
 COMMIT;

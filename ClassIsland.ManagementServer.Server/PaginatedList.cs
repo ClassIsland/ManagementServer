@@ -37,4 +37,16 @@ public class PaginatedList<T>(List<T> items, int count, int pageIndex, int pageS
             .ToListAsync();
         return new PaginatedList<T>(items, count, pageIndex, pageSize);
     }
+    
+    public static PaginatedList<T> CreateFromRawList(IList<T> source, int pageIndex, int pageSize)
+    {
+        if (pageIndex <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(pageIndex), "Page index should larger than 0");
+        }
+        
+        var count = source.Count;
+        var items = source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
+        return new PaginatedList<T>(items, count, pageIndex, pageSize);
+    }
 }
