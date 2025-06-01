@@ -15,6 +15,16 @@
 <div id="appProvider" style="display: none"></div>
 <div id="app">
   <style>
+    #logo {
+      margin: auto;
+    }
+    
+    .loading-wrap {
+      display: flex;
+      justify-items: center;
+      
+    }
+
     .first-loading-wrap {
       display: flex;
       width: 100%;
@@ -23,97 +33,63 @@
       align-items: center;
       flex-direction: column;
     }
-
-    .first-loading-wrap > h1 {
-      font-size: 128px
+    
+    body {
+      margin: 0;
+      background: #f6f8fa;
     }
 
-    .first-loading-wrap .loading-wrap {
-      padding: 98px;
-      display: flex;
-      justify-content: center;
-      align-items: center
+    .circle-loader {
+      margin-top: 32px;
+      border: 3px solid #e0e0e0;
+      border-top: 3px solid #00bfff;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      min-width: 24px;
+      min-height: 24px;
+      max-width: 24px;
+      max-height: 24px;
+      box-sizing: border-box;
+      animation: spin 1s cubic-bezier(0.75, 0.1, 0.25, 0.9) infinite;
     }
-
-    .dot {
-      animation: antRotate 1.2s infinite linear;
-      transform: rotate(45deg);
-      position: relative;
-      display: inline-block;
-      font-size: 32px;
-      width: 32px;
-      height: 32px;
-      box-sizing: border-box
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
-
-    .dot i {
-      width: 14px;
-      height: 14px;
-      position: absolute;
-      display: block;
-      background-color: #1890ff;
-      border-radius: 100%;
-      transform: scale(.75);
-      transform-origin: 50% 50%;
-      opacity: .3;
-      animation: antSpinMove 1s infinite linear alternate
-    }
-
-    .dot i:nth-child(1) {
-      top: 0;
-      left: 0
-    }
-
-    .dot i:nth-child(2) {
-      top: 0;
-      right: 0;
-      -webkit-animation-delay: .4s;
-      animation-delay: .4s
-    }
-
-    .dot i:nth-child(3) {
-      right: 0;
-      bottom: 0;
-      -webkit-animation-delay: .8s;
-      animation-delay: .8s
-    }
-
-    .dot i:nth-child(4) {
-      bottom: 0;
-      left: 0;
-      -webkit-animation-delay: 1.2s;
-      animation-delay: 1.2s
-    }
-
-    @keyframes antRotate {
-      to {
-        -webkit-transform: rotate(405deg);
-        transform: rotate(405deg)
-      }
-    }
-
-    @-webkit-keyframes antRotate {
-      to {
-        -webkit-transform: rotate(405deg);
-        transform: rotate(405deg)
-      }
-    }
-
-    @keyframes antSpinMove {
-      to {
-        opacity: 1
-      }
-    }
-
-    @-webkit-keyframes antSpinMove {
-      to {
-        opacity: 1
-      }
-    }</style>
+  </style>
   <div class="first-loading-wrap">
     <div class="loading-wrap">
-      <span class="dot dot-spin"><i></i><i></i><i></i><i></i></span>
+      <svg xmlns="http://www.w3.org/2000/svg" id="logo"
+           viewBox="-64 -64 320 320" width="160" height="160">
+        <defs>
+          <style>
+            .a{isolation:isolate;}.b{opacity:0.2;mix-blend-mode:multiply;}.c{fill:#e2e2e2;}.d{fill:#999;}.e{fill:#959595;}.f{fill:#f6f6f6;}.g{fill:#ccc;}.h{fill:#00bfff;}.i{fill:url(#a);}</style>
+          <linearGradient id="a" x1="90" y1="126" x2="154.97" y2="190.97"
+                          gradientUnits="userSpaceOnUse">
+            <stop offset="0.32" stop-opacity="0.15" />
+            <stop offset="0.62" stop-opacity="0.02" />
+            <stop offset="1" stop-opacity="0" />
+          </linearGradient>
+          <filter id="shadow" x="0" y="0" width="200%" height="200%">
+            <feDropShadow xmlns="http://www.w3.org/2000/svg" dx="0" dy="16" stdDeviation="16" flood-color="black" flood-opacity="0.2"/>
+          </filter>
+        </defs>
+        <title>AppLogo</title>
+        <g class="a" filter="url(#shadow)">
+          <path class="c" d="M177.94,160H56V100H177.94a8,8,0,0,1,8,8v44A8,8,0,0,1,177.94,160Z" />
+          <rect class="d" x="70.01" y="115" width="30" height="30" />
+          <rect class="d" x="107.51" y="115" width="30" height="30" />
+          <rect class="d" x="145" y="115" width="30" height="30" />
+          <polygon class="e" points="124 32 56 100 56 160 124 92 124 32" />
+          <path class="f" d="M124,92H16a8,8,0,0,1-8-8V40a8,8,0,0,1,8-8H124Z" />
+          <rect class="g" x="20" y="44.53" width="30" height="30" />
+          <rect class="h" x="56" y="44.53" width="58.02" height="30" />
+          <polygon class="i" points="116 100 56 160 185.94 160 185.94 153.94 132 100 116 100" />
+        </g>
+      </svg>
+      
     </div>
+    <div class="circle-loader"></div>
   </div>
 </div>
 <script>var globalThis = window;</script>
