@@ -68,6 +68,19 @@ public class ClientGroupController(ILogger<ClientGroupController> logger, Manage
             return NotFound();
         }
 
+        if (id is ClientGroup.DefaultGroupId or ClientGroup.GlobalGroupId)
+        {
+            return BadRequest();
+        }
+
+        var clients = await DbContext.AbstractClients
+            .Where(x => x.GroupId == id)
+            .ToListAsync();
+        foreach (var i in clients)
+        {
+            i.GroupId = ClientGroup.DefaultGroupId;
+        }
+        
         DbContext.ClientGroups.Remove(group);
         await DbContext.SaveChangesAsync();
         return Ok();

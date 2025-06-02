@@ -1850,6 +1850,168 @@ declare global {
       /**
        * ---
        *
+       * [PUT]
+       *
+       * **path:** /api/v1/clients_registry/abstract
+       *
+       * ---
+       *
+       * **RequestBody**
+       * ```ts
+       * type RequestBody = {
+       *   internalId?: number
+       *   id?: string | null
+       *   createdTime?: string
+       *   updatedTime?: string
+       *   groupId?: number
+       *   clients?: Array<{
+       *     cuid?: string
+       *     id?: string | null
+       *     registerTime?: string
+       *     policyVersion?: number
+       *     timeLayoutVersion?: number
+       *     subjectsVersion?: number
+       *     defaultSettingsVersion?: number
+       *     classPlanVersion?: number
+       *     objectUpdates?: Array<{
+       *       id?: number
+       *       objectId?: string
+       *       objectType?: 0 | 1 | 2 | 3 | 4 | 5
+       *       targetCuid?: string
+       *       updateTime?: string
+       *     }> | null
+       *     createdTime?: string
+       *     updatedTime?: string
+       *     abstractClient?: AbstractClient
+       *   }> | null
+       *   group?: ClientGroup
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      put_api_v1_clients_registry_abstract<
+        Config extends Alova2MethodConfig<unknown> & {
+          data: AbstractClient;
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'clientregistry.put_api_v1_clients_registry_abstract', Config>;
+      /**
+       * ---
+       *
+       * [PUT]
+       *
+       * **path:** /api/v1/clients_registry/abstract/{id}
+       *
+       * ---
+       *
+       * **Path Parameters**
+       * ```ts
+       * type PathParameters = {
+       *   // [required]
+       *   id: number
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **RequestBody**
+       * ```ts
+       * type RequestBody = {
+       *   internalId?: number
+       *   id?: string | null
+       *   createdTime?: string
+       *   updatedTime?: string
+       *   groupId?: number
+       *   clients?: Array<{
+       *     cuid?: string
+       *     id?: string | null
+       *     registerTime?: string
+       *     policyVersion?: number
+       *     timeLayoutVersion?: number
+       *     subjectsVersion?: number
+       *     defaultSettingsVersion?: number
+       *     classPlanVersion?: number
+       *     objectUpdates?: Array<{
+       *       id?: number
+       *       objectId?: string
+       *       objectType?: 0 | 1 | 2 | 3 | 4 | 5
+       *       targetCuid?: string
+       *       updateTime?: string
+       *     }> | null
+       *     createdTime?: string
+       *     updatedTime?: string
+       *     abstractClient?: AbstractClient
+       *   }> | null
+       *   group?: ClientGroup
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      put_api_v1_clients_registry_abstract_id<
+        Config extends Alova2MethodConfig<unknown> & {
+          pathParams: {
+            /**
+             * [required]
+             */
+            id: number;
+          };
+          data: AbstractClient;
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'clientregistry.put_api_v1_clients_registry_abstract_id', Config>;
+      /**
+       * ---
+       *
+       * [DELETE]
+       *
+       * **path:** /api/v1/clients_registry/abstract/{id}
+       *
+       * ---
+       *
+       * **Path Parameters**
+       * ```ts
+       * type PathParameters = {
+       *   // [required]
+       *   id: number
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      delete_api_v1_clients_registry_abstract_id<
+        Config extends Alova2MethodConfig<unknown> & {
+          pathParams: {
+            /**
+             * [required]
+             */
+            id: number;
+          };
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'clientregistry.delete_api_v1_clients_registry_abstract_id', Config>;
+      /**
+       * ---
+       *
        * [POST]
        *
        * **path:** /api/v1/clients_registry/register

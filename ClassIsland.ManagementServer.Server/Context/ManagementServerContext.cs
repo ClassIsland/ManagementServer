@@ -88,7 +88,7 @@ public partial class ManagementServerContext : IdentityDbContext<User>
         {
             await ClientGroups.AddAsync(new ClientGroup()
             {
-                Id = ClientGroup.DefaultGroupId,
+                Id = ClientGroup.GlobalGroupId,
                 Name = "全局",
                 ColorHex = "#ff8500"
             });

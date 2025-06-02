@@ -36,6 +36,42 @@ public class ClientRegistryController(ManagementServerContext context) : Control
             .ToPaginatedListAsync(pageIndex, pageSize));
     }
     
+    [HttpPut("abstract")]
+    public async Task<IActionResult> CreateAbstract([FromBody] AbstractClient group)
+    {
+        await DataContext.AbstractClients.AddAsync(group);
+        await DataContext.SaveChangesAsync();
+        
+        return Ok(group);
+    }
+    
+    [HttpPut("abstract/{id:long}")]
+    public async Task<IActionResult> UpdateAbstract(long id, [FromBody] AbstractClient client)
+    {   
+        var prev = await DataContext.AbstractClients.AnyAsync(x => x.InternalId == id);
+        if (!prev)
+        {
+            return NotFound();
+        }
+        DataContext.Entry(client).State = EntityState.Modified;
+        await DataContext.SaveChangesAsync();
+        return Ok();
+    }
+    
+    [HttpDelete("abstract/{id:long}")]
+    public async Task<IActionResult> DeleteAbstract(long id)
+    {
+        var client = await DataContext.AbstractClients.FirstOrDefaultAsync(x => x.InternalId == id);
+        if (client == null) 
+        {
+            return NotFound();
+        }
+
+        DataContext.AbstractClients.Remove(client);
+        await DataContext.SaveChangesAsync();
+        return Ok();
+    }
+    
     [HttpPost("register")]
     [Obsolete]
     public IActionResult Register([FromQuery] Guid cuid, [FromQuery] string id)

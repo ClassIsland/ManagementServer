@@ -94,7 +94,8 @@ async function loadData(){
 async function loadTimeLayouts(page: number) {
   let tl = await Apis.timelayouts.get_api_v1_profiles_timelayouts({
     params: {
-      pageSize: 50
+      pageSize: 50,
+      pageIndex: page
     }
   });
   timeLayouts.value.push(...tl.items);

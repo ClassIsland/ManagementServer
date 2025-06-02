@@ -128,7 +128,7 @@ function handleDelete(record) {
   console.log(record);
   dialog.info({
     title: '提示',
-    content: `您想删除客户端组 ${record.name} 吗？`,
+    content: `您想删除分组 ${record.name} 吗？所有被分配到此组的实例将被分配到默认分组中。`,
     positiveText: '确定',
     negativeText: '取消',
     onPositiveClick: async () => {
