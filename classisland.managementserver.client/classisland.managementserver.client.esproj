@@ -7,8 +7,29 @@
     <ShouldRunBuildScript>false</ShouldRunBuildScript>
     <!-- Folder where production build objects will be placed -->
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist</BuildOutputFolder>
+    <NpmInstallCheck>pnpm-lock.yaml</NpmInstallCheck>
+    <ShouldRunNpmInstall>False</ShouldRunNpmInstall>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="src\services\" />
   </ItemGroup>
+  
+  <!-- 覆盖原先的 npm install 命令，使用自定义的 pnpm -->
+  <!-- 
+  This target will ensure npm install runs before our build so node_modules is there. It will check for the file .install-check inside obj folder so it
+  compares timestamps with package.json. If some alteration happened on package.json, it will run npm install again. After running, it touches the file again
+  to update the timestamp. If npm install fails, it does not touch the install-check file. You can find NpmInstallCheck on Sdk.props.
+  -->
+  <Target Name="RunNpmInstall" Condition=" $(ShouldRunPnpmInstall) == 'true' " DependsOnTargets="PreNpmInstallCheck" Inputs="$(PackageJsonDirectory)package.json" Outputs="$(NpmInstallCheck)">
+    <!-- Ensure Node.js is installed -->
+    <Exec Command="node --version" ContinueOnError="true">
+      <Output TaskParameter="ExitCode" PropertyName="ErrorCodeNpmVersion" />
+    </Exec>
+    <Error Condition="'$(ErrorCodeNpmVersion)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
+    <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
+    <Exec WorkingDirectory="$(PackageJsonDirectory)" Command="pnpm install">
+      <Output TaskParameter="ExitCode" PropertyName="ErrorCodeNpmInstall" />
+    </Exec>
+    <Touch Files="$(NpmInstallCheck)" Condition="'$(ErrorCodeNpmInstall)' == '0'" AlwaysCreate="true" />
+  </Target>
 </Project>
