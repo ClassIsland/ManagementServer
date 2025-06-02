@@ -1,15 +1,20 @@
 <template>
-  <div class="console">
-    <!--数据卡片-->
-    <n-grid cols="1 s:2 m:3 l:4 xl:4 2xl:4" responsive="screen" :x-gap="12" :y-gap="8">
-
-    </n-grid>
+  <div class="console d-flex flex-col gap-y-2">
 
     <!--导航卡片-->
     <n-card title="ClassIsland 集控控制台">
       <span>欢迎使用 ClassIsland 集控控制台！</span>
     </n-card>
+    
+    <n-card>
+      <div class="d-flex flex-col items-center gap-2 my-4">
 
+        <img src="../../../assets/stickers/缇宝_炸飞.png" height="81" width="81"
+             alt="缇宝_炸飞" title="缇宝_炸飞"/>
+        <h2 class="text-h5 font-weight-bold">施工中</h2>
+        <p>此项目正在施工中，可能存在未完工的功能和缺陷。当前版本不代表最终品质。</p>
+      </div>
+    </n-card>
   </div>
 </template>
 <script lang="ts" setup>
