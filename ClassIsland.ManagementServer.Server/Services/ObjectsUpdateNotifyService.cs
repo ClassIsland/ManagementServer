@@ -31,7 +31,7 @@ public class ObjectsUpdateNotifyService(ManagementServerContext context, Objects
         var clients = await DbContext.Clients.Where(x =>
             (cuid != null && x.Cuid == cuid) ||
             (id != null && x.Id == id) ||
-            (group != null && x.GroupId == group)
+            (group != null && x.AbstractClient.GroupId == group)
         ).Select(x => x).ToListAsync();
         foreach (var i in clients)
         {

@@ -80,6 +80,7 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ManagementServerContext>();
     db.Database.Migrate();
+    await db.SetupDatabase();
 }
 #endif
 

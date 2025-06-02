@@ -1,8 +1,5 @@
 <template>
   <n-card :bordered="false" class="proCard">
-    <n-button type="primary" :onclick="addClient">添加客户端</n-button>
-  </n-card>
-  <n-card :bordered="false" class="proCard">
     <BasicTable
       title="客户端"
       titleTooltip="管理已连接到集控的客户端。"
@@ -12,8 +9,14 @@
       ref="actionRef"
       :actionColumn="actionColumn"
       :scroll-x="1360"
-      @update:checked-row-keys="onCheckedRow"
-    />
+      @update:checked-row-keys="onCheckedRow">
+      <template v-slot:toolbar>
+        <div class="d-flex gap-x-2">
+          <n-button >添加客户端</n-button>
+          <n-button type="primary" :onclick="addClient">下载集控配置</n-button>
+        </div>
+      </template>
+    </BasicTable>
   </n-card>
   <n-drawer v-model:show="isEditingDrawerActive" :width="400" placement="right">
     <n-drawer-content title="客户端编辑">
@@ -75,7 +78,7 @@ function createActions(record) {
 }
 
 const loadDataTable = async (res) => {
-  return Apis.clientregistry.get_api_v1_clients_registry_list({
+  return Apis.clientregistry.get_api_v1_clients_registry_abstract({
     params: {
       pageSize: res.pageSize,
       pageIndex: res.pageIndex

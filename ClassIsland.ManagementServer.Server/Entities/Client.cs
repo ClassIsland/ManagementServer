@@ -28,11 +28,6 @@ public partial class Client : IObjectWithTime
     public DateTime RegisterTime { get; set; } = DateTime.MinValue;
 
     /// <summary>
-    /// 客户端分组 ID
-    /// </summary>
-    public long GroupId { get; set; }
-
-    /// <summary>
     /// 客户端策略版本
     /// </summary>
     public int PolicyVersion { get; set; }
@@ -57,11 +52,6 @@ public partial class Client : IObjectWithTime
     /// </summary>
     public int ClassPlanVersion { get; set; }
 
-    /// <summary>
-    /// 客户端组
-    /// </summary>
-    public virtual ClientGroup Group { get; set; } = new();
-
     
     /// <summary>
     /// 此客户端对象更新信息
@@ -77,4 +67,7 @@ public partial class Client : IObjectWithTime
     /// 上次修改时间
     /// </summary>
     public DateTime UpdatedTime { get; set; } = DateTime.Now;
+
+    [ForeignKey("Id")]
+    public virtual AbstractClient AbstractClient { get; set; } = new();
 }

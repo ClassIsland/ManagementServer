@@ -98,38 +98,6 @@ export type Setting = {
 };
 export type ObjectTypes = 0 | 1 | 2 | 3 | 4 | 5;
 export type AssigneeTypes = 0 | 1 | 2 | 3;
-export type ObjectUpdate = {
-  id?: number;
-  objectId?: string;
-  objectType?: ObjectTypes;
-  targetCuid?: string;
-  updateTime?: string;
-  targetClient?: Client;
-};
-export type ClientGroup = {
-  id?: number;
-  name?: string | null;
-  clients?: Client[] | null;
-  objectsAssignees?: ObjectsAssignee[] | null;
-  createdTime?: string;
-  updatedTime?: string;
-};
-export type Client = {
-  cuid?: string;
-  id?: string | null;
-  registerTime?: string;
-  groupId?: number;
-  policyVersion?: number;
-  timeLayoutVersion?: number;
-  subjectsVersion?: number;
-  defaultSettingsVersion?: number;
-  classPlanVersion?: number;
-  group?: ClientGroup;
-  objectUpdates?: ObjectUpdate[] | null;
-  objectsAssignees?: ObjectsAssignee[] | null;
-  createdTime?: string;
-  updatedTime?: string;
-};
 export type ObjectsAssignee = {
   id?: number;
   objectId?: string;
@@ -138,8 +106,6 @@ export type ObjectsAssignee = {
   targetClientCuid?: string | null;
   targetGroupId?: number | null;
   assigneeType?: AssigneeTypes;
-  targetClientCu?: Client;
-  targetGroup?: ClientGroup;
   createdTime?: string;
   updatedTime?: string;
 };
@@ -240,6 +206,45 @@ export type SendNotificationRequest = {
 export type RestartAppRequest = {
   targets?: ObjectsAssignee[] | null;
   type?: CommandTypes;
+};
+export type ObjectUpdate = {
+  id?: number;
+  objectId?: string;
+  objectType?: ObjectTypes;
+  targetCuid?: string;
+  updateTime?: string;
+};
+export type Client = {
+  cuid?: string;
+  id?: string | null;
+  registerTime?: string;
+  policyVersion?: number;
+  timeLayoutVersion?: number;
+  subjectsVersion?: number;
+  defaultSettingsVersion?: number;
+  classPlanVersion?: number;
+  objectUpdates?: ObjectUpdate[] | null;
+  createdTime?: string;
+  updatedTime?: string;
+  abstractClient?: AbstractClient;
+};
+export type AbstractClient = {
+  internalId?: number;
+  id?: string | null;
+  createdTime?: string;
+  updatedTime?: string;
+  groupId?: number;
+  clients?: Client[] | null;
+  group?: ClientGroup;
+};
+export type ClientGroup = {
+  id?: number;
+  name?: string | null;
+  clients?: AbstractClient[] | null;
+  objectsAssignees?: ObjectsAssignee[] | null;
+  createdTime?: string;
+  updatedTime?: string;
+  colorHex?: string | null;
 };
 export type ManagementPolicy = {
   isActive?: boolean;
@@ -633,37 +638,6 @@ declare global {
        *   targetClientCuid?: string | null
        *   targetGroupId?: number | null
        *   assigneeType?: 0 | 1 | 2 | 3
-       *   targetClientCu?: {
-       *     cuid?: string
-       *     id?: string | null
-       *     registerTime?: string
-       *     groupId?: number
-       *     policyVersion?: number
-       *     timeLayoutVersion?: number
-       *     subjectsVersion?: number
-       *     defaultSettingsVersion?: number
-       *     classPlanVersion?: number
-       *     group?: {
-       *       id?: number
-       *       name?: string | null
-       *       clients?: Array<Client> | null
-       *       objectsAssignees?: Array<ObjectsAssignee> | null
-       *       createdTime?: string
-       *       updatedTime?: string
-       *     }
-       *     objectUpdates?: Array<{
-       *       id?: number
-       *       objectId?: string
-       *       objectType?: ObjectTypes
-       *       targetCuid?: string
-       *       updateTime?: string
-       *       targetClient?: Client
-       *     }> | null
-       *     objectsAssignees?: Array<ObjectsAssignee> | null
-       *     createdTime?: string
-       *     updatedTime?: string
-       *   }
-       *   targetGroup?: ClientGroup
        *   createdTime?: string
        *   updatedTime?: string
        * }
@@ -744,37 +718,6 @@ declare global {
        *   targetClientCuid?: string | null
        *   targetGroupId?: number | null
        *   assigneeType?: 0 | 1 | 2 | 3
-       *   targetClientCu?: {
-       *     cuid?: string
-       *     id?: string | null
-       *     registerTime?: string
-       *     groupId?: number
-       *     policyVersion?: number
-       *     timeLayoutVersion?: number
-       *     subjectsVersion?: number
-       *     defaultSettingsVersion?: number
-       *     classPlanVersion?: number
-       *     group?: {
-       *       id?: number
-       *       name?: string | null
-       *       clients?: Array<Client> | null
-       *       objectsAssignees?: Array<ObjectsAssignee> | null
-       *       createdTime?: string
-       *       updatedTime?: string
-       *     }
-       *     objectUpdates?: Array<{
-       *       id?: number
-       *       objectId?: string
-       *       objectType?: ObjectTypes
-       *       targetCuid?: string
-       *       updateTime?: string
-       *       targetClient?: Client
-       *     }> | null
-       *     objectsAssignees?: Array<ObjectsAssignee> | null
-       *     createdTime?: string
-       *     updatedTime?: string
-       *   }
-       *   targetGroup?: ClientGroup
        *   createdTime?: string
        *   updatedTime?: string
        * }
@@ -1489,37 +1432,6 @@ declare global {
        *     targetClientCuid?: string | null
        *     targetGroupId?: number | null
        *     assigneeType?: 0 | 1 | 2 | 3
-       *     targetClientCu?: {
-       *       cuid?: string
-       *       id?: string | null
-       *       registerTime?: string
-       *       groupId?: number
-       *       policyVersion?: number
-       *       timeLayoutVersion?: number
-       *       subjectsVersion?: number
-       *       defaultSettingsVersion?: number
-       *       classPlanVersion?: number
-       *       group?: {
-       *         id?: number
-       *         name?: string | null
-       *         clients?: Array<Client> | null
-       *         objectsAssignees?: Array<ObjectsAssignee> | null
-       *         createdTime?: string
-       *         updatedTime?: string
-       *       }
-       *       objectUpdates?: Array<{
-       *         id?: number
-       *         objectId?: string
-       *         objectType?: ObjectTypes
-       *         targetCuid?: string
-       *         updateTime?: string
-       *         targetClient?: Client
-       *       }> | null
-       *       objectsAssignees?: Array<ObjectsAssignee> | null
-       *       createdTime?: string
-       *       updatedTime?: string
-       *     }
-       *     targetGroup?: ClientGroup
        *     createdTime?: string
        *     updatedTime?: string
        *   }> | null
@@ -1574,37 +1486,6 @@ declare global {
        *     targetClientCuid?: string | null
        *     targetGroupId?: number | null
        *     assigneeType?: 0 | 1 | 2 | 3
-       *     targetClientCu?: {
-       *       cuid?: string
-       *       id?: string | null
-       *       registerTime?: string
-       *       groupId?: number
-       *       policyVersion?: number
-       *       timeLayoutVersion?: number
-       *       subjectsVersion?: number
-       *       defaultSettingsVersion?: number
-       *       classPlanVersion?: number
-       *       group?: {
-       *         id?: number
-       *         name?: string | null
-       *         clients?: Array<Client> | null
-       *         objectsAssignees?: Array<ObjectsAssignee> | null
-       *         createdTime?: string
-       *         updatedTime?: string
-       *       }
-       *       objectUpdates?: Array<{
-       *         id?: number
-       *         objectId?: string
-       *         objectType?: ObjectTypes
-       *         targetCuid?: string
-       *         updateTime?: string
-       *         targetClient?: Client
-       *       }> | null
-       *       objectsAssignees?: Array<ObjectsAssignee> | null
-       *       createdTime?: string
-       *       updatedTime?: string
-       *     }
-       *     targetGroup?: ClientGroup
        *     createdTime?: string
        *     updatedTime?: string
        *   }> | null
@@ -1627,13 +1508,13 @@ declare global {
         config: Config
       ): Alova2Method<unknown, 'clientcommanddeliver.post_api_v1_client_commands_restart_app', Config>;
     };
-    clientregistry: {
+    clientgroup: {
       /**
        * ---
        *
        * [GET]
        *
-       * **path:** /api/v1/clients_registry/list
+       * **path:** /api/v1/client_groups
        *
        * ---
        *
@@ -1652,7 +1533,7 @@ declare global {
        * type Response = unknown
        * ```
        */
-      get_api_v1_clients_registry_list<
+      get_api_v1_client_groups<
         Config extends Alova2MethodConfig<unknown> & {
           params: {
             pageIndex?: number;
@@ -1661,7 +1542,311 @@ declare global {
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'clientregistry.get_api_v1_clients_registry_list', Config>;
+      ): Alova2Method<unknown, 'clientgroup.get_api_v1_client_groups', Config>;
+      /**
+       * ---
+       *
+       * [PUT]
+       *
+       * **path:** /api/v1/client_groups
+       *
+       * ---
+       *
+       * **RequestBody**
+       * ```ts
+       * type RequestBody = {
+       *   id?: number
+       *   name?: string | null
+       *   clients?: Array<{
+       *     internalId?: number
+       *     id?: string | null
+       *     createdTime?: string
+       *     updatedTime?: string
+       *     groupId?: number
+       *     clients?: Array<{
+       *       cuid?: string
+       *       id?: string | null
+       *       registerTime?: string
+       *       policyVersion?: number
+       *       timeLayoutVersion?: number
+       *       subjectsVersion?: number
+       *       defaultSettingsVersion?: number
+       *       classPlanVersion?: number
+       *       objectUpdates?: Array<{
+       *         id?: number
+       *         objectId?: string
+       *         objectType?: 0 | 1 | 2 | 3 | 4 | 5
+       *         targetCuid?: string
+       *         updateTime?: string
+       *       }> | null
+       *       createdTime?: string
+       *       updatedTime?: string
+       *       abstractClient?: AbstractClient
+       *     }> | null
+       *     group?: ClientGroup
+       *   }> | null
+       *   objectsAssignees?: Array<{
+       *     id?: number
+       *     objectId?: string
+       *     objectType?: 0 | 1 | 2 | 3 | 4 | 5
+       *     targetClientId?: string | null
+       *     targetClientCuid?: string | null
+       *     targetGroupId?: number | null
+       *     assigneeType?: 0 | 1 | 2 | 3
+       *     createdTime?: string
+       *     updatedTime?: string
+       *   }> | null
+       *   createdTime?: string
+       *   updatedTime?: string
+       *   colorHex?: string | null
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      put_api_v1_client_groups<
+        Config extends Alova2MethodConfig<unknown> & {
+          data: ClientGroup;
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'clientgroup.put_api_v1_client_groups', Config>;
+      /**
+       * ---
+       *
+       * [GET]
+       *
+       * **path:** /api/v1/client_groups/{id}
+       *
+       * ---
+       *
+       * **Path Parameters**
+       * ```ts
+       * type PathParameters = {
+       *   // [required]
+       *   id: number
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      get_api_v1_client_groups_id<
+        Config extends Alova2MethodConfig<unknown> & {
+          pathParams: {
+            /**
+             * [required]
+             */
+            id: number;
+          };
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'clientgroup.get_api_v1_client_groups_id', Config>;
+      /**
+       * ---
+       *
+       * [PUT]
+       *
+       * **path:** /api/v1/client_groups/{id}
+       *
+       * ---
+       *
+       * **Path Parameters**
+       * ```ts
+       * type PathParameters = {
+       *   // [required]
+       *   id: number
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **RequestBody**
+       * ```ts
+       * type RequestBody = {
+       *   id?: number
+       *   name?: string | null
+       *   clients?: Array<{
+       *     internalId?: number
+       *     id?: string | null
+       *     createdTime?: string
+       *     updatedTime?: string
+       *     groupId?: number
+       *     clients?: Array<{
+       *       cuid?: string
+       *       id?: string | null
+       *       registerTime?: string
+       *       policyVersion?: number
+       *       timeLayoutVersion?: number
+       *       subjectsVersion?: number
+       *       defaultSettingsVersion?: number
+       *       classPlanVersion?: number
+       *       objectUpdates?: Array<{
+       *         id?: number
+       *         objectId?: string
+       *         objectType?: 0 | 1 | 2 | 3 | 4 | 5
+       *         targetCuid?: string
+       *         updateTime?: string
+       *       }> | null
+       *       createdTime?: string
+       *       updatedTime?: string
+       *       abstractClient?: AbstractClient
+       *     }> | null
+       *     group?: ClientGroup
+       *   }> | null
+       *   objectsAssignees?: Array<{
+       *     id?: number
+       *     objectId?: string
+       *     objectType?: 0 | 1 | 2 | 3 | 4 | 5
+       *     targetClientId?: string | null
+       *     targetClientCuid?: string | null
+       *     targetGroupId?: number | null
+       *     assigneeType?: 0 | 1 | 2 | 3
+       *     createdTime?: string
+       *     updatedTime?: string
+       *   }> | null
+       *   createdTime?: string
+       *   updatedTime?: string
+       *   colorHex?: string | null
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      put_api_v1_client_groups_id<
+        Config extends Alova2MethodConfig<unknown> & {
+          pathParams: {
+            /**
+             * [required]
+             */
+            id: number;
+          };
+          data: ClientGroup;
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'clientgroup.put_api_v1_client_groups_id', Config>;
+      /**
+       * ---
+       *
+       * [DELETE]
+       *
+       * **path:** /api/v1/client_groups/{id}
+       *
+       * ---
+       *
+       * **Path Parameters**
+       * ```ts
+       * type PathParameters = {
+       *   // [required]
+       *   id: number
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      delete_api_v1_client_groups_id<
+        Config extends Alova2MethodConfig<unknown> & {
+          pathParams: {
+            /**
+             * [required]
+             */
+            id: number;
+          };
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'clientgroup.delete_api_v1_client_groups_id', Config>;
+    };
+    clientregistry: {
+      /**
+       * ---
+       *
+       * [GET]
+       *
+       * **path:** /api/v1/clients_registry/all
+       *
+       * ---
+       *
+       * **Query Parameters**
+       * ```ts
+       * type QueryParameters = {
+       *   pageIndex?: number
+       *   pageSize?: number
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      get_api_v1_clients_registry_all<
+        Config extends Alova2MethodConfig<unknown> & {
+          params: {
+            pageIndex?: number;
+            pageSize?: number;
+          };
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'clientregistry.get_api_v1_clients_registry_all', Config>;
+      /**
+       * ---
+       *
+       * [GET]
+       *
+       * **path:** /api/v1/clients_registry/abstract
+       *
+       * ---
+       *
+       * **Query Parameters**
+       * ```ts
+       * type QueryParameters = {
+       *   pageIndex?: number
+       *   pageSize?: number
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      get_api_v1_clients_registry_abstract<
+        Config extends Alova2MethodConfig<unknown> & {
+          params: {
+            pageIndex?: number;
+            pageSize?: number;
+          };
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'clientregistry.get_api_v1_clients_registry_abstract', Config>;
       /**
        * ---
        *
@@ -1711,45 +1896,76 @@ declare global {
        *   Cuid?: string
        *   Id?: string
        *   RegisterTime?: string
-       *   GroupId?: number
        *   PolicyVersion?: number
        *   TimeLayoutVersion?: number
        *   SubjectsVersion?: number
        *   DefaultSettingsVersion?: number
        *   ClassPlanVersion?: number
-       *   'Group.Id'?: number
-       *   'Group.Name'?: string
-       *   'Group.Clients'?: Array<{
+       *   ObjectUpdates?: Array<{
+       *     id?: number
+       *     objectId?: string
+       *     objectType?: 0 | 1 | 2 | 3 | 4 | 5
+       *     targetCuid?: string
+       *     updateTime?: string
+       *   }>
+       *   CreatedTime?: string
+       *   UpdatedTime?: string
+       *   'AbstractClient.InternalId'?: number
+       *   'AbstractClient.Id'?: string
+       *   'AbstractClient.CreatedTime'?: string
+       *   'AbstractClient.UpdatedTime'?: string
+       *   'AbstractClient.GroupId'?: number
+       *   'AbstractClient.Clients'?: Array<{
        *     cuid?: string
        *     id?: string | null
        *     registerTime?: string
-       *     groupId?: number
        *     policyVersion?: number
        *     timeLayoutVersion?: number
        *     subjectsVersion?: number
        *     defaultSettingsVersion?: number
        *     classPlanVersion?: number
-       *     group?: {
-       *       id?: number
-       *       name?: string | null
-       *       clients?: Array<Client> | null
-       *       objectsAssignees?: Array<ObjectsAssignee> | null
-       *       createdTime?: string
-       *       updatedTime?: string
-       *     }
        *     objectUpdates?: Array<{
        *       id?: number
        *       objectId?: string
-       *       objectType?: ObjectTypes
+       *       objectType?: 0 | 1 | 2 | 3 | 4 | 5
        *       targetCuid?: string
        *       updateTime?: string
-       *       targetClient?: Client
        *     }> | null
-       *     objectsAssignees?: Array<ObjectsAssignee> | null
        *     createdTime?: string
        *     updatedTime?: string
+       *     abstractClient?: AbstractClient
        *   }>
-       *   'Group.ObjectsAssignees'?: Array<{
+       *   'AbstractClient.Group.Id'?: number
+       *   'AbstractClient.Group.Name'?: string
+       *   'AbstractClient.Group.Clients'?: Array<{
+       *     internalId?: number
+       *     id?: string | null
+       *     createdTime?: string
+       *     updatedTime?: string
+       *     groupId?: number
+       *     clients?: Array<{
+       *       cuid?: string
+       *       id?: string | null
+       *       registerTime?: string
+       *       policyVersion?: number
+       *       timeLayoutVersion?: number
+       *       subjectsVersion?: number
+       *       defaultSettingsVersion?: number
+       *       classPlanVersion?: number
+       *       objectUpdates?: Array<{
+       *         id?: number
+       *         objectId?: string
+       *         objectType?: 0 | 1 | 2 | 3 | 4 | 5
+       *         targetCuid?: string
+       *         updateTime?: string
+       *       }> | null
+       *       createdTime?: string
+       *       updatedTime?: string
+       *       abstractClient?: AbstractClient
+       *     }> | null
+       *     group?: ClientGroup
+       *   }>
+       *   'AbstractClient.Group.ObjectsAssignees'?: Array<{
        *     id?: number
        *     objectId?: string
        *     objectType?: 0 | 1 | 2 | 3 | 4 | 5
@@ -1757,53 +1973,12 @@ declare global {
        *     targetClientCuid?: string | null
        *     targetGroupId?: number | null
        *     assigneeType?: 0 | 1 | 2 | 3
-       *     targetClientCu?: {
-       *       cuid?: string
-       *       id?: string | null
-       *       registerTime?: string
-       *       groupId?: number
-       *       policyVersion?: number
-       *       timeLayoutVersion?: number
-       *       subjectsVersion?: number
-       *       defaultSettingsVersion?: number
-       *       classPlanVersion?: number
-       *       group?: {
-       *         id?: number
-       *         name?: string | null
-       *         clients?: Array<Client> | null
-       *         objectsAssignees?: Array<ObjectsAssignee> | null
-       *         createdTime?: string
-       *         updatedTime?: string
-       *       }
-       *       objectUpdates?: Array<{
-       *         id?: number
-       *         objectId?: string
-       *         objectType?: ObjectTypes
-       *         targetCuid?: string
-       *         updateTime?: string
-       *         targetClient?: Client
-       *       }> | null
-       *       objectsAssignees?: Array<ObjectsAssignee> | null
-       *       createdTime?: string
-       *       updatedTime?: string
-       *     }
-       *     targetGroup?: ClientGroup
        *     createdTime?: string
        *     updatedTime?: string
        *   }>
-       *   'Group.CreatedTime'?: string
-       *   'Group.UpdatedTime'?: string
-       *   ObjectUpdates?: Array<{
-       *     id?: number
-       *     objectId?: string
-       *     objectType?: ObjectTypes
-       *     targetCuid?: string
-       *     updateTime?: string
-       *     targetClient?: Client
-       *   }>
-       *   ObjectsAssignees?: Array<ObjectsAssignee>
-       *   CreatedTime?: string
-       *   UpdatedTime?: string
+       *   'AbstractClient.Group.CreatedTime'?: string
+       *   'AbstractClient.Group.UpdatedTime'?: string
+       *   'AbstractClient.Group.ColorHex'?: string
        * }
        * ```
        *
@@ -1820,22 +1995,27 @@ declare global {
             Cuid?: string;
             Id?: string;
             RegisterTime?: string;
-            GroupId?: number;
             PolicyVersion?: number;
             TimeLayoutVersion?: number;
             SubjectsVersion?: number;
             DefaultSettingsVersion?: number;
             ClassPlanVersion?: number;
-            'Group.Id'?: number;
-            'Group.Name'?: string;
-            'Group.Clients'?: Client[];
-            'Group.ObjectsAssignees'?: ObjectsAssignee[];
-            'Group.CreatedTime'?: string;
-            'Group.UpdatedTime'?: string;
             ObjectUpdates?: ObjectUpdate[];
-            ObjectsAssignees?: ObjectsAssignee[];
             CreatedTime?: string;
             UpdatedTime?: string;
+            'AbstractClient.InternalId'?: number;
+            'AbstractClient.Id'?: string;
+            'AbstractClient.CreatedTime'?: string;
+            'AbstractClient.UpdatedTime'?: string;
+            'AbstractClient.GroupId'?: number;
+            'AbstractClient.Clients'?: Client[];
+            'AbstractClient.Group.Id'?: number;
+            'AbstractClient.Group.Name'?: string;
+            'AbstractClient.Group.Clients'?: AbstractClient[];
+            'AbstractClient.Group.ObjectsAssignees'?: ObjectsAssignee[];
+            'AbstractClient.Group.CreatedTime'?: string;
+            'AbstractClient.Group.UpdatedTime'?: string;
+            'AbstractClient.Group.ColorHex'?: string;
           };
         }
       >(

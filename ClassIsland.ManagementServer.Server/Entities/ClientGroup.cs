@@ -26,7 +26,7 @@ public partial class ClientGroup : IObjectWithTime
     /// <summary>
     /// 客户端组包含的客户端
     /// </summary>
-    public virtual ICollection<Client> Clients { get; set; } = new List<Client>();
+    public virtual ICollection<AbstractClient> Clients { get; set; } = new List<AbstractClient>();
 
     /// <summary>
     /// 客户端组的对象分配信息
@@ -42,4 +42,10 @@ public partial class ClientGroup : IObjectWithTime
     /// 上次修改时间
     /// </summary>
     public DateTime UpdatedTime { get; set; } = DateTime.Now;
+    
+    [StringLength(7)]
+    public string ColorHex { get; set; } = "#66CCFF"; 
+    
+    public const long DefaultGroupId = 0;
+    public const long GlobalGroupId = -1;
 }

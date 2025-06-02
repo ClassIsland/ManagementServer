@@ -4,6 +4,7 @@ using ClassIsland.ManagementServer.Server.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClassIsland.ManagementServer.Server.Migrations
 {
     [DbContext(typeof(ManagementServerContext))]
-    partial class ManagementServerContextModelSnapshot : ModelSnapshot
+    [Migration("20250602114244_RefactorClientManagement")]
+    partial class RefactorClientManagement
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

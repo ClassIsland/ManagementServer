@@ -21,6 +21,8 @@ public partial class ManagementServerContext : IdentityDbContext<User>
 
     public virtual DbSet<Client> Clients { get; set; }
 
+    public virtual DbSet<AbstractClient> AbstractClients { get; set; }
+    
     public virtual DbSet<ClientGroup> ClientGroups { get; set; }
 
     public virtual DbSet<ObjectUpdate> ObjectUpdates { get; set; }
@@ -56,6 +58,11 @@ public partial class ManagementServerContext : IdentityDbContext<User>
             .HasConversion(
                 x => JsonSerializer.Serialize(x, JsonSerializerOptions.Default) ?? "{}",
                 x => JsonSerializer.Deserialize<ManagementPolicy>(x, JsonSerializerOptions.Default) ?? new());
+        modelBuilder.Entity<Client>()
+            .HasOne(x => x.AbstractClient)
+            .WithMany(x => x.Clients)
+            .HasForeignKey(x => x.Id)
+            .HasPrincipalKey(x => x.Id);
         base.OnModelCreating(modelBuilder);
         return;
 
@@ -64,6 +71,30 @@ public partial class ManagementServerContext : IdentityDbContext<User>
             .HasConversion(
                 x => JsonSerializer.Serialize(x, JsonSerializerOptions.Default) ?? "{}",
                 x => JsonSerializer.Deserialize<Dictionary<string, object?>>(x, JsonSerializerOptions.Default) ?? new());
+    }
+
+    public async Task SetupDatabase()
+    {
+        if (!await ClientGroups.AnyAsync(x => x.Id == ClientGroup.DefaultGroupId))
+        {
+            await ClientGroups.AddAsync(new ClientGroup()
+            {
+                Id = ClientGroup.DefaultGroupId,
+                Name = "默认",
+                ColorHex = "#00f1f1"
+            });
+        }
+        if (!await ClientGroups.AnyAsync(x => x.Id == ClientGroup.GlobalGroupId))
+        {
+            await ClientGroups.AddAsync(new ClientGroup()
+            {
+                Id = ClientGroup.DefaultGroupId,
+                Name = "全局",
+                ColorHex = "#ff8500"
+            });
+        }
+
+        await SaveChangesAsync();
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

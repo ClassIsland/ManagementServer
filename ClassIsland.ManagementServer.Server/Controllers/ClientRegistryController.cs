@@ -7,6 +7,7 @@ using ClassIsland.Shared.Enums;
 using ClassIsland.Shared.Models.Management;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ClassIsland.ManagementServer.Server.Controllers;
 
@@ -22,10 +23,17 @@ public class ClientRegistryController(ManagementServerContext context) : Control
     /// <returns>
     /// 返回已经注册的实例列表
     /// </returns>
-    [HttpGet("list")]
+    [HttpGet("all")]
     public async Task<IActionResult> List([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 20)
     {
         return Ok(await DataContext.Clients.Select(x => x).ToPaginatedListAsync(pageIndex, pageSize));
+    }
+    
+    [HttpGet("abstract")]
+    public async Task<IActionResult> ListAbstract([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 20)
+    {
+        return Ok(await DataContext.AbstractClients.Include(b => b.Group).Select(x => x)
+            .ToPaginatedListAsync(pageIndex, pageSize));
     }
     
     [HttpPost("register")]
