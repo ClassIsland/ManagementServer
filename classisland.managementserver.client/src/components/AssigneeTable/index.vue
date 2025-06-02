@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { defineProps, ref, reactive, h } from 'vue';
 import {BasicTable, TableAction} from "@/components/Table";
-import {columns, columnsClient} from "./columns";
+import {columns, columnsAbstractClients, columnsClient, columnsGroups} from "./columns";
 import { DeleteOutlined, EditOutlined } from '@vicons/antd';
 import { useDialog, useMessage } from 'naive-ui';
 
@@ -18,6 +18,8 @@ const assigneeFormData = ref({
 const isSaving = ref(false);
 const actionRef = ref();
 const actionRefClients = ref();
+const actionRefAbstractClients = ref();
+const actionRefClientGroups = ref();
 const message = useMessage();
 
 
@@ -71,6 +73,44 @@ const loadDataTable = async (res) => {
   });
 };
 
+function setupAssigneeCallback(assigneeType: number, states) {
+  states.items.forEach((item) => {
+    item.updateHasAssignee = async () => {
+      if (item.hasAssignee) {
+        const data = {
+          assigneeType: assigneeType,
+          objectId: props.objectId,
+          objectType: props.objectType,
+        };
+        if (assigneeType === 1) {
+          data.targetClientCuid = item.clientObject.cuid;
+        } else if (assigneeType === 2) {
+          data.targetClientId = item.clientObject.id;
+        } else if (assigneeType === 3) {
+          data.targetGroupId = item.clientObject.id;
+        }
+        await Apis.assignees.post_api_v1_assignees_all({
+          data: data
+        });
+      } else {
+        await Apis.assignees.delete_api_v1_assignees_all_id({
+          pathParams: {
+            id: item.assignee.id
+          }
+        });
+      }
+      if (assigneeType === 1) {
+        actionRefClients.value.reload();
+      } else if (assigneeType === 2) {
+        actionRefAbstractClients.value.reload();
+      } else if (assigneeType === 3) {
+        actionRefClientGroups.value.reload();
+      }
+      message.success("保存成功");
+    };
+  });
+}
+
 const loadDataTableClients = async (res) => {
   const states = await Apis.assignees.get_api_v1_assignees_by_object_clients_objecttype_id({
     pathParams: {
@@ -82,31 +122,40 @@ const loadDataTableClients = async (res) => {
       pageIndex: res.pageIndex
     }
   });
-  states.items.forEach((item) => {
-    item.updateHasAssignee = async () => {
-      if (item.hasAssignee) {
-        await Apis.assignees.post_api_v1_assignees_all({
-          pathParams: {
-          },
-          data: {
-            assigneeType: 1,
-            objectId: props.objectId,
-            objectType: props.objectType,
-            targetClientCuid: item.clientObject.cuid,
-          }
-        });
-      } else {
-        await Apis.assignees.delete_api_v1_assignees_all_id({
-          pathParams: {
-            id: item.assignee.id
-          }
-        });
-      }
-      actionRefClients.value.reload();
-      message.success("保存成功");
-    };
-  });
+  setupAssigneeCallback(1, states);
   
+  return states;
+};
+
+const loadDataTableAbstractClients = async (res) => {
+  const states = await Apis.assignees.get_api_v1_assignees_by_object_clients_abstract_objecttype_id({
+    pathParams: {
+      id: props.objectId,
+      objectType: props.objectType
+    },
+    params: {
+      pageSize: res.pageSize,
+      pageIndex: res.pageIndex
+    }
+  });
+  setupAssigneeCallback(2, states);
+
+  return states;
+};
+
+const loadDataTableClientGroups = async (res) => {
+  const states = await Apis.assignees.get_api_v1_assignees_by_object_client_groups_objecttype_id({
+    pathParams: {
+      id: props.objectId,
+      objectType: props.objectType
+    },
+    params: {
+      pageSize: res.pageSize,
+      pageIndex: res.pageIndex
+    }
+  });
+  setupAssigneeCallback(3, states);
+
   return states;
 };
 
@@ -189,6 +238,30 @@ const actionColumn = reactive({
         :request="loadDataTableClients"
         :row-key="(row) => row.id"
         ref="actionRefClients"
+        @update:checked-row-keys="onCheckedRow">
+      </BasicTable>
+
+    </n-tab-pane>
+    <n-tab-pane name="id" tab="抽象客户端">
+      <BasicTable
+        title="客户端"
+        titleTooltip="管理当前对象分配给的客户端。"
+        :columns="columnsAbstractClients"
+        :request="loadDataTableAbstractClients"
+        :row-key="(row) => row.id"
+        ref="actionRefAbstractClients"
+        @update:checked-row-keys="onCheckedRow">
+      </BasicTable>
+
+    </n-tab-pane>
+    <n-tab-pane name="group" tab="分组">
+      <BasicTable
+        title="客户端"
+        titleTooltip="管理当前对象分配给的客户端。"
+        :columns="columnsGroups"
+        :request="loadDataTableClientGroups"
+        :row-key="(row) => row.id"
+        ref="actionRefClientGroups"
         @update:checked-row-keys="onCheckedRow">
       </BasicTable>
 

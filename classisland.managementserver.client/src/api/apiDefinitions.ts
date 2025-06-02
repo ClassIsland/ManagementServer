@@ -33,6 +33,14 @@ export default {
     'GET',
     '/api/v1/assignees/by-object/clients/{objectType}/{id}'
   ],
+  'assignees.get_api_v1_assignees_by_object_clients_abstract_objecttype_id': [
+    'GET',
+    '/api/v1/assignees/by-object/clients-abstract/{objectType}/{id}'
+  ],
+  'assignees.get_api_v1_assignees_by_object_client_groups_objecttype_id': [
+    'GET',
+    '/api/v1/assignees/by-object/client-groups/{objectType}/{id}'
+  ],
   'identity.post_api_v1_identity_register': ['POST', '/api/v1/identity/register'],
   'identity.post_api_v1_identity_login': ['POST', '/api/v1/identity/login'],
   'identity.post_api_v1_identity_refresh': ['POST', '/api/v1/identity/refresh'],

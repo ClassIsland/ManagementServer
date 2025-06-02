@@ -104,4 +104,41 @@ public class AssigneesController(ManagementServerContext dbContext,
         
         return Ok(states.ToPaginatedList(pageIndex, pageSize));
     }
+    
+    [HttpGet("by-object/clients-abstract/{objectType:int}/{id:guid}")]
+    public async Task<IActionResult> GetByObjectInAbstractClientView([FromRoute] int objectType, [FromRoute] Guid id,
+        [FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 20)
+    {
+        var clients = await DbContext.AbstractClients
+            .Include(x => x.Group)
+            .ToPaginatedListAsync(pageIndex, pageSize);
+        Collection<ClientAssigneeState<AbstractClient>> states = [];
+        foreach (var client in clients.Items)
+        {
+            var assignee = await DbContext.ObjectsAssignees.FirstOrDefaultAsync(x =>
+                x.AssigneeType == AssigneeTypes.Id && x.TargetClientId == client.Id &&
+                (int)x.ObjectType == objectType && x.ObjectId == id);
+            states.Add(new ClientAssigneeState<AbstractClient>(AssigneeTypes.ClientUid, client, assignee));
+        }
+        
+        return Ok(states.ToPaginatedList(pageIndex, pageSize));
+    }
+    
+    [HttpGet("by-object/client-groups/{objectType:int}/{id:guid}")]
+    public async Task<IActionResult> GetByObjectInClientGroupsView([FromRoute] int objectType, [FromRoute] Guid id,
+        [FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 20)
+    {
+        var clientGroups = await DbContext.ClientGroups
+            .ToPaginatedListAsync(pageIndex, pageSize);
+        Collection<ClientAssigneeState<ClientGroup>> states = [];
+        foreach (var group in clientGroups.Items)
+        {
+            var assignee = await DbContext.ObjectsAssignees.FirstOrDefaultAsync(x =>
+                x.AssigneeType == AssigneeTypes.Group && x.TargetGroupId == group.Id &&
+                (int)x.ObjectType == objectType && x.ObjectId == id);
+            states.Add(new ClientAssigneeState<ClientGroup>(AssigneeTypes.ClientUid, group, assignee));
+        }
+        
+        return Ok(states.ToPaginatedList(pageIndex, pageSize));
+    }
 }
