@@ -1,0 +1,1 @@
+dotnet ./ClassIsland.ManagementServer.Server.dll

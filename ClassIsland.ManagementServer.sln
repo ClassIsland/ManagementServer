@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassIsland.ManagementServer.Server", "ClassIsland.ManagementServer.Server\ClassIsland.ManagementServer.Server.csproj", "{C5FBFE86-191C-4EE2-9065-1F4648670D73}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{10773FE0-1E7E-4BB9-8BE3-1CD0AE51AFDA}"
+	ProjectSection(SolutionItems) = preProject
+		appsettings.example.json = appsettings.example.json
+	EndProjectSection
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "classisland.managementserver.client", "classisland.managementserver.client\classisland.managementserver.client.esproj", "{075A4E9B-DEAC-4835-BE3A-6EDB97FEDD34}"
 EndProject
