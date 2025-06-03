@@ -97,16 +97,16 @@ export const useUserStore = defineStore({
     // 获取用户信息
     async getInfo() {
       const data = await getUserInfoApi();
-      const { result } = data;
-      if (result.permissions && result.permissions.length) {
-        const permissionsList = result.permissions;
-        this.setPermissions(permissionsList);
-        this.setUserInfo(result);
-      } else {
-        throw new Error('getInfo: permissionsList must be a non-null array !');
-      }
-      this.setAvatar(result.avatar);
-      return result;
+      // const { result } = data;
+      // if (result.permissions && result.permissions.length) {
+      //   const permissionsList = result.permissions;
+      //   this.setPermissions(permissionsList);
+      // } else {
+      //   throw new Error('getInfo: permissionsList must be a non-null array !');
+      // }
+      // this.setAvatar(result.avatar);
+      this.setUserInfo(data);
+      return data;
     },
 
     // 登出

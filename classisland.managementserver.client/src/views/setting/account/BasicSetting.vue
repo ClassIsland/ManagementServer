@@ -7,20 +7,16 @@
         </n-form-item>
 
         <n-form-item label="邮箱" path="email">
-          <n-input placeholder="请输入邮箱" v-model:value="formValue.email" />
+          <n-input placeholder="请输入邮箱" v-model:value="formValue.emailAddress" />
         </n-form-item>
 
         <n-form-item label="联系电话" path="mobile">
-          <n-input placeholder="请输入联系电话" v-model:value="formValue.mobile" />
-        </n-form-item>
-
-        <n-form-item label="联系地址" path="address">
-          <n-input v-model:value="formValue.address" type="textarea" placeholder="请输入联系地址" />
+          <n-input placeholder="请输入联系电话" v-model:value="formValue.phoneNumber" />
         </n-form-item>
 
         <div>
           <n-space>
-            <n-button type="primary" @click="formSubmit">更新基本信息</n-button>
+            <n-button type="primary" @click="formSubmit" :loading="isLoading">更新基本信息</n-button>
           </n-space>
         </div>
       </n-form>
@@ -29,43 +25,48 @@
 </template>
 
 <script lang="ts" setup>
-  import { reactive, ref } from 'vue';
+  import { reactive, ref, onMounted } from 'vue';
   import { useMessage } from 'naive-ui';
+  import {useUser} from "@/store/modules/user";
 
   const rules = {
     name: {
       required: true,
       message: '请输入昵称',
       trigger: 'blur',
-    },
-    email: {
-      required: true,
-      message: '请输入邮箱',
-      trigger: 'blur',
-    },
-    mobile: {
-      required: true,
-      message: '请输入联系电话',
-      trigger: 'input',
-    },
+    }
   };
   const formRef: any = ref(null);
   const message = useMessage();
-
-  const formValue = reactive({
+  const isLoading = ref(false);
+  const users = useUser();
+  
+  const formValue = ref({
     name: '',
-    mobile: '',
-    email: '',
-    address: '',
+    phoneNumber: '',
+    emailAddress: ''
   });
 
   function formSubmit() {
-    formRef.value.validate((errors) => {
+    formRef.value.validate(async (errors) => {
       if (!errors) {
-        message.success('验证成功');
+        try {
+          isLoading.value = true;
+          await Apis.users.post_api_v1_users_current({
+            data: formValue.value
+          });
+          await users.getInfo();
+          message.success('更新成功');
+        } finally {
+          isLoading.value = false;
+        }
       } else {
         message.error('验证失败，请填写完整信息');
       }
     });
   }
+  
+  onMounted(async () => {
+    formValue.value = users.info
+  });
 </script>

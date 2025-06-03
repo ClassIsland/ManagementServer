@@ -116,56 +116,6 @@ export type LoginRequestBody = {
 export type RefreshRequest = {
   refreshToken?: string | null;
 };
-export type RegisterRequest = {
-  email?: string | null;
-  password?: string | null;
-};
-export type AccessTokenResponse = {
-  tokenType?: string | null;
-  accessToken?: string | null;
-  expiresIn?: number;
-  refreshToken?: string | null;
-};
-export type LoginRequest = {
-  email?: string | null;
-  password?: string | null;
-  twoFactorCode?: string | null;
-  twoFactorRecoveryCode?: string | null;
-};
-export type ResendConfirmationEmailRequest = {
-  email?: string | null;
-};
-export type ForgotPasswordRequest = {
-  email?: string | null;
-};
-export type ResetPasswordRequest = {
-  email?: string | null;
-  resetCode?: string | null;
-  newPassword?: string | null;
-};
-export type TwoFactorResponse = {
-  sharedKey?: string | null;
-  recoveryCodesLeft?: number;
-  recoveryCodes?: string[] | null;
-  isTwoFactorEnabled?: boolean;
-  isMachineRemembered?: boolean;
-};
-export type TwoFactorRequest = {
-  enable?: boolean | null;
-  twoFactorCode?: string | null;
-  resetSharedKey?: boolean;
-  resetRecoveryCodes?: boolean;
-  forgetMachine?: boolean;
-};
-export type InfoResponse = {
-  email?: string | null;
-  isEmailConfirmed?: boolean;
-};
-export type InfoRequest = {
-  newEmail?: string | null;
-  newPassword?: string | null;
-  oldPassword?: string | null;
-};
 export type TimeRule = {
   isActive?: boolean;
   weekDay?: number;
@@ -418,35 +368,14 @@ export type UserCreateBody = {
   user?: User;
   password?: string | null;
 };
-export type ClaimsIdentity = {
-  authenticationType?: string | null;
-  isAuthenticated?: boolean;
-  actor?: ClaimsIdentity;
-  bootstrapContext?: unknown | null;
-  claims?: Claim[] | null;
-  label?: string | null;
+export type UserInfo = {
   name?: string | null;
-  nameClaimType?: string | null;
-  roleClaimType?: string | null;
+  emailAddress?: string | null;
+  phoneNumber?: string | null;
 };
-export type Claim = {
-  issuer?: string | null;
-  originalIssuer?: string | null;
-  properties?: Record<string, string> | null;
-  subject?: ClaimsIdentity;
-  type?: string | null;
-  value?: string | null;
-  valueType?: string | null;
-};
-export type IIdentity = {
-  name?: string | null;
-  authenticationType?: string | null;
-  isAuthenticated?: boolean;
-};
-export type ClaimsPrincipal = {
-  claims?: Claim[] | null;
-  identities?: ClaimsIdentity[] | null;
-  identity?: IIdentity;
+export type ChangePasswordRequestBody = {
+  oldPassword?: string | null;
+  newPassword?: string | null;
 };
 declare global {
   interface Apis {
@@ -1079,349 +1008,6 @@ declare global {
       >(
         config: Config
       ): Alova2Method<unknown, 'auth.post_api_v1_auth_refresh', Config>;
-    };
-    identity: {
-      /**
-       * ---
-       *
-       * [POST]
-       *
-       * **path:** /api/v1/identity/register
-       *
-       * ---
-       *
-       * **RequestBody**
-       * ```ts
-       * type RequestBody = {
-       *   email?: string | null
-       *   password?: string | null
-       * }
-       * ```
-       *
-       * ---
-       *
-       * **Response**
-       * ```ts
-       * type Response = unknown
-       * ```
-       */
-      post_api_v1_identity_register<
-        Config extends Alova2MethodConfig<unknown> & {
-          data: RegisterRequest;
-        }
-      >(
-        config: Config
-      ): Alova2Method<unknown, 'identity.post_api_v1_identity_register', Config>;
-      /**
-       * ---
-       *
-       * [POST]
-       *
-       * **path:** /api/v1/identity/login
-       *
-       * ---
-       *
-       * **Query Parameters**
-       * ```ts
-       * type QueryParameters = {
-       *   useCookies?: boolean
-       *   useSessionCookies?: boolean
-       * }
-       * ```
-       *
-       * ---
-       *
-       * **RequestBody**
-       * ```ts
-       * type RequestBody = {
-       *   email?: string | null
-       *   password?: string | null
-       *   twoFactorCode?: string | null
-       *   twoFactorRecoveryCode?: string | null
-       * }
-       * ```
-       *
-       * ---
-       *
-       * **Response**
-       * ```ts
-       * type Response = {
-       *   tokenType?: string | null
-       *   accessToken?: string | null
-       *   expiresIn?: number
-       *   refreshToken?: string | null
-       * }
-       * ```
-       */
-      post_api_v1_identity_login<
-        Config extends Alova2MethodConfig<AccessTokenResponse> & {
-          params: {
-            useCookies?: boolean;
-            useSessionCookies?: boolean;
-          };
-          data: LoginRequest;
-        }
-      >(
-        config: Config
-      ): Alova2Method<AccessTokenResponse, 'identity.post_api_v1_identity_login', Config>;
-      /**
-       * ---
-       *
-       * [POST]
-       *
-       * **path:** /api/v1/identity/refresh
-       *
-       * ---
-       *
-       * **RequestBody**
-       * ```ts
-       * type RequestBody = {
-       *   refreshToken?: string | null
-       * }
-       * ```
-       *
-       * ---
-       *
-       * **Response**
-       * ```ts
-       * type Response = {
-       *   tokenType?: string | null
-       *   accessToken?: string | null
-       *   expiresIn?: number
-       *   refreshToken?: string | null
-       * }
-       * ```
-       */
-      post_api_v1_identity_refresh<
-        Config extends Alova2MethodConfig<AccessTokenResponse> & {
-          data: RefreshRequest;
-        }
-      >(
-        config: Config
-      ): Alova2Method<AccessTokenResponse, 'identity.post_api_v1_identity_refresh', Config>;
-      /**
-       * ---
-       *
-       * [GET]
-       *
-       * **path:** /api/v1/identity/confirmEmail
-       *
-       * ---
-       *
-       * **Query Parameters**
-       * ```ts
-       * type QueryParameters = {
-       *   userId?: string
-       *   code?: string
-       *   changedEmail?: string
-       * }
-       * ```
-       *
-       * ---
-       *
-       * **Response**
-       * ```ts
-       * type Response = unknown
-       * ```
-       */
-      mapidentityapiApiV1IdentityConfirmemail<
-        Config extends Alova2MethodConfig<unknown> & {
-          params: {
-            userId?: string;
-            code?: string;
-            changedEmail?: string;
-          };
-        }
-      >(
-        config: Config
-      ): Alova2Method<unknown, 'identity.mapidentityapiApiV1IdentityConfirmemail', Config>;
-      /**
-       * ---
-       *
-       * [POST]
-       *
-       * **path:** /api/v1/identity/resendConfirmationEmail
-       *
-       * ---
-       *
-       * **RequestBody**
-       * ```ts
-       * type RequestBody = {
-       *   email?: string | null
-       * }
-       * ```
-       *
-       * ---
-       *
-       * **Response**
-       * ```ts
-       * type Response = unknown
-       * ```
-       */
-      post_api_v1_identity_resendconfirmationemail<
-        Config extends Alova2MethodConfig<unknown> & {
-          data: ResendConfirmationEmailRequest;
-        }
-      >(
-        config: Config
-      ): Alova2Method<unknown, 'identity.post_api_v1_identity_resendconfirmationemail', Config>;
-      /**
-       * ---
-       *
-       * [POST]
-       *
-       * **path:** /api/v1/identity/forgotPassword
-       *
-       * ---
-       *
-       * **RequestBody**
-       * ```ts
-       * type RequestBody = {
-       *   email?: string | null
-       * }
-       * ```
-       *
-       * ---
-       *
-       * **Response**
-       * ```ts
-       * type Response = unknown
-       * ```
-       */
-      post_api_v1_identity_forgotpassword<
-        Config extends Alova2MethodConfig<unknown> & {
-          data: ForgotPasswordRequest;
-        }
-      >(
-        config: Config
-      ): Alova2Method<unknown, 'identity.post_api_v1_identity_forgotpassword', Config>;
-      /**
-       * ---
-       *
-       * [POST]
-       *
-       * **path:** /api/v1/identity/resetPassword
-       *
-       * ---
-       *
-       * **RequestBody**
-       * ```ts
-       * type RequestBody = {
-       *   email?: string | null
-       *   resetCode?: string | null
-       *   newPassword?: string | null
-       * }
-       * ```
-       *
-       * ---
-       *
-       * **Response**
-       * ```ts
-       * type Response = unknown
-       * ```
-       */
-      post_api_v1_identity_resetpassword<
-        Config extends Alova2MethodConfig<unknown> & {
-          data: ResetPasswordRequest;
-        }
-      >(
-        config: Config
-      ): Alova2Method<unknown, 'identity.post_api_v1_identity_resetpassword', Config>;
-      /**
-       * ---
-       *
-       * [POST]
-       *
-       * **path:** /api/v1/identity/manage/2fa
-       *
-       * ---
-       *
-       * **RequestBody**
-       * ```ts
-       * type RequestBody = {
-       *   enable?: boolean | null
-       *   twoFactorCode?: string | null
-       *   resetSharedKey?: boolean
-       *   resetRecoveryCodes?: boolean
-       *   forgetMachine?: boolean
-       * }
-       * ```
-       *
-       * ---
-       *
-       * **Response**
-       * ```ts
-       * type Response = {
-       *   sharedKey?: string | null
-       *   recoveryCodesLeft?: number
-       *   recoveryCodes?: string[] | null
-       *   isTwoFactorEnabled?: boolean
-       *   isMachineRemembered?: boolean
-       * }
-       * ```
-       */
-      post_api_v1_identity_manage_2fa<
-        Config extends Alova2MethodConfig<TwoFactorResponse> & {
-          data: TwoFactorRequest;
-        }
-      >(
-        config: Config
-      ): Alova2Method<TwoFactorResponse, 'identity.post_api_v1_identity_manage_2fa', Config>;
-      /**
-       * ---
-       *
-       * [GET]
-       *
-       * **path:** /api/v1/identity/manage/info
-       *
-       * ---
-       *
-       * **Response**
-       * ```ts
-       * type Response = {
-       *   email?: string | null
-       *   isEmailConfirmed?: boolean
-       * }
-       * ```
-       */
-      get_api_v1_identity_manage_info<Config extends Alova2MethodConfig<InfoResponse>>(
-        config?: Config
-      ): Alova2Method<InfoResponse, 'identity.get_api_v1_identity_manage_info', Config>;
-      /**
-       * ---
-       *
-       * [POST]
-       *
-       * **path:** /api/v1/identity/manage/info
-       *
-       * ---
-       *
-       * **RequestBody**
-       * ```ts
-       * type RequestBody = {
-       *   newEmail?: string | null
-       *   newPassword?: string | null
-       *   oldPassword?: string | null
-       * }
-       * ```
-       *
-       * ---
-       *
-       * **Response**
-       * ```ts
-       * type Response = {
-       *   email?: string | null
-       *   isEmailConfirmed?: boolean
-       * }
-       * ```
-       */
-      post_api_v1_identity_manage_info<
-        Config extends Alova2MethodConfig<InfoResponse> & {
-          data: InfoRequest;
-        }
-      >(
-        config: Config
-      ): Alova2Method<InfoResponse, 'identity.post_api_v1_identity_manage_info', Config>;
     };
     classplans: {
       /**
@@ -3657,7 +3243,7 @@ declare global {
        *
        * [POST]
        *
-       * **path:** /api/v1/users
+       * **path:** /api/v1/users/manage
        *
        * ---
        *
@@ -3694,13 +3280,13 @@ declare global {
        * type Response = unknown
        * ```
        */
-      post_api_v1_users<
+      post_api_v1_users_manage<
         Config extends Alova2MethodConfig<unknown> & {
           data: UserCreateBody;
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'users.post_api_v1_users', Config>;
+      ): Alova2Method<unknown, 'users.post_api_v1_users_manage', Config>;
       /**
        * ---
        *
@@ -3710,34 +3296,29 @@ declare global {
        *
        * ---
        *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      get_api_v1_users_current<Config extends Alova2MethodConfig<unknown>>(
+        config?: Config
+      ): Alova2Method<unknown, 'users.get_api_v1_users_current', Config>;
+      /**
+       * ---
+       *
+       * [POST]
+       *
+       * **path:** /api/v1/users/current
+       *
+       * ---
+       *
        * **RequestBody**
        * ```ts
        * type RequestBody = {
-       *   claims?: Array<{
-       *     issuer?: string | null
-       *     originalIssuer?: string | null
-       *     properties?: Record<string, string> | null
-       *     subject?: {
-       *       authenticationType?: string | null
-       *       isAuthenticated?: boolean
-       *       actor?: ClaimsIdentity
-       *       bootstrapContext?: unknown | null
-       *       claims?: Array<Claim> | null
-       *       label?: string | null
-       *       name?: string | null
-       *       nameClaimType?: string | null
-       *       roleClaimType?: string | null
-       *     }
-       *     type?: string | null
-       *     value?: string | null
-       *     valueType?: string | null
-       *   }> | null
-       *   identities?: Array<ClaimsIdentity> | null
-       *   identity?: {
-       *     name?: string | null
-       *     authenticationType?: string | null
-       *     isAuthenticated?: boolean
-       *   }
+       *   name?: string | null
+       *   emailAddress?: string | null
+       *   phoneNumber?: string | null
        * }
        * ```
        *
@@ -3748,13 +3329,44 @@ declare global {
        * type Response = unknown
        * ```
        */
-      get_api_v1_users_current<
+      post_api_v1_users_current<
         Config extends Alova2MethodConfig<unknown> & {
-          data: ClaimsPrincipal;
+          data: UserInfo;
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'users.get_api_v1_users_current', Config>;
+      ): Alova2Method<unknown, 'users.post_api_v1_users_current', Config>;
+      /**
+       * ---
+       *
+       * [POST]
+       *
+       * **path:** /api/v1/users/change-password
+       *
+       * ---
+       *
+       * **RequestBody**
+       * ```ts
+       * type RequestBody = {
+       *   oldPassword?: string | null
+       *   newPassword?: string | null
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      post_api_v1_users_change_password<
+        Config extends Alova2MethodConfig<unknown> & {
+          data: ChangePasswordRequestBody;
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'users.post_api_v1_users_change_password', Config>;
     };
   }
 

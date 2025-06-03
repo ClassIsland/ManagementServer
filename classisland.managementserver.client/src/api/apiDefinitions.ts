@@ -43,16 +43,6 @@ export default {
   ],
   'auth.post_api_v1_auth_login': ['POST', '/api/v1/auth/login'],
   'auth.post_api_v1_auth_refresh': ['POST', '/api/v1/auth/refresh'],
-  'identity.post_api_v1_identity_register': ['POST', '/api/v1/identity/register'],
-  'identity.post_api_v1_identity_login': ['POST', '/api/v1/identity/login'],
-  'identity.post_api_v1_identity_refresh': ['POST', '/api/v1/identity/refresh'],
-  'identity.mapidentityapiApiV1IdentityConfirmemail': ['GET', '/api/v1/identity/confirmEmail'],
-  'identity.post_api_v1_identity_resendconfirmationemail': ['POST', '/api/v1/identity/resendConfirmationEmail'],
-  'identity.post_api_v1_identity_forgotpassword': ['POST', '/api/v1/identity/forgotPassword'],
-  'identity.post_api_v1_identity_resetpassword': ['POST', '/api/v1/identity/resetPassword'],
-  'identity.post_api_v1_identity_manage_2fa': ['POST', '/api/v1/identity/manage/2fa'],
-  'identity.get_api_v1_identity_manage_info': ['GET', '/api/v1/identity/manage/info'],
-  'identity.post_api_v1_identity_manage_info': ['POST', '/api/v1/identity/manage/info'],
   'classplans.get_api_v1_profiles_classplans': ['GET', '/api/v1/profiles/classPlans'],
   'classplans.put_api_v1_profiles_classplans': ['PUT', '/api/v1/profiles/classPlans'],
   'classplans.get_api_v1_profiles_classplans_id': ['GET', '/api/v1/profiles/classPlans/{id}'],
@@ -102,6 +92,8 @@ export default {
   'timelayouts.get_api_v1_profiles_timelayouts_id': ['GET', '/api/v1/profiles/timeLayouts/{id}'],
   'timelayouts.put_api_v1_profiles_timelayouts_id': ['PUT', '/api/v1/profiles/timeLayouts/{id}'],
   'timelayouts.delete_api_v1_profiles_timelayouts_id': ['DELETE', '/api/v1/profiles/timeLayouts/{id}'],
-  'users.post_api_v1_users': ['POST', '/api/v1/users'],
-  'users.get_api_v1_users_current': ['GET', '/api/v1/users/current']
+  'users.post_api_v1_users_manage': ['POST', '/api/v1/users/manage'],
+  'users.get_api_v1_users_current': ['GET', '/api/v1/users/current'],
+  'users.post_api_v1_users_current': ['POST', '/api/v1/users/current'],
+  'users.post_api_v1_users_change_password': ['POST', '/api/v1/users/change-password']
 };
