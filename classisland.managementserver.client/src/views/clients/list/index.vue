@@ -174,7 +174,7 @@ function addClient() {
 function createAbstractClient() {
   isCreating.value = true;
   editingFormRef.value = {
-    groupId: 0,
+    groupId: 1,
     id: ""
   } as Client;
   isEditingDrawerActive.value = true;

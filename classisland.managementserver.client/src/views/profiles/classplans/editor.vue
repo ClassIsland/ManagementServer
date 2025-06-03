@@ -145,6 +145,12 @@ async function saveClassPlan() {
   message.success("保存成功");
 } 
 
+function getTimeLayoutData(pageIndex: number, pageSize: number) {
+  return Apis.timelayouts.get_api_v1_profiles_timelayouts({
+    params: { pageIndex, pageSize }
+  })
+}
+
 onMounted(() => {
   loadTimeLayouts(1);
   loadData();
@@ -170,15 +176,14 @@ onMounted(() => {
               <n-input v-model:value="classPlan.name"/>
             </n-form-item>
             <n-form-item label="时间表">
-              <n-select
+              <PagedSelect
                 v-model:value="classPlan.timeLayoutId"
-                :options="timeLayouts"
-                :reset-menu-on-options-change="false"
-                @scroll="handleTimeLayoutMenuScroll"
-                label-field="name"
-                value-field="id"
+                labelField="name"
+                valueField="id"
+                :get-data="getTimeLayoutData"
               />
             </n-form-item>
+            
           </n-form>
           
           <n-button type="primary" @click="saveClassPlan">保存</n-button>
