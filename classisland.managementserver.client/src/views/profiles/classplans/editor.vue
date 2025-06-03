@@ -48,6 +48,7 @@ const subjects = ref<Array<Subject>>([]);
 const subjectsLayoutsPage = ref(1);
 const subjectsLayoutsEnd = ref(false);
 const isLoading = ref(false);
+const isSaving = ref(false);
 const message = useMessage();
 
 function getTimeString(time){
@@ -59,36 +60,41 @@ function updateView() {
 }
 
 async function loadData(){
-  const result = await Apis.classplans.get_api_v1_profiles_classplans_id({
-    pathParams: {
-      id: router.currentRoute.value.params.id
-    }
-  }) as any;
-  const cp = result.classPlan as ClassPlan;
-  classPlan.value = cp;
-  const classNames = result.classNames as string[];
-  timeLayout.value = await Apis.timelayouts.get_api_v1_profiles_timelayouts_id({
-    pathParams: {
-      id: cp.timeLayoutId ?? ""
-    }
-  }) as TimeLayout;
-  const entries: IClassInfoEditingEntry[] = [];
-  let ic = 0;
-  cp.classes?.forEach((c, i) => {
-    while (ic < timeLayout.value!.layouts!.length &&
-       timeLayout.value!.layouts![ic].timeType != 0) {
-      ic++;
-    }
-    entries.push({
-      timePoint: timeLayout.value!.layouts![ic],
-      subjectName: classNames[i],
-      classInfo: c
+  try {
+    isLoading.value = true;
+    const result = await Apis.classplans.get_api_v1_profiles_classplans_id({
+      pathParams: {
+        id: router.currentRoute.value.params.id
+      }
+    }) as any;
+    const cp = result.classPlan as ClassPlan;
+    classPlan.value = cp;
+    const classNames = result.classNames as string[];
+    timeLayout.value = await Apis.timelayouts.get_api_v1_profiles_timelayouts_id({
+      pathParams: {
+        id: cp.timeLayoutId ?? ""
+      }
+    }) as TimeLayout;
+    const entries: IClassInfoEditingEntry[] = [];
+    let ic = 0;
+    cp.classes?.forEach((c, i) => {
+      while (ic < timeLayout.value!.layouts!.length &&
+         timeLayout.value!.layouts![ic].timeType != 0) {
+        ic++;
+      }
+      entries.push({
+        timePoint: timeLayout.value!.layouts![ic],
+        subjectName: classNames[i],
+        classInfo: c
+      });
+      if (ic + 1 < timeLayout.value!.layouts!.length) {
+        ic++;
+      }
     });
-    if (ic + 1 < timeLayout.value!.layouts!.length) {
-      ic++;
-    }
-  });
-  classPlanEditingEntries.value = entries;
+    classPlanEditingEntries.value = entries;
+  } finally {
+    isLoading.value = false;
+  }
 } 
 
 async function loadTimeLayouts(page: number) {
@@ -131,18 +137,23 @@ async function handleTimeLayoutMenuScroll(e: Event) {
 }
 
 async function saveClassPlan() {
-  const cp = classPlan.value;
-  cp.timeLayout = {};
-  const entries = classPlanEditingEntries.value;
-  const classes = entries.map(e => e.classInfo);
-  cp.classes = classes;
-  await Apis.classplans.put_api_v1_profiles_classplans_id({
-    pathParams: {
-      id: router.currentRoute.value.params.id
-    },
-    data: cp
-  });
-  message.success("保存成功");
+  try {
+    isSaving.value = true;
+    const cp = classPlan.value;
+    cp.timeLayout = {};
+    const entries = classPlanEditingEntries.value;
+    const classes = entries.map(e => e.classInfo);
+    cp.classes = classes;
+    await Apis.classplans.put_api_v1_profiles_classplans_id({
+      pathParams: {
+        id: router.currentRoute.value.params.id
+      },
+      data: cp
+    });
+    message.success("保存成功");
+  } finally {
+    isSaving.value = false;
+  }
 } 
 
 function getTimeLayoutData(pageIndex: number, pageSize: number) {
@@ -160,44 +171,43 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex gap-2 root">
-    <n-card class="proCard" :bordered="false">
-      <n-data-table :data="classPlanEditingEntries"
-                    :columns="mainTableColumns"
-                    :max-height="`calc(100vh - 210px)`">
-        
-      </n-data-table>
-    </n-card>
-    <n-card class="proCard" :bordered="false">
-      <n-tabs type="line" animated>
-        <n-tab-pane name="classPlanInfo" tab="课表信息">
-          <n-form :model="classPlan">
-            <n-form-item label="课表名称">
-              <n-input v-model:value="classPlan.name"/>
-            </n-form-item>
-            <n-form-item label="时间表">
-              <PagedSelect
-                v-model:value="classPlan.timeLayoutId"
-                labelField="name"
-                valueField="id"
-                :get-data="getTimeLayoutData"
-              />
-            </n-form-item>
-            
-          </n-form>
+  <n-spin :show="isLoading">
+    <div class="flex gap-2 root">
+      <n-card class="proCard" :bordered="false">
+        <n-data-table :data="classPlanEditingEntries"
+                      :columns="mainTableColumns"
+                      :max-height="`calc(100vh - 210px)`">
           
-          <n-button type="primary" @click="saveClassPlan">保存</n-button>
-        </n-tab-pane>
-        <n-tab-pane name="assignee" tab="分配">
-          <AssigneeTable :object-id="router.currentRoute.value.params.id"
-                         :object-type="1"/>
-        </n-tab-pane>
-        <n-tab-pane name="classEdit" tab="编辑科目">
-          Hey Jude
-        </n-tab-pane>
-      </n-tabs>
-    </n-card>
-  </div>
+        </n-data-table>
+      </n-card>
+      <n-card class="proCard" :bordered="false">
+        <n-tabs type="line" animated>
+          <n-tab-pane name="classPlanInfo" tab="课表信息">
+            <n-form :model="classPlan">
+              <n-form-item label="课表名称">
+                <n-input v-model:value="classPlan.name"/>
+              </n-form-item>
+              <n-form-item label="时间表">
+                <PagedSelect
+                  v-model:value="classPlan.timeLayoutId"
+                  labelField="name"
+                  valueField="id"
+                  :get-data="getTimeLayoutData"
+                />
+              </n-form-item>
+              
+            </n-form>
+            
+            <n-button type="primary" @click="saveClassPlan" :loading="isSaving">保存</n-button>
+          </n-tab-pane>
+          <n-tab-pane name="assignee" tab="分配">
+            <AssigneeTable :object-id="router.currentRoute.value.params.id"
+                           :object-type="1"/>
+          </n-tab-pane>
+        </n-tabs>
+      </n-card>
+    </div>
+  </n-spin>
 </template>
 
 <style scoped lang="less">

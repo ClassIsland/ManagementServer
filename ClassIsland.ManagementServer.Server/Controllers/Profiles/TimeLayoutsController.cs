@@ -1,6 +1,7 @@
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
 using ClassIsland.ManagementServer.Server.Extensions;
+using ClassIsland.ManagementServer.Server.Models;
 using ClassIsland.ManagementServer.Server.Services;
 using ClassIsland.Shared.Models.Profile;
 using Microsoft.AspNetCore.Authorization;
@@ -29,7 +30,7 @@ public class TimeLayoutsController(ManagementServerContext dbContext, ProfileEnt
         var v = await ProfileEntitiesService.GetTimeLayoutEntity(id);
         if (v == null)
         {
-            return NotFound();
+            return NotFound(new Error("找不到请求的对象"));
         }
         return Ok(v);
     }
@@ -40,7 +41,7 @@ public class TimeLayoutsController(ManagementServerContext dbContext, ProfileEnt
         var prev = await DbContext.ProfileTimelayouts.FirstOrDefaultAsync(x => x.Id == id);
         if (prev == null)
         {
-            return NotFound();
+            return NotFound(new Error("找不到请求的对象"));
         }
         
         await ProfileEntitiesService.SetTimeLayoutEntity(id, payload, true);
@@ -63,7 +64,7 @@ public class TimeLayoutsController(ManagementServerContext dbContext, ProfileEnt
         var entity = await DbContext.ProfileTimelayouts.FirstOrDefaultAsync(x => x.Id == id);
         if (entity == null) 
         {
-            return NotFound();
+            return NotFound(new Error("找不到请求的对象"));
         }
 
         DbContext.ProfileTimelayouts.Remove(entity);

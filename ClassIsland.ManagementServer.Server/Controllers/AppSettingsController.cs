@@ -1,5 +1,6 @@
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
+using ClassIsland.ManagementServer.Server.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +26,7 @@ public class AppSettingsController(ManagementServerContext dbContext) : Controll
         var o = await DbContext.Settings.Where(x => x.Id == id).FirstOrDefaultAsync();
         if (o == null)
         {
-            return NotFound();
+            return NotFound(new Error("找不到请求的对象"));
         }
 
         return Ok(o);
@@ -65,7 +66,7 @@ public class AppSettingsController(ManagementServerContext dbContext) : Controll
         var o = await DbContext.Settings.Where(x => x.Id == id).FirstOrDefaultAsync();
         if (o == null)
         {
-            return NotFound();
+            return NotFound(new Error("找不到请求的对象"));
         }
 
         DbContext.Settings.Remove(o);

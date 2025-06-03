@@ -142,23 +142,26 @@ function handleDelete(record) {
 }
 
 async function saveEntry() {
-  isSaving.value = true;
-  if (isCreating.value) {
-    await Api.clientregistry.put_api_v1_clients_registry_abstract({
-      data: editingFormRef.value
-    });
-  } else {
-    await Api.clientregistry.put_api_v1_clients_registry_abstract_id({
-      pathParams: {
-        id: editingFormRef.value.internalId
-      },
-      data: editingFormRef.value
-    });
+  try {
+    isSaving.value = true;
+    if (isCreating.value) {
+      await Api.clientregistry.put_api_v1_clients_registry_abstract({
+        data: editingFormRef.value
+      });
+    } else {
+      await Api.clientregistry.put_api_v1_clients_registry_abstract_id({
+        pathParams: {
+          id: editingFormRef.value.internalId
+        },
+        data: editingFormRef.value
+      });
+    }
+    isEditingDrawerActive.value = false;
+    actionRef?.value.reload();
+    message.success("保存成功");
+  } finally {
+    isSaving.value = false;
   }
-  isSaving.value = false;
-  isEditingDrawerActive.value = false;
-  actionRef?.value.reload();
-  message.success("保存成功");
 }
 
 function handleEdit(record) {

@@ -1,6 +1,7 @@
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
 using ClassIsland.ManagementServer.Server.Extensions;
+using ClassIsland.ManagementServer.Server.Models;
 using ClassIsland.ManagementServer.Server.Services;
 using ClassIsland.Shared.Models.Profile;
 using Microsoft.AspNetCore.Authorization;
@@ -29,7 +30,7 @@ public class ClassPlansController(ManagementServerContext dbContext, ProfileEnti
         var v = await ProfileEntitiesService.GetClassPlanEntity(id);
         if (v == null)
         {
-            return NotFound();
+            return NotFound(new Error("找不到请求的对象"));
         }
         return Ok(new
         {
@@ -48,7 +49,7 @@ public class ClassPlansController(ManagementServerContext dbContext, ProfileEnti
         var prev = await DbContext.ProfileClassplans.FirstOrDefaultAsync(x => x.Id == id);
         if (prev == null)
         {
-            return NotFound();
+            return NotFound(new Error("找不到请求的对象"));
         }
         
         await ProfileEntitiesService.SetClassPlanEntity(id, payload, true);
@@ -71,7 +72,7 @@ public class ClassPlansController(ManagementServerContext dbContext, ProfileEnti
         var entity = await DbContext.ProfileClassplans.FirstOrDefaultAsync(x => x.Id == id);
         if (entity == null) 
         {
-            return NotFound();
+            return NotFound(new Error("找不到请求的对象"));
         }
 
         DbContext.ProfileClassplans.Remove(entity);

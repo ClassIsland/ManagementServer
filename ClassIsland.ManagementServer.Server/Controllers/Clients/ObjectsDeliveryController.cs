@@ -4,6 +4,7 @@ using System.Text.Json;
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
 using ClassIsland.ManagementServer.Server.Enums;
+using ClassIsland.ManagementServer.Server.Models;
 using ClassIsland.ManagementServer.Server.Services;
 using ClassIsland.Shared;
 using ClassIsland.Shared.Models.Management;
@@ -35,7 +36,7 @@ public class ObjectsDeliveryController(
     {
         var client = DbContext.Clients.FirstOrDefault(x => x.Cuid == cuid);
         if (client == null)
-            return NotFound();
+            return NotFound(new Error("找不到请求的对象"));
         var assignees = await ObjectsAssigneeService.GetClientAssigningObjects(client, ObjectTypes.ProfileSubject);
         var subjects = new ObservableDictionary<string, Subject>();
         foreach (var i in assignees)
@@ -80,7 +81,7 @@ public class ObjectsDeliveryController(
     {
         var client = DbContext.Clients.FirstOrDefault(x => x.Cuid == cuid);
         if (client == null)
-            return NotFound();
+            return NotFound(new Error("找不到请求的对象"));
         var assignees = await ObjectsAssigneeService.GetClientAssigningObjects(client, ObjectTypes.ProfileTimeLayout);
         var timeLayouts = new ObservableDictionary<string, TimeLayout>();
         foreach (var i in assignees)
@@ -118,7 +119,7 @@ public class ObjectsDeliveryController(
     {
         var client = DbContext.Clients.FirstOrDefault(x => x.Cuid == cuid);
         if (client == null)
-            return NotFound();
+            return NotFound(new Error("找不到请求的对象"));
         var assignees = await ObjectsAssigneeService.GetClientAssigningObjects(client, ObjectTypes.ProfileClassPlan);
         var classPlans = new ObservableDictionary<string, ClassPlan>();
         foreach (var i in assignees)
@@ -157,7 +158,7 @@ public class ObjectsDeliveryController(
     {
         var client = DbContext.Clients.FirstOrDefault(x => x.Cuid == cuid);
         if (client == null)
-            return NotFound();
+            return NotFound(new Error("找不到请求的对象"));
         var assignees = await ObjectsAssigneeService.GetClientAssigningObjectsLeveled(client, ObjectTypes.Policy);
         foreach (var policy in assignees.Select(i => DbContext.Policies.FirstOrDefault(x => x.Id == i.ObjectId)).OfType<Policy>().Where(policy => (policy.IsEnabled)))
         {
@@ -172,7 +173,7 @@ public class ObjectsDeliveryController(
     {
         var client = DbContext.Clients.FirstOrDefault(x => x.Cuid == cuid);
         if (client == null)
-            return NotFound();
+            return NotFound(new Error("找不到请求的对象"));
         var assignees = await ObjectsAssigneeService.GetClientAssigningObjectsLeveled(client, ObjectTypes.AppSettings);
         foreach (var setting in assignees.Select(i => DbContext.Settings.FirstOrDefault(x => x.Id == i.ObjectId)).OfType<Setting>())
         {

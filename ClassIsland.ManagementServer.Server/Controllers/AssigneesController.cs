@@ -3,6 +3,7 @@ using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
 using ClassIsland.ManagementServer.Server.Enums;
 using ClassIsland.ManagementServer.Server.Extensions;
+using ClassIsland.ManagementServer.Server.Models;
 using ClassIsland.ManagementServer.Server.Models.Assignees;
 using ClassIsland.ManagementServer.Server.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -30,7 +31,7 @@ public class AssigneesController(ManagementServerContext dbContext,
     {
         var v = DbContext.ObjectsAssignees.FirstOrDefault(x => x.Id == id);
         if (v == null)
-            return NotFound();
+            return NotFound(new Error("找不到请求的对象"));
         return Ok(v);
     }
     
@@ -70,7 +71,7 @@ public class AssigneesController(ManagementServerContext dbContext,
     {
         var v = DbContext.ObjectsAssignees.FirstOrDefault(x => x.Id == id);
         if (v == null)
-            return NotFound();
+            return NotFound(new Error("找不到请求的对象"));
         await ObjectsUpdateNotifyService.NotifyClientUpdatingAsync(v.TargetClientCuid, v.TargetClientId,
             v.TargetGroupId);
         DbContext.ObjectsAssignees.Remove(v);

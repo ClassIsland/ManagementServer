@@ -77,8 +77,9 @@ export const Alova = createAlova({
         });
       } else {
         // 可按需处理错误 一般情况下不是 912 错误，不一定需要弹出 message
-        Message?.error(res.message ?? code);
-        throw new Error(code);
+        let errorMessage = res?.message ?? code.toString();
+        Message?.error(errorMessage);
+        throw new Error(errorMessage);
       }
       
       return res;

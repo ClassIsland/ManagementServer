@@ -1,6 +1,7 @@
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
 using ClassIsland.ManagementServer.Server.Extensions;
+using ClassIsland.ManagementServer.Server.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -33,7 +34,7 @@ public class ClientGroupController(ILogger<ClientGroupController> logger, Manage
         
         if (group == null)
         {
-            return NotFound();
+            return NotFound(new Error("找不到请求的对象"));
         }
         
         return Ok(group);
@@ -54,7 +55,7 @@ public class ClientGroupController(ILogger<ClientGroupController> logger, Manage
         var prev = await DbContext.ClientGroups.AnyAsync(x => x.Id == id);
         if (!prev)
         {
-            return NotFound();
+            return NotFound(new Error("找不到请求的对象"));
         }
         DbContext.Entry(group).State = EntityState.Modified;
         await DbContext.SaveChangesAsync();
@@ -67,12 +68,12 @@ public class ClientGroupController(ILogger<ClientGroupController> logger, Manage
         var group = await DbContext.ClientGroups.FirstOrDefaultAsync(x => x.Id == id);
         if (group == null) 
         {
-            return NotFound();
+            return NotFound(new Error("找不到请求的对象"));
         }
 
         if (id is ClientGroup.DefaultGroupId or ClientGroup.GlobalGroupId)
         {
-            return BadRequest();
+            return BadRequest(new Error("不能删除默认组或全局分组"));
         }
 
         var clients = await DbContext.AbstractClients

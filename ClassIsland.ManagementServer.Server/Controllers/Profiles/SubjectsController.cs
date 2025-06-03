@@ -1,6 +1,7 @@
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
 using ClassIsland.ManagementServer.Server.Extensions;
+using ClassIsland.ManagementServer.Server.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +28,7 @@ public class SubjectsController(ManagementServerContext dbContext) : ControllerB
         var prev = await DbContext.ProfileSubjects.AnyAsync(x => x.Id == id);
         if (!prev)
         {
-            return BadRequest();
+            return NotFound(new Error("找不到请求的对象"));
         }
         DbContext.Entry(payload).State = EntityState.Modified;
         await DbContext.SaveChangesAsync();
@@ -49,7 +50,7 @@ public class SubjectsController(ManagementServerContext dbContext) : ControllerB
         var entity = await DbContext.ProfileSubjects.FirstOrDefaultAsync(x => x.Id == id);
         if (entity == null) 
         {
-            return NotFound();
+            return NotFound(new Error("找不到请求的对象"));
         }
 
         DbContext.ProfileSubjects.Remove(entity);

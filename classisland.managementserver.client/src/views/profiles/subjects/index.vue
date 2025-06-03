@@ -76,28 +76,31 @@ const actionColumn = reactive({
 });
 
 async function saveEntry(e: MouseEvent) {
-  e.preventDefault();
-  console.log("saving");
-  if (editingFormRef?.value == null){
-    return;
+  try {
+    e.preventDefault();
+    console.log("saving");
+    if (editingFormRef?.value == null){
+      return;
+    }
+    isSaving.value = true;
+    if (isAdding.value) {
+      await Apis.subjects.put_api_v1_profiles_subjects({
+        data: editingFormRef.value
+      });
+    } else {
+      await Apis.subjects.put_api_v1_profiles_subjects_id({
+        pathParams: {
+          id: editingFormRef.value?.id,
+        },
+        data: editingFormRef.value
+      });
+    }
+    isEditingDrawerVisible.value = false;
+    actionRef.value.reload();
+    message.success("保存成功");
+  } finally {
+    isSaving.value = false;
   }
-  isSaving.value = true;
-  if (isAdding.value) {
-    await Apis.subjects.put_api_v1_profiles_subjects({
-      data: editingFormRef.value
-    });
-  } else {
-    await Apis.subjects.put_api_v1_profiles_subjects_id({
-      pathParams: {
-        id: editingFormRef.value?.id,
-      },
-      data: editingFormRef.value
-    });
-  }
-  isEditingDrawerVisible.value = false;
-  isSaving.value = false;
-  actionRef.value.reload();
-  message.success("保存成功");
 }
 
 function createActions(record) {

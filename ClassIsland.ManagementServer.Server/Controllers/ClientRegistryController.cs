@@ -3,6 +3,7 @@ using System.Text.Json;
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
 using ClassIsland.ManagementServer.Server.Extensions;
+using ClassIsland.ManagementServer.Server.Models;
 using ClassIsland.Shared.Enums;
 using ClassIsland.Shared.Models.Management;
 using Microsoft.AspNetCore.Authorization;
@@ -52,7 +53,7 @@ public class ClientRegistryController(ManagementServerContext context) : Control
         var prev = await DataContext.AbstractClients.AnyAsync(x => x.InternalId == id);
         if (!prev)
         {
-            return NotFound();
+            return NotFound(new Error("找不到请求的对象"));
         }
         DataContext.Entry(client).State = EntityState.Modified;
         await DataContext.SaveChangesAsync();
@@ -65,7 +66,7 @@ public class ClientRegistryController(ManagementServerContext context) : Control
         var client = await DataContext.AbstractClients.FirstOrDefaultAsync(x => x.InternalId == id);
         if (client == null) 
         {
-            return NotFound();
+            return NotFound(new Error("找不到请求的对象"));
         }
 
         DataContext.AbstractClients.Remove(client);

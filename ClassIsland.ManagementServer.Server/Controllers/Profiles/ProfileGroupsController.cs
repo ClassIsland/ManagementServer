@@ -1,6 +1,7 @@
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
 using ClassIsland.ManagementServer.Server.Extensions;
+using ClassIsland.ManagementServer.Server.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -28,7 +29,7 @@ public class ProfileGroupsController(ManagementServerContext dbContext) : Contro
         var prev = await DbContext.ProfileGroups.AnyAsync(x => x.Id == id);
         if (!prev)
         {
-            return BadRequest();
+            return NotFound(new Error("找不到请求的对象"));
         }
         DbContext.Entry(payload).State = EntityState.Modified;
         await DbContext.SaveChangesAsync();
@@ -50,7 +51,7 @@ public class ProfileGroupsController(ManagementServerContext dbContext) : Contro
         var entity = await DbContext.ProfileGroups.FirstOrDefaultAsync(x => x.Id == id);
         if (entity == null) 
         {
-            return NotFound();
+            return NotFound(new Error("找不到请求的对象"));
         }
 
         DbContext.ProfileGroups.Remove(entity);

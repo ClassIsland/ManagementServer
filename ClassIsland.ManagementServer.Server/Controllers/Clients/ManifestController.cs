@@ -1,5 +1,6 @@
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Enums;
+using ClassIsland.ManagementServer.Server.Models;
 using ClassIsland.ManagementServer.Server.Services;
 using ClassIsland.Shared.Enums;
 using ClassIsland.Shared.Models.Management;
@@ -23,7 +24,7 @@ public class ManifestController(ManagementServerContext dataContext,
         var client = DataContext.Clients.FirstOrDefault(i => i.Cuid == cuid);
         if (client == null)
         {
-            return NotFound();
+            return NotFound(new Error("找不到请求的对象"));
         }
 
         var manifest = new ManagementManifest();
