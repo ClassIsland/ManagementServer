@@ -6,12 +6,14 @@ using ClassIsland.ManagementServer.Server.Helpers;
 using ClassIsland.ManagementServer.Server.Models;
 using ClassIsland.ManagementServer.Server.Services;
 using ClassIsland.Shared.Models.Profile;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClassIsland.ManagementServer.Server.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/v1/profiles")]
 public class ProfilesController(ManagementServerContext dbContext, 
     ILogger<ProfilesController> logger, 

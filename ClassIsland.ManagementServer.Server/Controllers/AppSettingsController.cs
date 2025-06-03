@@ -1,11 +1,13 @@
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClassIsland.ManagementServer.Server.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/v1/default-settings")]
 public class AppSettingsController(ManagementServerContext dbContext) : ControllerBase
 {

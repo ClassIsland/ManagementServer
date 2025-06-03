@@ -1,12 +1,14 @@
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
 using ClassIsland.ManagementServer.Server.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClassIsland.ManagementServer.Server.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/v1/client_groups")]
 public class ClientGroupController(ILogger<ClientGroupController> logger, ManagementServerContext dbContext) : Controller
 {

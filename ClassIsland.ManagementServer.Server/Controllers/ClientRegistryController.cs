@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 namespace ClassIsland.ManagementServer.Server.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/v1/clients_registry")]
 public class ClientRegistryController(ManagementServerContext context) : ControllerBase
 {

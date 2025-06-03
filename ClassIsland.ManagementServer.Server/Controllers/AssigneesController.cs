@@ -5,6 +5,7 @@ using ClassIsland.ManagementServer.Server.Enums;
 using ClassIsland.ManagementServer.Server.Extensions;
 using ClassIsland.ManagementServer.Server.Models.Assignees;
 using ClassIsland.ManagementServer.Server.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 namespace ClassIsland.ManagementServer.Server.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/v1/assignees/")]
 public class AssigneesController(ManagementServerContext dbContext, 
     ObjectsAssigneeService objectsAssigneeService,

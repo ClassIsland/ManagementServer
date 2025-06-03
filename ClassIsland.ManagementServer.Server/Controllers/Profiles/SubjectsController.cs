@@ -1,12 +1,14 @@
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
 using ClassIsland.ManagementServer.Server.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClassIsland.ManagementServer.Server.Controllers.Profiles;
 
 [ApiController]
+[Authorize]
 [Route("api/v1/profiles/subjects")]
 public class SubjectsController(ManagementServerContext dbContext) : ControllerBase
 {

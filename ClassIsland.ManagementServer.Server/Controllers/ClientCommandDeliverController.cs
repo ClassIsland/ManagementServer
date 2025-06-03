@@ -4,11 +4,13 @@ using ClassIsland.ManagementServer.Server.Services;
 using ClassIsland.Shared.Protobuf.Enum;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClassIsland.ManagementServer.Server.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/v1/client-commands/")]
 public class ClientCommandDeliverController(ClientCommandDeliverService clientCommandDeliverService) : ControllerBase
 {

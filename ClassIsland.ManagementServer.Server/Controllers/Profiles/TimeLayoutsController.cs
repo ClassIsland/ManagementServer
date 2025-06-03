@@ -3,12 +3,14 @@ using ClassIsland.ManagementServer.Server.Entities;
 using ClassIsland.ManagementServer.Server.Extensions;
 using ClassIsland.ManagementServer.Server.Services;
 using ClassIsland.Shared.Models.Profile;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClassIsland.ManagementServer.Server.Controllers.Profiles;
 
 [ApiController]
+[Authorize]
 [Route("api/v1/profiles/timeLayouts")]
 public class TimeLayoutsController(ManagementServerContext dbContext, ProfileEntitiesService profileEntitiesService) : ControllerBase
 {
