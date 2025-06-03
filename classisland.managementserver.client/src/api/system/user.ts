@@ -18,6 +18,9 @@ export function login(params) {
     data: {
       email: params.username,
       password: params.password,
+    },
+    meta: {
+      ignoreAuth: true
     }
   })
 }

@@ -25,6 +25,7 @@
   import { useRoute } from 'vue-router';
   import { useDesignSettingStore } from '@/store/modules/designSetting';
   import { lighten } from '@/utils/index';
+  import {useUser} from "@/store/modules/user";
 
   const route = useRoute();
   const useScreenLock = useScreenLockStore();
@@ -73,7 +74,7 @@
     }, 1000);
   };
 
-  onMounted(() => {
+  onMounted(async () => {
     document.addEventListener('mousedown', timekeeping);
   });
 

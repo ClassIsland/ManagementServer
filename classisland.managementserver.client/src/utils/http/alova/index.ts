@@ -61,15 +61,17 @@ export const Alova = createAlova({
         return res;
       }
       // 需要登录
-      if (code === 912) {
+      console.log(method)
+      if (code === 401 && !method.meta?.ignoreAuth) {
         Modal?.warning({
           title: '提示',
           content: '登录身份已失效，请重新登录!',
-          okText: '确定',
+          positiveText: '确定',
           closable: false,
           maskClosable: false,
-          onOk: async () => {
-            storage.clear();
+
+          onPositiveClick: async () => {
+            await useUser().logout();
             window.location.href = LoginPath;
           },
         });

@@ -59,7 +59,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { reactive, ref } from 'vue';
+  import { reactive, ref, onMounted } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import { useUserStore } from '@/store/modules/user';
   import { useMessage } from 'naive-ui';
@@ -114,12 +114,8 @@
         try {
           await userStore.login(params);
           message.destroyAll();
-          console.log(store[ACCESS_TOKEN]);
-          const toPath = decodeURIComponent((route.query?.redirect || '/') as string);
           message.success('登录成功，即将进入系统');
-          if (route.name === LOGIN_NAME) {
-            router.push('/');
-          } else router.push(toPath);
+          redirect();
         } catch (e) {
           console.log(e)
           message.error("登陆失败：" + e.message)
@@ -138,6 +134,19 @@
       handleSubmit(e);
     }
   }
+  
+  function redirect() {
+    const toPath = decodeURIComponent((route.query?.redirect || '/') as string);
+    if (route.name === LOGIN_NAME) {
+      router.push('/');
+    } else router.push(toPath);
+  }
+  
+  onMounted(() => {
+    if (userStore.getIsLoggedIn) {
+      redirect();
+    }
+  });
 </script>
 
 <style lang="less" scoped>

@@ -6,12 +6,16 @@ import { setupNaiveDiscreteApi, setupNaive, setupDirectives } from '@/plugins';
 import App from './App.vue';
 import router, { setupRouter } from './router';
 import { setupStore } from '@/store';
+import {useUser} from "@/store/modules/user";
 
 async function bootstrap() {
   const app = createApp(App);
 
   // 挂载状态管理
   setupStore(app);
+  
+  const user = useUser();
+  await user.init();
 
   // 注册全局常用的 naive-ui 组件
   setupNaive(app);
@@ -39,7 +43,7 @@ async function bootstrap() {
   const meta = document.createElement('meta');
   meta.name = 'naive-ui-style';
   document.head.appendChild(meta);
-
+  
   app.mount('#app', true);
 }
 
