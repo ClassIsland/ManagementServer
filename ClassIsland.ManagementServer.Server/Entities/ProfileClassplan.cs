@@ -25,7 +25,7 @@ public partial class ProfileClassplan : IDbAttachableObject, IObjectWithTime
     /// <summary>
     /// 课表所属分组 ID
     /// </summary>
-    public Guid? GroupId { get; set; }
+    public Guid GroupId { get; set; } = ProfileGroup.DefaultGroupId;
 
     /// <summary>
     /// 在一周中的哪一天启用这个课表

@@ -11,7 +11,7 @@ public partial class ProfileSubject : IDbAttachableObject, IObjectWithTime
     [Key]
     public Guid Id { get; set; }
 
-    public Guid? GroupId { get; set; }
+    public Guid GroupId { get; set; } = ProfileGroup.DefaultGroupId;
 
     public string Name { get; set; } = "";
 

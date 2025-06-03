@@ -1,6 +1,6 @@
 import { RouteRecordRaw } from 'vue-router';
 import { Layout } from '@/router/constant';
-import { FileOutlined, BookOutlined, TableOutlined, CalendarOutlined, UploadOutlined } from '@vicons/antd';
+import { FileOutlined, BookOutlined, TableOutlined, CalendarOutlined, UploadOutlined, GroupOutlined } from '@vicons/antd';
 import { renderIcon } from '@/utils/index';
 
 const routeName = 'profiles';
@@ -51,6 +51,15 @@ const routes: Array<RouteRecordRaw> = [
           icon: renderIcon(BookOutlined),
         },
         component: () => import('@/views/profiles/subjects/index.vue'),
+      },
+      {
+        path: '/profiles/groups',
+        name: `${routeName}_groups`,
+        meta: {
+          title: '分组',
+          icon: renderIcon(GroupOutlined),
+        },
+        component: () => import('@/views/profiles/groups/index.vue'),
       },
       {
         path: '/profiles/upload',

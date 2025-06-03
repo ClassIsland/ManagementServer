@@ -46,6 +46,6 @@ public partial class ClientGroup : IObjectWithTime
     [StringLength(7)]
     public string ColorHex { get; set; } = "#66CCFF"; 
     
-    public const long DefaultGroupId = 0;
+    public const long DefaultGroupId = 1;
     public const long GlobalGroupId = -1;
 }

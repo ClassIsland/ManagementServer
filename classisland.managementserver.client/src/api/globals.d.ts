@@ -265,6 +265,14 @@ export type Policy = {
   createdTime?: string;
   updatedTime?: string;
 };
+export type ProfileGroup = {
+  id?: string;
+  name?: string | null;
+  description?: string | null;
+  colorHex?: string | null;
+  createdTime?: string;
+  updatedTime?: string;
+};
 export type TimeLayoutItem = {
   isActive?: boolean;
   attachedObjects?: Record<string, unknown | null> | null;
@@ -337,10 +345,25 @@ export type ProfileTimeLayoutTimePoint = {
 export type ProfileTimeLayout = {
   id?: string;
   name?: string | null;
-  groupId?: string | null;
+  groupId?: string;
   group?: ProfileGroup;
   profileClassPlans?: ProfileClassplan[] | null;
   profileTimelayoutTimepoints?: ProfileTimeLayoutTimePoint[] | null;
+  attachedObjects?: Record<string, unknown | null> | null;
+  createdTime?: string;
+  updatedTime?: string;
+};
+export type ProfileClassplan = {
+  id?: string;
+  name?: string | null;
+  groupId?: string;
+  weekDay?: number;
+  weekDiv?: number;
+  timeLayoutId?: string;
+  isEnabled?: boolean;
+  group?: ProfileGroup;
+  profileClassPlanClasses?: ProfileClassPlanClass[] | null;
+  timeLayout?: ProfileTimeLayout;
   attachedObjects?: Record<string, unknown | null> | null;
   createdTime?: string;
   updatedTime?: string;
@@ -356,34 +379,9 @@ export type ProfileClassPlanClass = {
   createdTime?: string;
   updatedTime?: string;
 };
-export type ProfileClassplan = {
-  id?: string;
-  name?: string | null;
-  groupId?: string | null;
-  weekDay?: number;
-  weekDiv?: number;
-  timeLayoutId?: string;
-  isEnabled?: boolean;
-  group?: ProfileGroup;
-  profileClassPlanClasses?: ProfileClassPlanClass[] | null;
-  timeLayout?: ProfileTimeLayout;
-  attachedObjects?: Record<string, unknown | null> | null;
-  createdTime?: string;
-  updatedTime?: string;
-};
-export type ProfileGroup = {
-  id?: string;
-  name?: string | null;
-  description?: string | null;
-  profileClassplans?: ProfileClassplan[] | null;
-  profileSubjects?: ProfileSubject[] | null;
-  profileTimelayouts?: ProfileTimeLayout[] | null;
-  createdTime?: string;
-  updatedTime?: string;
-};
 export type ProfileSubject = {
   id?: string;
-  groupId?: string | null;
+  groupId?: string;
   name?: string | null;
   initials?: string | null;
   isOutDoor?: boolean;
@@ -2766,6 +2764,164 @@ declare global {
         config: Config
       ): Alova2Method<unknown, 'policies.delete_api_v1_policies_id', Config>;
     };
+    profilegroups: {
+      /**
+       * ---
+       *
+       * [GET]
+       *
+       * **path:** /api/v1/profiles/groups
+       *
+       * ---
+       *
+       * **Query Parameters**
+       * ```ts
+       * type QueryParameters = {
+       *   pageIndex?: number
+       *   pageSize?: number
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      get_api_v1_profiles_groups<
+        Config extends Alova2MethodConfig<unknown> & {
+          params: {
+            pageIndex?: number;
+            pageSize?: number;
+          };
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'profilegroups.get_api_v1_profiles_groups', Config>;
+      /**
+       * ---
+       *
+       * [PUT]
+       *
+       * **path:** /api/v1/profiles/groups
+       *
+       * ---
+       *
+       * **RequestBody**
+       * ```ts
+       * type RequestBody = {
+       *   id?: string
+       *   name?: string | null
+       *   description?: string | null
+       *   colorHex?: string | null
+       *   createdTime?: string
+       *   updatedTime?: string
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      put_api_v1_profiles_groups<
+        Config extends Alova2MethodConfig<unknown> & {
+          data: ProfileGroup;
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'profilegroups.put_api_v1_profiles_groups', Config>;
+      /**
+       * ---
+       *
+       * [PUT]
+       *
+       * **path:** /api/v1/profiles/groups/{id}
+       *
+       * ---
+       *
+       * **Path Parameters**
+       * ```ts
+       * type PathParameters = {
+       *   // [required]
+       *   id: string
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **RequestBody**
+       * ```ts
+       * type RequestBody = {
+       *   id?: string
+       *   name?: string | null
+       *   description?: string | null
+       *   colorHex?: string | null
+       *   createdTime?: string
+       *   updatedTime?: string
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      put_api_v1_profiles_groups_id<
+        Config extends Alova2MethodConfig<unknown> & {
+          pathParams: {
+            /**
+             * [required]
+             */
+            id: string;
+          };
+          data: ProfileGroup;
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'profilegroups.put_api_v1_profiles_groups_id', Config>;
+      /**
+       * ---
+       *
+       * [DELETE]
+       *
+       * **path:** /api/v1/profiles/groups/{id}
+       *
+       * ---
+       *
+       * **Path Parameters**
+       * ```ts
+       * type PathParameters = {
+       *   // [required]
+       *   id: string
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      delete_api_v1_profiles_groups_id<
+        Config extends Alova2MethodConfig<unknown> & {
+          pathParams: {
+            /**
+             * [required]
+             */
+            id: string;
+          };
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'profilegroups.delete_api_v1_profiles_groups_id', Config>;
+    };
     profiles: {
       /**
        * ---
@@ -2927,7 +3083,7 @@ declare global {
        * ```ts
        * type RequestBody = {
        *   id?: string
-       *   groupId?: string | null
+       *   groupId?: string
        *   name?: string | null
        *   initials?: string | null
        *   isOutDoor?: boolean
@@ -2935,30 +3091,29 @@ declare global {
        *     id?: string
        *     name?: string | null
        *     description?: string | null
-       *     profileClassplans?: Array<{
+       *     colorHex?: string | null
+       *     createdTime?: string
+       *     updatedTime?: string
+       *   }
+       *   profileClassplanClasses?: Array<{
+       *     internalId?: number
+       *     index?: number
+       *     parentId?: string
+       *     subjectId?: string
+       *     parent?: {
        *       id?: string
        *       name?: string | null
-       *       groupId?: string | null
+       *       groupId?: string
        *       weekDay?: number
        *       weekDiv?: number
        *       timeLayoutId?: string
        *       isEnabled?: boolean
        *       group?: ProfileGroup
-       *       profileClassPlanClasses?: Array<{
-       *         internalId?: number
-       *         index?: number
-       *         parentId?: string
-       *         subjectId?: string
-       *         parent?: ProfileClassplan
-       *         subject?: ProfileSubject
-       *         attachedObjects?: Record<string, unknown | null> | null
-       *         createdTime?: string
-       *         updatedTime?: string
-       *       }> | null
+       *       profileClassPlanClasses?: Array<ProfileClassPlanClass> | null
        *       timeLayout?: {
        *         id?: string
        *         name?: string | null
-       *         groupId?: string | null
+       *         groupId?: string
        *         group?: ProfileGroup
        *         profileClassPlans?: Array<ProfileClassplan> | null
        *         profileTimelayoutTimepoints?: Array<{
@@ -2990,13 +3145,12 @@ declare global {
        *       attachedObjects?: Record<string, unknown | null> | null
        *       createdTime?: string
        *       updatedTime?: string
-       *     }> | null
-       *     profileSubjects?: Array<ProfileSubject> | null
-       *     profileTimelayouts?: Array<ProfileTimeLayout> | null
+       *     }
+       *     subject?: ProfileSubject
+       *     attachedObjects?: Record<string, unknown | null> | null
        *     createdTime?: string
        *     updatedTime?: string
-       *   }
-       *   profileClassplanClasses?: Array<ProfileClassPlanClass> | null
+       *   }> | null
        *   attachedObjects?: Record<string, unknown | null> | null
        *   createdTime?: string
        *   updatedTime?: string
@@ -3040,7 +3194,7 @@ declare global {
        * ```ts
        * type RequestBody = {
        *   id?: string
-       *   groupId?: string | null
+       *   groupId?: string
        *   name?: string | null
        *   initials?: string | null
        *   isOutDoor?: boolean
@@ -3048,30 +3202,29 @@ declare global {
        *     id?: string
        *     name?: string | null
        *     description?: string | null
-       *     profileClassplans?: Array<{
+       *     colorHex?: string | null
+       *     createdTime?: string
+       *     updatedTime?: string
+       *   }
+       *   profileClassplanClasses?: Array<{
+       *     internalId?: number
+       *     index?: number
+       *     parentId?: string
+       *     subjectId?: string
+       *     parent?: {
        *       id?: string
        *       name?: string | null
-       *       groupId?: string | null
+       *       groupId?: string
        *       weekDay?: number
        *       weekDiv?: number
        *       timeLayoutId?: string
        *       isEnabled?: boolean
        *       group?: ProfileGroup
-       *       profileClassPlanClasses?: Array<{
-       *         internalId?: number
-       *         index?: number
-       *         parentId?: string
-       *         subjectId?: string
-       *         parent?: ProfileClassplan
-       *         subject?: ProfileSubject
-       *         attachedObjects?: Record<string, unknown | null> | null
-       *         createdTime?: string
-       *         updatedTime?: string
-       *       }> | null
+       *       profileClassPlanClasses?: Array<ProfileClassPlanClass> | null
        *       timeLayout?: {
        *         id?: string
        *         name?: string | null
-       *         groupId?: string | null
+       *         groupId?: string
        *         group?: ProfileGroup
        *         profileClassPlans?: Array<ProfileClassplan> | null
        *         profileTimelayoutTimepoints?: Array<{
@@ -3103,13 +3256,12 @@ declare global {
        *       attachedObjects?: Record<string, unknown | null> | null
        *       createdTime?: string
        *       updatedTime?: string
-       *     }> | null
-       *     profileSubjects?: Array<ProfileSubject> | null
-       *     profileTimelayouts?: Array<ProfileTimeLayout> | null
+       *     }
+       *     subject?: ProfileSubject
+       *     attachedObjects?: Record<string, unknown | null> | null
        *     createdTime?: string
        *     updatedTime?: string
-       *   }
-       *   profileClassplanClasses?: Array<ProfileClassPlanClass> | null
+       *   }> | null
        *   attachedObjects?: Record<string, unknown | null> | null
        *   createdTime?: string
        *   updatedTime?: string

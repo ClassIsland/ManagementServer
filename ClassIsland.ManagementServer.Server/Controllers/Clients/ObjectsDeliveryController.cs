@@ -9,6 +9,7 @@ using ClassIsland.Shared;
 using ClassIsland.Shared.Models.Management;
 using ClassIsland.Shared.Models.Profile;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ClassIsland.ManagementServer.Server.Controllers.Clients;
 
@@ -45,6 +46,22 @@ public class ObjectsDeliveryController(
                 subjects.Add(i.ObjectId.ToString(), subject);
             }
         }
+        
+        var assigneeGroups = await ObjectsAssigneeService.GetClientAssigningObjects(client, ObjectTypes.Group);
+        foreach (var group in assigneeGroups)
+        {
+            var groupSubjects = await DbContext.ProfileSubjects
+                .Where(x => x.GroupId == group.ObjectId)
+                .Select(x => x)
+                .ToListAsync();
+            foreach (var i in groupSubjects)
+            {
+                var cp = await ProfileEntitiesService.GetSubjectEntity(i.Id);
+                if (cp == null)
+                    continue;
+                subjects.TryAdd(i.Id.ToString(), cp);
+            }
+        }
 
         return Ok(new Profile()
         {
@@ -71,7 +88,23 @@ public class ObjectsDeliveryController(
             var tl = await ProfileEntitiesService.GetTimeLayoutEntity(i.ObjectId);
             if (tl == null)
                 continue;
-            timeLayouts.Add(i.ObjectId.ToString(), tl);
+            timeLayouts.TryAdd(i.ObjectId.ToString(), tl);
+        }
+
+        var assigneeGroups = await ObjectsAssigneeService.GetClientAssigningObjects(client, ObjectTypes.Group);
+        foreach (var group in assigneeGroups)
+        {
+            var groupTimeLayouts = await DbContext.ProfileTimelayouts
+                .Where(x => x.GroupId == group.ObjectId)
+                .Select(x => x)
+                .ToListAsync();
+            foreach (var i in groupTimeLayouts)
+            {
+                var tl = await ProfileEntitiesService.GetTimeLayoutEntity(i.Id);
+                if (tl == null)
+                    continue;
+                timeLayouts.TryAdd(i.Id.ToString(), tl);
+            }
         }
 
         return Ok(new Profile()
@@ -94,6 +127,22 @@ public class ObjectsDeliveryController(
             if (cp != null)
             {
                 classPlans.Add(i.ObjectId.ToString(), cp);
+            }
+        }
+        
+        var assigneeGroups = await ObjectsAssigneeService.GetClientAssigningObjects(client, ObjectTypes.Group);
+        foreach (var group in assigneeGroups)
+        {
+            var groupClassPlans = await DbContext.ProfileClassplans
+                .Where(x => x.GroupId == group.ObjectId)
+                .Select(x => x)
+                .ToListAsync();
+            foreach (var i in groupClassPlans)
+            {
+                var cp = await ProfileEntitiesService.GetClassPlanEntity(i.Id);
+                if (cp == null)
+                    continue;
+                classPlans.TryAdd(i.Id.ToString(), cp);
             }
         }
 

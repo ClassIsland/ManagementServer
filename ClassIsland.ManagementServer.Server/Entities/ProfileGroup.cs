@@ -13,12 +13,9 @@ public partial class ProfileGroup : IObjectWithTime
     public string Name { get; set; } = "";
 
     public string Description { get; set; } = "";
-
-    public virtual ICollection<ProfileClassplan> ProfileClassplans { get; set; } = new List<ProfileClassplan>();
-
-    public virtual ICollection<ProfileSubject> ProfileSubjects { get; set; } = new List<ProfileSubject>();
-
-    public virtual ICollection<ProfileTimeLayout> ProfileTimelayouts { get; set; } = new List<ProfileTimeLayout>();
+    
+    [StringLength(7)]
+    public string ColorHex { get; set; } = "#66CCFF";
     
     /// <summary>
     /// 创建时间
@@ -29,4 +26,6 @@ public partial class ProfileGroup : IObjectWithTime
     /// 上次修改时间
     /// </summary>
     public DateTime UpdatedTime { get; set; } = DateTime.Now;
+
+    public static readonly Guid DefaultGroupId = new Guid("00000000-0000-0000-0000-000000000001");
 }

@@ -14,7 +14,7 @@ public partial class ProfileTimeLayout : IDbAttachableObject, IObjectWithTime
     public string Name { get; set; } = "";
     
     
-    public Guid? GroupId { get; set; }
+    public Guid GroupId { get; set; } = ProfileGroup.DefaultGroupId;
 
     public virtual ProfileGroup? Group { get; set; }
 

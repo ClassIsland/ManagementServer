@@ -1,21 +1,21 @@
 import { h } from 'vue';
 import { NAvatar, NTag } from 'naive-ui';
 import { BasicColumn } from '@/components/Table';
-import {ClassPlan, Client, Subject} from "@/api/globals";
+import {Client, ProfileGroup, Subject} from "@/api/globals";
 import ClientGroupIndicator from "@/components/ClientGroupIndicator/index.vue";
 
-export const columns: BasicColumn<ClassPlan>[] = [
+export const columns: BasicColumn<ProfileGroup>[] = [
   {
-    title: '名称',
-    key: 'name',
-  },
-  {
-    'title': '分组',
-    'key': 'group',
+    'title': '名称',
+    'key': 'name',
     render(data) {
       return h(ClientGroupIndicator, {
-        group: data.group,
+        group: data,
       });
     }
-  }
+  },
+  {
+    'title': '创建时间',
+    'key': 'createdTime',
+  },
 ];

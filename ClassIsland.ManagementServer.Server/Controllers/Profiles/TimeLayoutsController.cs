@@ -18,7 +18,7 @@ public class TimeLayoutsController(ManagementServerContext dbContext, ProfileEnt
     [HttpGet]
     public async Task<IActionResult> Get([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 20)
     {
-        return Ok(await DbContext.ProfileTimelayouts.Select(x => x).ToPaginatedListAsync(pageIndex, pageSize));
+        return Ok(await DbContext.ProfileTimelayouts.Include(x => x.Group).Select(x => x).ToPaginatedListAsync(pageIndex, pageSize));
     }
     
     [HttpGet("{id:guid}")]

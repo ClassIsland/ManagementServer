@@ -18,7 +18,7 @@ public class ClassPlansController(ManagementServerContext dbContext, ProfileEnti
     [HttpGet]
     public async Task<IActionResult> Get([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 20)
     {
-        return Ok(await DbContext.ProfileClassplans.Select(x => x).ToPaginatedListAsync(pageIndex, pageSize));
+        return Ok(await DbContext.ProfileClassplans.Include(x => x.Group).Select(x => x).ToPaginatedListAsync(pageIndex, pageSize));
     }
     
     [HttpGet("{id:guid}")]

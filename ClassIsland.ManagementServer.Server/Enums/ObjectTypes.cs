@@ -7,5 +7,6 @@ public enum ObjectTypes : int
     ProfileTimeLayout,
     ProfileSubject,
     AppSettings,
-    Policy
+    Policy,
+    Group
 }

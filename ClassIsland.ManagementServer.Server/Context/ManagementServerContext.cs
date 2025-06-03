@@ -93,6 +93,15 @@ public partial class ManagementServerContext : IdentityDbContext<User>
                 ColorHex = "#ff8500"
             });
         }
+        if (!await ProfileGroups.AnyAsync(x => x.Id == ProfileGroup.DefaultGroupId))
+        {
+            await ProfileGroups.AddAsync(new ProfileGroup()
+            {
+                Id = ProfileGroup.DefaultGroupId,
+                Name = "默认",
+                ColorHex = "#00f1f1"
+            });
+        }
 
         await SaveChangesAsync();
     }
