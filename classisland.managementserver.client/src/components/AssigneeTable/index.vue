@@ -214,26 +214,26 @@ const actionColumn = reactive({
 
 <template>
   <n-tabs>
-    <n-tab-pane name="all" tab="全部分配">
+<!--    <n-tab-pane name="all" tab="全部分配">-->
+<!--      <BasicTable-->
+<!--        title="分配"-->
+<!--        titleTooltip="管理当前对象分配给的客户端。"-->
+<!--        :columns="columns"-->
+<!--        :request="loadDataTable"-->
+<!--        :row-key="(row) => row.id"-->
+<!--        ref="actionRef"-->
+<!--        :actionColumn="actionColumn"-->
+<!--        @update:checked-row-keys="onCheckedRow">-->
+<!--        <template v-slot:toolbar>-->
+<!--          <n-button type="primary" @click="handleAdd">添加分配</n-button>-->
+<!--        </template>-->
+<!--      </BasicTable>-->
+<!--      -->
+<!--    </n-tab-pane>-->
+    <n-tab-pane name="cuid" tab="实例">
       <BasicTable
-        title="分配"
-        titleTooltip="管理当前对象分配给的客户端。"
-        :columns="columns"
-        :request="loadDataTable"
-        :row-key="(row) => row.id"
-        ref="actionRef"
-        :actionColumn="actionColumn"
-        @update:checked-row-keys="onCheckedRow">
-        <template v-slot:toolbar>
-          <n-button type="primary" @click="handleAdd">添加分配</n-button>
-        </template>
-      </BasicTable>
-      
-    </n-tab-pane>
-    <n-tab-pane name="cuid" tab="客户端">
-      <BasicTable
-        title="客户端"
-        titleTooltip="管理当前对象分配给的客户端。"
+        title="实例"
+        titleTooltip="管理当前对象分配给的实例。"
         :columns="columnsClient"
         :request="loadDataTableClients"
         :row-key="(row) => row.id"
@@ -242,10 +242,10 @@ const actionColumn = reactive({
       </BasicTable>
 
     </n-tab-pane>
-    <n-tab-pane name="id" tab="抽象客户端">
+    <n-tab-pane name="id" tab="抽象实例">
       <BasicTable
-        title="客户端"
-        titleTooltip="管理当前对象分配给的客户端。"
+        title="抽象实例"
+        titleTooltip="管理当前对象分配给的抽象实例。"
         :columns="columnsAbstractClients"
         :request="loadDataTableAbstractClients"
         :row-key="(row) => row.id"
@@ -256,8 +256,8 @@ const actionColumn = reactive({
     </n-tab-pane>
     <n-tab-pane name="group" tab="分组">
       <BasicTable
-        title="客户端"
-        titleTooltip="管理当前对象分配给的客户端。"
+        title="实例组"
+        titleTooltip="管理当前对象分配给的实例组。"
         :columns="columnsGroups"
         :request="loadDataTableClientGroups"
         :row-key="(row) => row.id"
