@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/0.5.438991-alpha">
   <PropertyGroup>
     <StartupCommand>npm run dev</StartupCommand>
+    <BuildCommand>pnpm build</BuildCommand>
     <JavaScriptTestRoot>src\</JavaScriptTestRoot>
     <JavaScriptTestFramework>Jest</JavaScriptTestFramework>
     <!-- Allows the build (or compile) script located on package.json to run on Build -->
@@ -9,6 +10,7 @@
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist</BuildOutputFolder>
     <NpmInstallCheck>pnpm-lock.yaml</NpmInstallCheck>
     <ShouldRunNpmInstall>False</ShouldRunNpmInstall>
+    <ShouldRunPnpmInstall>True</ShouldRunPnpmInstall>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="src\services\" />
@@ -20,7 +22,7 @@
   compares timestamps with package.json. If some alteration happened on package.json, it will run npm install again. After running, it touches the file again
   to update the timestamp. If npm install fails, it does not touch the install-check file. You can find NpmInstallCheck on Sdk.props.
   -->
-  <Target Name="RunNpmInstall" Condition=" $(ShouldRunPnpmInstall) == 'true' " DependsOnTargets="PreNpmInstallCheck" Inputs="$(PackageJsonDirectory)package.json" Outputs="$(NpmInstallCheck)">
+  <Target Name="RunNpmInstall" Condition=" $(ShouldRunPnpmInstall) == 'True' " DependsOnTargets="PreNpmInstallCheck" Inputs="$(PackageJsonDirectory)package.json" Outputs="$(NpmInstallCheck)">
     <!-- Ensure Node.js is installed -->
     <Exec Command="node --version" ContinueOnError="true">
       <Output TaskParameter="ExitCode" PropertyName="ErrorCodeNpmVersion" />

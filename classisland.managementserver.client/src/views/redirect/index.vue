@@ -1,5 +1,5 @@
-<script lang="tsx">
-  import { defineComponent, onBeforeMount } from 'vue';
+<script lang="ts">
+  import { defineComponent, onBeforeMount, h } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import { NEmpty } from 'naive-ui';
 
@@ -16,7 +16,7 @@
           query,
         });
       });
-      return () => <NEmpty />;
+      return () => h(NEmpty);
     },
   });
 </script>

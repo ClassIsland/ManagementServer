@@ -30,7 +30,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\classisland.managementserver.client\classisland.managementserver.client.esproj" />
     <ProjectReference Include="..\ClassIsland.Shared\ClassIsland.Shared.csproj" />
+    
   </ItemGroup>
 
 </Project>
