@@ -48,7 +48,10 @@ builder.WebHost.ConfigureKestrel((context, options) =>
     
 });
 builder.Logging.AddConsoleFormatter<ClassIslandConsoleFormatter, ConsoleFormatterOptions>();
-builder.Services.AddIdentityApiEndpoints<User>()
+builder.Services.AddIdentityApiEndpoints<User>(options =>
+    {
+        
+    })
     .AddEntityFrameworkStores<ManagementServerContext>()
     .AddDefaultTokenProviders();
 
@@ -72,8 +75,6 @@ app.MapGrpcService<ClientRegisterService>();
 app.MapGrpcService<ClientCommandDeliverFrontedService>();
 app.MapGrpcService<AuditService>();
 app.MapGrpcService<ConfigUploadService>();
-app.MapGroup("/api/v1/identity")
-    .MapIdentityApi<User>();
 
 app.MapFallbackToFile("/index.html");
 

@@ -41,6 +41,8 @@ export default {
     'GET',
     '/api/v1/assignees/by-object/client-groups/{objectType}/{id}'
   ],
+  'auth.post_api_v1_auth_login': ['POST', '/api/v1/auth/login'],
+  'auth.post_api_v1_auth_refresh': ['POST', '/api/v1/auth/refresh'],
   'identity.post_api_v1_identity_register': ['POST', '/api/v1/identity/register'],
   'identity.post_api_v1_identity_login': ['POST', '/api/v1/identity/login'],
   'identity.post_api_v1_identity_refresh': ['POST', '/api/v1/identity/refresh'],
@@ -100,5 +102,6 @@ export default {
   'timelayouts.get_api_v1_profiles_timelayouts_id': ['GET', '/api/v1/profiles/timeLayouts/{id}'],
   'timelayouts.put_api_v1_profiles_timelayouts_id': ['PUT', '/api/v1/profiles/timeLayouts/{id}'],
   'timelayouts.delete_api_v1_profiles_timelayouts_id': ['DELETE', '/api/v1/profiles/timeLayouts/{id}'],
-  'usersinfo.get_api_v1_users_info_id': ['GET', '/api/v1/users/info/{id}']
+  'users.post_api_v1_users': ['POST', '/api/v1/users'],
+  'users.get_api_v1_users_current': ['GET', '/api/v1/users/current']
 };

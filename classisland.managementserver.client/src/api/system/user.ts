@@ -5,18 +5,18 @@ import Apis from '@/api'
  * @description: 获取用户信息
  */
 export function getUserInfo() {
-  return Apis.identity.get_api_v1_identity_manage_info({});
+  return Apis.users.get_api_v1_users_current({});
 }
 
 /**
  * @description: 用户登录
  */
 export function login(params) {
-  return Apis.identity.post_api_v1_identity_login({
+  return Apis.auth.post_api_v1_auth_login({
     params: {
     },
     data: {
-      email: params.username,
+      username: params.username,
       password: params.password,
     },
     meta: {

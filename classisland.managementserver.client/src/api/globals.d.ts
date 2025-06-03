@@ -96,7 +96,7 @@ export type Setting = {
   createdTime?: string;
   updatedTime?: string;
 };
-export type ObjectTypes = 0 | 1 | 2 | 3 | 4 | 5;
+export type ObjectTypes = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 export type AssigneeTypes = 0 | 1 | 2 | 3;
 export type ObjectsAssignee = {
   id?: number;
@@ -108,6 +108,13 @@ export type ObjectsAssignee = {
   assigneeType?: AssigneeTypes;
   createdTime?: string;
   updatedTime?: string;
+};
+export type LoginRequestBody = {
+  username?: string | null;
+  password?: string | null;
+};
+export type RefreshRequest = {
+  refreshToken?: string | null;
 };
 export type RegisterRequest = {
   email?: string | null;
@@ -124,9 +131,6 @@ export type LoginRequest = {
   password?: string | null;
   twoFactorCode?: string | null;
   twoFactorRecoveryCode?: string | null;
-};
-export type RefreshRequest = {
-  refreshToken?: string | null;
 };
 export type ResendConfirmationEmailRequest = {
   email?: string | null;
@@ -184,7 +188,7 @@ export type ClassPlan = {
   isEnabled?: boolean;
   associatedGroup?: string | null;
 };
-export type CommandTypes = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+export type CommandTypes = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 export type SendNotification = {
   messageMask?: string | null;
   messageContent?: string | null;
@@ -390,6 +394,59 @@ export type ProfileSubject = {
   attachedObjects?: Record<string, unknown | null> | null;
   createdTime?: string;
   updatedTime?: string;
+};
+export type User = {
+  id?: string | null;
+  userName?: string | null;
+  normalizedUserName?: string | null;
+  email?: string | null;
+  normalizedEmail?: string | null;
+  emailConfirmed?: boolean;
+  passwordHash?: string | null;
+  securityStamp?: string | null;
+  concurrencyStamp?: string | null;
+  phoneNumber?: string | null;
+  phoneNumberConfirmed?: boolean;
+  twoFactorEnabled?: boolean;
+  lockoutEnd?: string | null;
+  lockoutEnabled?: boolean;
+  accessFailedCount?: number;
+  name?: string | null;
+  createdTime?: string;
+};
+export type UserCreateBody = {
+  user?: User;
+  password?: string | null;
+};
+export type ClaimsIdentity = {
+  authenticationType?: string | null;
+  isAuthenticated?: boolean;
+  actor?: ClaimsIdentity;
+  bootstrapContext?: unknown | null;
+  claims?: Claim[] | null;
+  label?: string | null;
+  name?: string | null;
+  nameClaimType?: string | null;
+  roleClaimType?: string | null;
+};
+export type Claim = {
+  issuer?: string | null;
+  originalIssuer?: string | null;
+  properties?: Record<string, string> | null;
+  subject?: ClaimsIdentity;
+  type?: string | null;
+  value?: string | null;
+  valueType?: string | null;
+};
+export type IIdentity = {
+  name?: string | null;
+  authenticationType?: string | null;
+  isAuthenticated?: boolean;
+};
+export type ClaimsPrincipal = {
+  claims?: Claim[] | null;
+  identities?: ClaimsIdentity[] | null;
+  identity?: IIdentity;
 };
 declare global {
   interface Apis {
@@ -631,7 +688,7 @@ declare global {
        * type RequestBody = {
        *   id?: number
        *   objectId?: string
-       *   objectType?: 0 | 1 | 2 | 3 | 4 | 5
+       *   objectType?: 0 | 1 | 2 | 3 | 4 | 5 | 6
        *   targetClientId?: string | null
        *   targetClientCuid?: string | null
        *   targetGroupId?: number | null
@@ -711,7 +768,7 @@ declare global {
        * type RequestBody = {
        *   id?: number
        *   objectId?: string
-       *   objectType?: 0 | 1 | 2 | 3 | 4 | 5
+       *   objectType?: 0 | 1 | 2 | 3 | 4 | 5 | 6
        *   targetClientId?: string | null
        *   targetClientCuid?: string | null
        *   targetGroupId?: number | null
@@ -959,6 +1016,69 @@ declare global {
       >(
         config: Config
       ): Alova2Method<unknown, 'assignees.get_api_v1_assignees_by_object_client_groups_objecttype_id', Config>;
+    };
+    auth: {
+      /**
+       * ---
+       *
+       * [POST]
+       *
+       * **path:** /api/v1/auth/login
+       *
+       * ---
+       *
+       * **RequestBody**
+       * ```ts
+       * type RequestBody = {
+       *   username?: string | null
+       *   password?: string | null
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      post_api_v1_auth_login<
+        Config extends Alova2MethodConfig<unknown> & {
+          data: LoginRequestBody;
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'auth.post_api_v1_auth_login', Config>;
+      /**
+       * ---
+       *
+       * [POST]
+       *
+       * **path:** /api/v1/auth/refresh
+       *
+       * ---
+       *
+       * **RequestBody**
+       * ```ts
+       * type RequestBody = {
+       *   refreshToken?: string | null
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      post_api_v1_auth_refresh<
+        Config extends Alova2MethodConfig<unknown> & {
+          data: RefreshRequest;
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'auth.post_api_v1_auth_refresh', Config>;
     };
     identity: {
       /**
@@ -1537,7 +1657,7 @@ declare global {
        *   targets?: Array<{
        *     id?: number
        *     objectId?: string
-       *     objectType?: 0 | 1 | 2 | 3 | 4 | 5
+       *     objectType?: 0 | 1 | 2 | 3 | 4 | 5 | 6
        *     targetClientId?: string | null
        *     targetClientCuid?: string | null
        *     targetGroupId?: number | null
@@ -1545,7 +1665,7 @@ declare global {
        *     createdTime?: string
        *     updatedTime?: string
        *   }> | null
-       *   type?: 0 | 1 | 2 | 3 | 4 | 5 | 6
+       *   type?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7
        *   payload?: {
        *     messageMask?: string | null
        *     messageContent?: string | null
@@ -1591,7 +1711,7 @@ declare global {
        *   targets?: Array<{
        *     id?: number
        *     objectId?: string
-       *     objectType?: 0 | 1 | 2 | 3 | 4 | 5
+       *     objectType?: 0 | 1 | 2 | 3 | 4 | 5 | 6
        *     targetClientId?: string | null
        *     targetClientCuid?: string | null
        *     targetGroupId?: number | null
@@ -1599,7 +1719,7 @@ declare global {
        *     createdTime?: string
        *     updatedTime?: string
        *   }> | null
-       *   type?: 0 | 1 | 2 | 3 | 4 | 5 | 6
+       *   type?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7
        * }
        * ```
        *
@@ -1685,7 +1805,7 @@ declare global {
        *       objectUpdates?: Array<{
        *         id?: number
        *         objectId?: string
-       *         objectType?: 0 | 1 | 2 | 3 | 4 | 5
+       *         objectType?: 0 | 1 | 2 | 3 | 4 | 5 | 6
        *         targetCuid?: string
        *         updateTime?: string
        *       }> | null
@@ -1698,7 +1818,7 @@ declare global {
        *   objectsAssignees?: Array<{
        *     id?: number
        *     objectId?: string
-       *     objectType?: 0 | 1 | 2 | 3 | 4 | 5
+       *     objectType?: 0 | 1 | 2 | 3 | 4 | 5 | 6
        *     targetClientId?: string | null
        *     targetClientCuid?: string | null
        *     targetGroupId?: number | null
@@ -1804,7 +1924,7 @@ declare global {
        *       objectUpdates?: Array<{
        *         id?: number
        *         objectId?: string
-       *         objectType?: 0 | 1 | 2 | 3 | 4 | 5
+       *         objectType?: 0 | 1 | 2 | 3 | 4 | 5 | 6
        *         targetCuid?: string
        *         updateTime?: string
        *       }> | null
@@ -1817,7 +1937,7 @@ declare global {
        *   objectsAssignees?: Array<{
        *     id?: number
        *     objectId?: string
-       *     objectType?: 0 | 1 | 2 | 3 | 4 | 5
+       *     objectType?: 0 | 1 | 2 | 3 | 4 | 5 | 6
        *     targetClientId?: string | null
        *     targetClientCuid?: string | null
        *     targetGroupId?: number | null
@@ -1986,7 +2106,7 @@ declare global {
        *     objectUpdates?: Array<{
        *       id?: number
        *       objectId?: string
-       *       objectType?: 0 | 1 | 2 | 3 | 4 | 5
+       *       objectType?: 0 | 1 | 2 | 3 | 4 | 5 | 6
        *       targetCuid?: string
        *       updateTime?: string
        *     }> | null
@@ -2051,7 +2171,7 @@ declare global {
        *     objectUpdates?: Array<{
        *       id?: number
        *       objectId?: string
-       *       objectType?: 0 | 1 | 2 | 3 | 4 | 5
+       *       objectType?: 0 | 1 | 2 | 3 | 4 | 5 | 6
        *       targetCuid?: string
        *       updateTime?: string
        *     }> | null
@@ -2176,7 +2296,7 @@ declare global {
        *   ObjectUpdates?: Array<{
        *     id?: number
        *     objectId?: string
-       *     objectType?: 0 | 1 | 2 | 3 | 4 | 5
+       *     objectType?: 0 | 1 | 2 | 3 | 4 | 5 | 6
        *     targetCuid?: string
        *     updateTime?: string
        *   }>
@@ -2199,7 +2319,7 @@ declare global {
        *     objectUpdates?: Array<{
        *       id?: number
        *       objectId?: string
-       *       objectType?: 0 | 1 | 2 | 3 | 4 | 5
+       *       objectType?: 0 | 1 | 2 | 3 | 4 | 5 | 6
        *       targetCuid?: string
        *       updateTime?: string
        *     }> | null
@@ -2227,7 +2347,7 @@ declare global {
        *       objectUpdates?: Array<{
        *         id?: number
        *         objectId?: string
-       *         objectType?: 0 | 1 | 2 | 3 | 4 | 5
+       *         objectType?: 0 | 1 | 2 | 3 | 4 | 5 | 6
        *         targetCuid?: string
        *         updateTime?: string
        *       }> | null
@@ -2240,7 +2360,7 @@ declare global {
        *   'AbstractClient.Group.ObjectsAssignees'?: Array<{
        *     id?: number
        *     objectId?: string
-       *     objectType?: 0 | 1 | 2 | 3 | 4 | 5
+       *     objectType?: 0 | 1 | 2 | 3 | 4 | 5 | 6
        *     targetClientId?: string | null
        *     targetClientCuid?: string | null
        *     targetGroupId?: number | null
@@ -3531,21 +3651,39 @@ declare global {
         config: Config
       ): Alova2Method<unknown, 'timelayouts.delete_api_v1_profiles_timelayouts_id', Config>;
     };
-    usersinfo: {
+    users: {
       /**
        * ---
        *
-       * [GET]
+       * [POST]
        *
-       * **path:** /api/v1/users/info/{id}
+       * **path:** /api/v1/users
        *
        * ---
        *
-       * **Path Parameters**
+       * **RequestBody**
        * ```ts
-       * type PathParameters = {
-       *   // [required]
-       *   id: string
+       * type RequestBody = {
+       *   user?: {
+       *     id?: string | null
+       *     userName?: string | null
+       *     normalizedUserName?: string | null
+       *     email?: string | null
+       *     normalizedEmail?: string | null
+       *     emailConfirmed?: boolean
+       *     passwordHash?: string | null
+       *     securityStamp?: string | null
+       *     concurrencyStamp?: string | null
+       *     phoneNumber?: string | null
+       *     phoneNumberConfirmed?: boolean
+       *     twoFactorEnabled?: boolean
+       *     lockoutEnd?: string | null
+       *     lockoutEnabled?: boolean
+       *     accessFailedCount?: number
+       *     name?: string | null
+       *     createdTime?: string
+       *   }
+       *   password?: string | null
        * }
        * ```
        *
@@ -3556,18 +3694,67 @@ declare global {
        * type Response = unknown
        * ```
        */
-      get_api_v1_users_info_id<
+      post_api_v1_users<
         Config extends Alova2MethodConfig<unknown> & {
-          pathParams: {
-            /**
-             * [required]
-             */
-            id: string;
-          };
+          data: UserCreateBody;
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'usersinfo.get_api_v1_users_info_id', Config>;
+      ): Alova2Method<unknown, 'users.post_api_v1_users', Config>;
+      /**
+       * ---
+       *
+       * [GET]
+       *
+       * **path:** /api/v1/users/current
+       *
+       * ---
+       *
+       * **RequestBody**
+       * ```ts
+       * type RequestBody = {
+       *   claims?: Array<{
+       *     issuer?: string | null
+       *     originalIssuer?: string | null
+       *     properties?: Record<string, string> | null
+       *     subject?: {
+       *       authenticationType?: string | null
+       *       isAuthenticated?: boolean
+       *       actor?: ClaimsIdentity
+       *       bootstrapContext?: unknown | null
+       *       claims?: Array<Claim> | null
+       *       label?: string | null
+       *       name?: string | null
+       *       nameClaimType?: string | null
+       *       roleClaimType?: string | null
+       *     }
+       *     type?: string | null
+       *     value?: string | null
+       *     valueType?: string | null
+       *   }> | null
+       *   identities?: Array<ClaimsIdentity> | null
+       *   identity?: {
+       *     name?: string | null
+       *     authenticationType?: string | null
+       *     isAuthenticated?: boolean
+       *   }
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      get_api_v1_users_current<
+        Config extends Alova2MethodConfig<unknown> & {
+          data: ClaimsPrincipal;
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'users.get_api_v1_users_current', Config>;
     };
   }
 

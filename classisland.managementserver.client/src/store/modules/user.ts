@@ -123,7 +123,7 @@ export const useUserStore = defineStore({
         return;
       }
       
-      const response = await Api.identity.post_api_v1_identity_refresh({
+      const response = await Api.auth.post_api_v1_auth_refresh({
         data: {
           refreshToken: this.refreshToken,
         }

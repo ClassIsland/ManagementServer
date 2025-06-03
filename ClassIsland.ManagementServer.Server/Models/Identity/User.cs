@@ -7,7 +7,7 @@ public class User : IdentityUser
 {
     [PersonalData]
     [MaxLength(32)]
-    public string Name { get; set; } = "";
+    public string Name { get; set; }
     
     public DateTime CreatedTime { get; set; } = DateTime.Now;
     
