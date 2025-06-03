@@ -70,6 +70,8 @@ app.UseHttpsRedirection();
 app.MapControllers();
 app.MapGrpcService<ClientRegisterService>();
 app.MapGrpcService<ClientCommandDeliverFrontedService>();
+app.MapGrpcService<AuditService>();
+app.MapGrpcService<ConfigUploadService>();
 app.MapGroup("/api/v1/identity")
     .MapIdentityApi<User>();
 
