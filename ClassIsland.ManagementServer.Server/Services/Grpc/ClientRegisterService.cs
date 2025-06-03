@@ -28,7 +28,13 @@ public class ClientRegisterService(ManagementServerContext dbContext) : ClientRe
             {
                 Cuid = new Guid(request.ClientUid),
                 Id = request.ClientId,
-                RegisterTime = DateTime.Now
+                RegisterTime = DateTime.Now,
+                AbstractClient = await DbContext.AbstractClients
+                    .FirstOrDefaultAsync(x => x.Id == request.ClientId) ?? new AbstractClient()
+                    {
+                        Id = request.ClientId,
+                        GroupId = ClientGroup.DefaultGroupId
+                    }
             };
             await DbContext.Clients.AddAsync(newClient);
             await DbContext.SaveChangesAsync();
