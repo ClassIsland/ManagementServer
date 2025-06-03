@@ -1,5 +1,6 @@
 using ClassIsland.ManagementServer.Server.Models;
 using ClassIsland.ManagementServer.Server.Models.Identity;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
@@ -34,10 +35,12 @@ public class AuthController(ILogger<AuthController> logger,
         {
             return Unauthorized(new Error("密码错误。"));
         }
-        
+
         var principal = await SignInManager.CreateUserPrincipalAsync(user);
 
-        return SignIn(principal);
+        Response.Cookies.Delete(".AspNetCore.Identity.Application");
+        return SignIn(principal, IdentityConstants.BearerScheme);
+        
     }
     
     [HttpPost("refresh")]
@@ -49,12 +52,13 @@ public class AuthController(ILogger<AuthController> logger,
         // Reject the /refresh attempt with a 401 if the token expired or the security stamp validation fails
         if (refreshTicket?.Properties?.ExpiresUtc is not { } expiresUtc ||
             timeProvider.GetUtcNow() >= expiresUtc ||
-            await signInManager.ValidateSecurityStampAsync(refreshTicket.Principal) is not { } user)
+            await SignInManager.ValidateSecurityStampAsync(refreshTicket.Principal) is not { } user)
         {
             return Challenge();
         }
 
-        var newPrincipal = await signInManager.CreateUserPrincipalAsync(user);
-        return SignIn(newPrincipal, authenticationScheme: IdentityConstants.BearerScheme);
+        var newPrincipal = await SignInManager.CreateUserPrincipalAsync(user);
+        Response.Cookies.Delete(".AspNetCore.Identity.Application");
+        return SignIn(newPrincipal, IdentityConstants.BearerScheme);
     }
 }

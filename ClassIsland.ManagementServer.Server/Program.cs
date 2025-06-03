@@ -28,7 +28,12 @@ builder.Services.AddDbContext<ManagementServerContext>(options =>
     // options.EnableSensitiveDataLogging();
 });
 builder.Services.AddAuthorization();
-builder.Services.AddAuthentication();
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = IdentityConstants.BearerScheme;
+    options.DefaultChallengeScheme = IdentityConstants.BearerScheme;
+    options.DefaultSignInScheme = IdentityConstants.BearerScheme;
+}).AddBearerToken();
 
 builder.Services.AddControllers()
     .AddJsonOptions(o =>
