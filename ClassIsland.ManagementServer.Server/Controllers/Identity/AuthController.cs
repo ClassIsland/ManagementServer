@@ -61,4 +61,12 @@ public class AuthController(ILogger<AuthController> logger,
         Response.Cookies.Delete(".AspNetCore.Identity.Application");
         return SignIn(newPrincipal, IdentityConstants.BearerScheme);
     }
+    
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        await SignInManager.SignOutAsync();
+        Response.Cookies.Delete(".AspNetCore.Identity.Application");
+        return SignOut(IdentityConstants.BearerScheme);
+    }
 }

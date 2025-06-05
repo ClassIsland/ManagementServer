@@ -15,9 +15,10 @@ import Api from "@/api";
 import {AccessTokenResponse} from "@/api/globals";
 
 export type UserInfoType = {
-  // TODO: add your own data
-  username: string;
+  userName: string;
+  name: string;
   email: string;
+  phoneNumber: string;
 };
 
 export interface IUserState {
@@ -91,6 +92,7 @@ export const useUserStore = defineStore({
       this.setupToken(response);
       const userInfo = await getUserInfo();
       this.setUserInfo(userInfo as UserInfoType);
+      
       return response;
     },
 
@@ -112,7 +114,8 @@ export const useUserStore = defineStore({
     // 登出
     async logout() {
       this.setPermissions([]);
-      this.setUserInfo({ username: '', email: '' });
+      this.setUserInfo({ userName: '', email: '' });
+      
       storage.remove(ACCESS_TOKEN);
       storage.remove(CURRENT_USER);
       storage.remove(REFRESH_TOKEN);
@@ -155,6 +158,14 @@ export const useUserStore = defineStore({
         }
       } catch (e) {
         console.error('无法刷新令牌', e);
+      }
+      
+      if (this.getIsLoggedIn) {
+        try {
+          await this.getInfo();
+        } catch (e) {
+          console.error('获取用户信息失败', e);
+        }
       }
     }
   },

@@ -38,6 +38,7 @@ public class UsersController(ILogger<UsersController> logger, UserManager<User> 
         }
         return Ok(new UserInfo()
         {
+            UserName = info.UserName ?? "",
             Name = info.Name,
             EmailAddress = info.Email ?? "",
             PhoneNumber = info.PhoneNumber ?? "",

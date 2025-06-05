@@ -2,6 +2,10 @@
   <n-grid cols="2 s:2 m:2 l:3 xl:3 2xl:3" responsive="screen">
     <n-grid-item>
       <n-form :label-width="80" :model="formValue" :rules="rules" ref="formRef">
+        <n-form-item label="用户名" path="userName">
+          <n-input v-model:value="formValue.userName" disabled/>
+        </n-form-item>
+        
         <n-form-item label="昵称" path="name">
           <n-input v-model:value="formValue.name" placeholder="请输入昵称" />
         </n-form-item>
@@ -42,6 +46,7 @@
   const users = useUser();
   
   const formValue = ref({
+    userName: '',
     name: '',
     phoneNumber: '',
     emailAddress: ''

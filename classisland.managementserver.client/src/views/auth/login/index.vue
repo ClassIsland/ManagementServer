@@ -13,7 +13,7 @@
     >
       <!-- TODO: 适配 SSO -->
       <n-form-item path="username">
-        <n-input v-model:value="formInline.username" id="username" placeholder="电子邮箱" >
+        <n-input v-model:value="formInline.username" id="username" placeholder="用户名" >
           <template #prefix>
             <n-icon size="18" color="#808695">
               <PersonOutline />
