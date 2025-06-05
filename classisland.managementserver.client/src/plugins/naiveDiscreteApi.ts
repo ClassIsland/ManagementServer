@@ -11,9 +11,10 @@ import { lighten } from '@/utils/index';
 
 export function setupNaiveDiscreteApi() {
   const designStore = useDesignSetting();
+  const isDarkTheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
   const configProviderPropsRef = computed(() => ({
-    theme: designStore.darkTheme ? NaiveUI.darkTheme : undefined,
+    theme: isDarkTheme ? NaiveUI.darkTheme : undefined,
     themeOverrides: {
       common: {
         primaryColor: designStore.appTheme,

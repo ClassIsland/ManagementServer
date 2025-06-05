@@ -31,8 +31,7 @@ export const useDesignSettingStore = defineStore({
       return this.appThemeList;
     },
   },
-  actions: {},
-  persist: true
+  actions: {}
 });
 
 // Need to be used outside the setup
