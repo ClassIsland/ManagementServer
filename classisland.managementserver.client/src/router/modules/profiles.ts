@@ -17,7 +17,7 @@ const routes: Array<RouteRecordRaw> = [
     },
     children: [
       {
-        path: '/profiles/classplans',
+        path: 'classplans',
         name: `${routeName}_classPlans`,
         meta: {
           title: '课表',
@@ -26,7 +26,7 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/profiles/classplans/index.vue'),
       },
       {
-        path: '/profiles/classplans/:id',
+        path: 'classplans/:id',
         name: `${routeName}_classPlans_editor`,
         meta: {
           title: '编辑课表',
@@ -35,7 +35,7 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/profiles/classplans/editor.vue'),
       },
       {
-        path: '/profiles/timetables',
+        path: 'timetables',
         name: `${routeName}_timetables`,
         meta: {
           title: '时间表',
@@ -44,7 +44,7 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/profiles/subjects/index.vue'),
       },
       {
-        path: '/profiles/subjects',
+        path: 'subjects',
         name: `${routeName}_subjects`,
         meta: {
           title: '科目',
@@ -53,7 +53,7 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/profiles/subjects/index.vue'),
       },
       {
-        path: '/profiles/groups',
+        path: 'groups',
         name: `${routeName}_groups`,
         meta: {
           title: '分组',
@@ -62,7 +62,7 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/profiles/groups/index.vue'),
       },
       {
-        path: '/profiles/upload',
+        path: 'upload',
         name: `${routeName}_upload`,
         meta: {
           title: '上传',

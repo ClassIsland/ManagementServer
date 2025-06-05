@@ -1,6 +1,7 @@
 import './styles/tailwind.css';
 import './styles/index.less';
 import 'vuetify/styles'
+import { createVuetify } from 'vuetify'
 import { createApp } from 'vue';
 import { setupNaiveDiscreteApi, setupNaive, setupDirectives } from '@/plugins';
 import App from './App.vue';
@@ -16,6 +17,9 @@ async function bootstrap() {
   
   const user = useUser();
   await user.init();
+
+  const vuetify = createVuetify({});
+  app.use(vuetify);
 
   // 注册全局常用的 naive-ui 组件
   setupNaive(app);

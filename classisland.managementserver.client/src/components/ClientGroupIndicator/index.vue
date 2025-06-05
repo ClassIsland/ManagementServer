@@ -9,9 +9,9 @@ const props = defineProps({
 
 <template>
   <NTag size="small"
-        :color="{textColor: props.group.colorHex, borderColor: props.group.colorHex}"
+        :color="{textColor: props?.group?.colorHex, borderColor: props?.group?.colorHex}"
         round>
-    {{ props.group.name }}
+    {{ props?.group?.name }}
   </NTag>
 </template>
 

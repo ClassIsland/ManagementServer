@@ -1,20 +1,12 @@
 <template>
   <RouterView>
     <template #default="{ Component, route }">
-      <template v-if="mode === 'production'">
-        <transition :name="getTransitionName" mode="out-in" appear>
-          <keep-alive v-if="keepAliveComponents.length" :include="keepAliveComponents">
-            <component :is="Component" :key="route.fullPath" />
-          </keep-alive>
-          <component v-else :is="Component" :key="route.fullPath" />
-        </transition>
-      </template>
-      <template v-else>
+      <div>
         <keep-alive v-if="keepAliveComponents.length" :include="keepAliveComponents">
           <component :is="Component" :key="route.fullPath" />
         </keep-alive>
         <component v-else :is="Component" :key="route.fullPath" />
-      </template>
+      </div>
     </template>
   </RouterView>
 </template>
