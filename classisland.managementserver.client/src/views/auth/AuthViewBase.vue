@@ -1,11 +1,29 @@
 <script setup lang="ts">
 
 import {websiteConfig} from "@/config/website.config";
+import {useBrand} from "@/store/modules/brand";
+import {computed, ref} from "vue";
+
+const brand = useBrand();
+
+const bannerUrl = computed(() => {
+  return "url(\"" + (brand.customLoginBanner ?? "") + "\")";
+});
+const bannerUrlRef = ref(bannerUrl);
+const isDefaultBackground = ref(brand.customLoginBanner == null || brand.customLoginBanner === "");
+const loginFormPlacement = ref<"left" | "center" | "right">(brand.loginFormPlacement ?? "left");
+
 </script>
 
 <template>
-  <div class="view-account">
-    <n-card class="view-account-container">
+  <div class="view-account" :class="{ 
+    'default-background': isDefaultBackground,
+     }">
+    <n-card class="view-account-container" :class="{
+      left: loginFormPlacement === 'left',
+      center: loginFormPlacement === 'center',
+      right: loginFormPlacement === 'right',
+    }">
       <template #header>
         <div class="view-account-header">
           <img :src="websiteConfig.loginImage" alt="" width="36" height="36"
@@ -30,8 +48,6 @@ import {websiteConfig} from "@/config/website.config";
   &-container {
     flex: 1;
     margin-top: 0;
-    margin-right: auto;
-    margin-left: 100px;
     flex-grow: 0;
     align-self: center;
     max-width: 384px;
@@ -42,6 +58,22 @@ import {websiteConfig} from "@/config/website.config";
       max-width: 100vw;
       min-width: 100vw;
       margin: 0 !important;
+      border-radius: 0;
+    }
+
+    &.left {
+      margin-right: auto;
+      margin-left: 100px;
+    }
+
+    &.center {
+      margin-right: auto;
+      margin-left: auto;
+    }
+
+    &.right {
+      margin-right: 100px;
+      margin-left: auto;
     }
   }
   &-top {
@@ -72,18 +104,23 @@ import {websiteConfig} from "@/config/website.config";
       color: #515a6e;
     }
   }
+  
 }
 
 
 @media (min-width: 640px) {
   .view-account {
-    background-image: linear-gradient(#00000040), url('../../assets/Banner-Web-24.png'), linear-gradient(135deg, #041515, #111, #111);
+    background-image: linear-gradient(#00000040), v-bind(bannerUrlRef);
     background-repeat: no-repeat;
     background-position: 50%;
-    background-size: auto 100%;
+    background-size: cover;
     background-clip: border-box;
+    
+    &.default-background {
+      background-image: linear-gradient(#00000040), url('../../assets/Banner-Web-24.png'), linear-gradient(135deg, #041515, #111, #111) !important;
+    }
   }
-
+  
 } 
 </style>
 <style lang="less">

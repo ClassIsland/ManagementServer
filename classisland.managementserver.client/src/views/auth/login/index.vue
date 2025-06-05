@@ -1,7 +1,9 @@
 <template>
   <div class="view-account-form">
     <div class="auth-header">登录</div>
-    <div class="view-account-top-desc">{{ websiteConfig.loginDesc }}</div>
+    <div class="view-account-top-desc">
+      登录以继续到<b>{{ brand.organizationName }}</b>。
+    </div>
     <n-form
       ref="formRef"
       label-placement="left"
@@ -70,6 +72,7 @@
   import Apis from "@/api/index";
   import {ACCESS_TOKEN} from "@/store/mutation-types";
   import {store} from "@/store";
+  import {useBrand} from "@/store/modules/brand";
 
   interface FormState {
     username: string;
@@ -81,6 +84,7 @@
   const loading = ref(false);
   const autoLogin = ref(true);
   const LOGIN_NAME = PageEnum.BASE_LOGIN_NAME;
+  const brand = useBrand();
 
   const formInline = reactive({
     username: '',
@@ -116,9 +120,6 @@
           message.destroyAll();
           message.success('登录成功，即将进入系统');
           redirect();
-        } catch (e) {
-          console.log(e)
-          message.error("登陆失败：" + e.message)
         }
         finally {
           loading.value = false;

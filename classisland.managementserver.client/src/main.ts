@@ -8,6 +8,7 @@ import App from './App.vue';
 import router, { setupRouter } from './router';
 import { setupStore } from '@/store';
 import {useUser} from "@/store/modules/user";
+import {useBrand} from "@/store/modules/brand";
 
 async function bootstrap() {
   const app = createApp(App);
@@ -17,6 +18,8 @@ async function bootstrap() {
   
   const user = useUser();
   await user.init();
+  const brand = useBrand();
+  await brand.init();
 
   const vuetify = createVuetify({});
   app.use(vuetify);

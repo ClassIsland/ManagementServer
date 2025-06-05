@@ -200,6 +200,24 @@ export type ClientGroup = {
   updatedTime?: string;
   colorHex?: string | null;
 };
+export type BrandInfo = {
+  /**
+   * [required]
+   */
+  organizationName: string;
+  /**
+   * [required]
+   */
+  logoUrl: string;
+  /**
+   * [required]
+   */
+  customLoginBanner: string;
+  /**
+   * [required]
+   */
+  loginFormPlacement: string;
+};
 export type ManagementPolicy = {
   isActive?: boolean;
   disableProfileClassPlanEditing?: boolean;
@@ -1008,6 +1026,25 @@ declare global {
       >(
         config: Config
       ): Alova2Method<unknown, 'auth.post_api_v1_auth_refresh', Config>;
+    };
+    brandsettings: {
+      /**
+       * ---
+       *
+       * [GET]
+       *
+       * **path:** /api/v1/brand
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      get_api_v1_brand<Config extends Alova2MethodConfig<unknown>>(
+        config?: Config
+      ): Alova2Method<unknown, 'brandsettings.get_api_v1_brand', Config>;
     };
     classplans: {
       /**
@@ -2272,6 +2309,62 @@ declare global {
       >(
         config: Config
       ): Alova2Method<unknown, 'objectsdelivery.get_api_v1_client_cuid_default_settings', Config>;
+    };
+    organizationsettings: {
+      /**
+       * ---
+       *
+       * [GET]
+       *
+       * **path:** /api/v1/settings/brand
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      get_api_v1_settings_brand<Config extends Alova2MethodConfig<unknown>>(
+        config?: Config
+      ): Alova2Method<unknown, 'organizationsettings.get_api_v1_settings_brand', Config>;
+      /**
+       * ---
+       *
+       * [POST]
+       *
+       * **path:** /api/v1/settings/brand
+       *
+       * ---
+       *
+       * **RequestBody**
+       * ```ts
+       * type RequestBody = {
+       *   // [required]
+       *   organizationName: string
+       *   // [required]
+       *   logoUrl: string
+       *   // [required]
+       *   customLoginBanner: string
+       *   // [required]
+       *   loginFormPlacement: string
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      post_api_v1_settings_brand<
+        Config extends Alova2MethodConfig<unknown> & {
+          data: BrandInfo;
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'organizationsettings.post_api_v1_settings_brand', Config>;
     };
     policies: {
       /**

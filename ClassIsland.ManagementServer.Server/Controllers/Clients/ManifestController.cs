@@ -12,14 +12,15 @@ namespace ClassIsland.ManagementServer.Server.Controllers.Clients;
 [ApiController]
 [Route("api/v1/client/{cuid}/manifest")]
 public class ManifestController(ManagementServerContext dataContext, 
-    ObjectsUpdateNotifyService objectsUpdateNotifyService) : ControllerBase
+    ObjectsUpdateNotifyService objectsUpdateNotifyService, IConfiguration configuration) : ControllerBase
 {
     private ManagementServerContext DataContext { get; } = dataContext;
 
     private ObjectsUpdateNotifyService ObjectsUpdateNotifyService { get; } = objectsUpdateNotifyService;
+    public IConfiguration Configuration { get; } = configuration;
 
     [HttpGet]
-    public IActionResult GetManifest([FromRoute] Guid cuid)
+    public async Task<IActionResult> GetManifest([FromRoute] Guid cuid)
     {
         var client = DataContext.Clients.FirstOrDefault(i => i.Cuid == cuid);
         if (client == null)
@@ -28,14 +29,14 @@ public class ManifestController(ManagementServerContext dataContext,
         }
 
         var manifest = new ManagementManifest();
-        using var tran = DataContext.Database.BeginTransaction();
+        await using var tran = await DataContext.Database.BeginTransactionAsync();
         
         var classplanUpdates = DataContext.ObjectUpdates.Where(
             x => x.TargetCuid == cuid && (x.ObjectType == ObjectTypes.ProfileClassPlan)).Select(x =>x);
         if (classplanUpdates.Any())
         {
             client.ClassPlanVersion++;
-            classplanUpdates.ExecuteDelete();
+            await classplanUpdates.ExecuteDeleteAsync();
         }
 
         var timeLayoutUpdates = DataContext.ObjectUpdates.Where(
@@ -43,7 +44,7 @@ public class ManifestController(ManagementServerContext dataContext,
         if (timeLayoutUpdates.Any())
         {
             client.TimeLayoutVersion++;
-            timeLayoutUpdates.ExecuteDelete();
+            await timeLayoutUpdates.ExecuteDeleteAsync();
         }
 
         var subjectUpdates = DataContext.ObjectUpdates.Where(
@@ -51,7 +52,7 @@ public class ManifestController(ManagementServerContext dataContext,
         if (subjectUpdates.Any())
         {
             client.SubjectsVersion++;
-            subjectUpdates.ExecuteDelete();
+            await subjectUpdates.ExecuteDeleteAsync();
         }
 
         var policyUpdates = DataContext.ObjectUpdates.Where(
@@ -59,7 +60,7 @@ public class ManifestController(ManagementServerContext dataContext,
         if (policyUpdates.Any())
         {
             client.PolicyVersion++;
-            policyUpdates.ExecuteDelete();
+            await policyUpdates.ExecuteDeleteAsync();
         }
 
         var settingsUpdates = DataContext.ObjectUpdates.Where(
@@ -67,7 +68,7 @@ public class ManifestController(ManagementServerContext dataContext,
         if (settingsUpdates.Any())
         {
             client.DefaultSettingsVersion++;
-            settingsUpdates.ExecuteDelete();
+            await settingsUpdates.ExecuteDeleteAsync();
         }
 
         var globalUpdates = DataContext.ObjectUpdates.Where(
@@ -79,14 +80,14 @@ public class ManifestController(ManagementServerContext dataContext,
             client.SubjectsVersion++;
             client.PolicyVersion++;
             client.DefaultSettingsVersion++;
-            globalUpdates.ExecuteDelete();
+            await globalUpdates.ExecuteDeleteAsync();
         }
 
-        tran.Commit();
-        DataContext.SaveChanges();
+        await tran.CommitAsync();
+        await DataContext.SaveChangesAsync();
         return Ok(new ManagementManifest()
         {
-            OrganizationName = "", // TODO: 读取组织名
+            OrganizationName = (await DataContext.OrganizationSettings.FindAsync("OrganizationName"))?.Value ?? "",
             ServerKind = ManagementServerKind.ManagementServer,
             SubjectsSource = new ReVersionString {
                 Value = "{host}/api/v1/client/{cuid}/subjects",

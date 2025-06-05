@@ -42,8 +42,31 @@ public partial class ManagementServerContext : IdentityDbContext<User>
     public virtual DbSet<ProfileTimeLayout> ProfileTimelayouts { get; set; }
 
     public virtual DbSet<ProfileTimeLayoutTimePoint> ProfileTimelayoutTimepoints { get; set; }
+    
+    public virtual DbSet<OrganizationSettings> OrganizationSettings { get; set; }
 
     public virtual DbSet<Setting> Settings { get; set; }
+
+    public async Task SetOrganizationSettings(string key, string category, string? value)
+    {
+        var setting = await OrganizationSettings.FindAsync(key);
+        if (setting == null)
+        {
+            setting = new OrganizationSettings()
+            {
+                Key = key,
+                Category = category,
+                Value = value
+            };
+            OrganizationSettings.Add(setting);
+        }
+        else
+        {
+            setting.Value = value;
+            setting.Category = category;
+            OrganizationSettings.Update(setting);
+        }
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
