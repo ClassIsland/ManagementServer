@@ -1,5 +1,8 @@
 <template>
   <div class="view-account-form">
+    <n-alert type="warning" class="mb-2 mobile-warning">
+      您正在使用移动设备使用本应用。为获得更好的体验，建议使用桌面设备使用本应用。
+    </n-alert>
     <div class="auth-header">登录</div>
     <div class="view-account-top-desc">
       登录以继续到<b>{{ brand.organizationName }}</b>。
@@ -151,6 +154,14 @@
 </script>
 
 <style lang="less" scoped>
+
+  .mobile-warning {
+    display: none;  
+
+    @media (max-width: 640px) {
+      display: flex;
+    }
+  }
   .view-account {
     &-top-desc{
       margin-bottom: 12px;
