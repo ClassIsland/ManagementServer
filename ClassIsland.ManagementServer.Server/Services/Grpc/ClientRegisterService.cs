@@ -26,7 +26,7 @@ public class ClientRegisterService(ManagementServerContext dbContext, Organizati
                 return result;
             }
 
-            var abstractClient = await DbContext.AbstractClients.FindAsync(request.ClientId);
+            var abstractClient = await DbContext.AbstractClients.FirstOrDefaultAsync(x => x.Id == request.ClientId);
             var allowUnregistered = !bool.TryParse(await OrganizationSettingsService.GetSettings("AllowUnregisteredClients"), out var r1) || r1;
             if (abstractClient == null && !allowUnregistered)
             {
