@@ -36,6 +36,9 @@ jobs:
         include:
           - arch: any
             os: any
+        exclude:
+          - arch: x86
+            os: linux
     name: Build_${{ matrix.os }}_${{ matrix.arch }}
     steps:
       - name: Checkout
