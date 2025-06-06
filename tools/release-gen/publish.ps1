@@ -15,9 +15,9 @@ if ($(Test-Path ./out) -eq $false) {
 Write-Host "Publish parameters: OS=$os, Platform=$arch"
 
 if (($os -eq "any" ) -and ($arch -eq "any")) {
-    $runtimeIdentifier = ""
+    $runtimeIdentifier = "-p:RuntimeIdentifier="
 } else {
-    $runtimeIdentifier = " -r $os-$arch"
+    $runtimeIdentifier = "-p:RuntimeIdentifier=$os-$arch"
 }
 
 # PNPM Install
