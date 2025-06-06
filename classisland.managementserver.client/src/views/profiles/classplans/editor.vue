@@ -176,7 +176,7 @@ onMounted(() => {
       <n-card class="proCard" :bordered="false">
         <n-data-table :data="classPlanEditingEntries"
                       :columns="mainTableColumns"
-                      :max-height="`calc(100vh - 210px)`">
+                      :max-height="`calc(var(--content-height) - 90px)`">
           
         </n-data-table>
       </n-card>

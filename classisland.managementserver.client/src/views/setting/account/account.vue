@@ -46,7 +46,7 @@ function switchType(e) {
 </script>
 <style lang="less" scoped>
 .content {
-  height: calc(100vh - 116px);
+  height: var(--content-height);
   padding: 8px;
 }
 
