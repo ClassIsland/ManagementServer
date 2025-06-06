@@ -60,6 +60,7 @@ builder.Services.AddScoped<ObjectsUpdateNotifyService>();
 builder.Services.AddScoped<ObjectsAssigneeService>();
 builder.Services.AddScoped<ProfileEntitiesService>();
 builder.Services.AddScoped<ClientCommandDeliverService>();
+builder.Services.AddSingleton<ObjectsCacheService>();
 builder.WebHost.ConfigureKestrel((context, options) =>
 {
     

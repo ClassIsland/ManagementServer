@@ -1,9 +1,11 @@
 using System.Collections.ObjectModel;
 using System.Text.Json;
+using ClassIsland.ManagementServer.Server.ComponentModels;
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
 using ClassIsland.ManagementServer.Server.Enums;
 using ClassIsland.ManagementServer.Server.Helpers;
+using ClassIsland.ManagementServer.Server.Models;
 using ClassIsland.Shared.Models.Profile;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,13 +14,17 @@ namespace ClassIsland.ManagementServer.Server.Services;
 public class ProfileEntitiesService(
     ManagementServerContext context,
     ObjectsUpdateNotifyService objectsUpdateNotifyService,
-    ILogger<ProfileEntitiesService> logger)
+    ILogger<ProfileEntitiesService> logger,
+    IConfiguration configuration,
+    ObjectsCacheService objectsCacheService)
 {
     private ManagementServerContext DbContext { get; } = context;
 
     private ObjectsUpdateNotifyService ObjectsUpdateNotifyService { get; } = objectsUpdateNotifyService;
 
     private ILogger<ProfileEntitiesService> Logger { get; } = logger;
+    public IConfiguration Configuration { get; } = configuration;
+    public ObjectsCacheService ObjectsCacheService { get; } = objectsCacheService;
 
     public async Task SetSubjectEntity(Guid id, Subject subject, bool replace, Guid? groupId = null)
     {
@@ -51,6 +57,7 @@ public class ProfileEntitiesService(
             await DbContext.ProfileSubjects.AddAsync(o);
         }
 
+        ObjectsCacheService.InvalidateCache(ObjectTypes.ProfileSubject, id);
         await ObjectsUpdateNotifyService.NotifyObjectUpdatingAsync(id, ObjectTypes.ProfileSubject);
     }
 
@@ -100,6 +107,7 @@ public class ProfileEntitiesService(
             });
         }
 
+        ObjectsCacheService.InvalidateCache(ObjectTypes.ProfileTimeLayout, id);
         await ObjectsUpdateNotifyService.NotifyObjectUpdatingAsync(id, ObjectTypes.ProfileTimeLayout);
     }
 
@@ -163,6 +171,7 @@ public class ProfileEntitiesService(
             });
         }
 
+        ObjectsCacheService.InvalidateCache(ObjectTypes.ProfileClassPlan, id);
         await ObjectsUpdateNotifyService.NotifyObjectUpdatingAsync(id, ObjectTypes.ProfileClassPlan);
     }
     
@@ -175,6 +184,11 @@ public class ProfileEntitiesService(
     public async Task<ClassPlan?> GetClassPlanEntity(Guid id)
     {
         Logger.LogDebug("获取课表：{}", id);
+        if (ObjectsCacheService.ClassPlanCache.TryGet(id, out var cached))
+        {
+            Logger.LogTrace("命中对象缓存（课表） {}", id);
+            return cached;
+        }
         var cp = await DbContext.ProfileClassplans.FirstOrDefaultAsync(x => x.Id == id);
         if (cp == null)
             return null;
@@ -209,12 +223,18 @@ public class ProfileEntitiesService(
             IsEnabled = cp.IsEnabled,
             GroupId = cp.GroupId
         };
+        ObjectsCacheService.ClassPlanCache.Add(id, classPlan);
         return classPlan;
     }
 
     public async Task<TimeLayout?> GetTimeLayoutEntity(Guid id)
     {
         Logger.LogDebug("获取时间表：{}", id);
+        if (ObjectsCacheService.TimeLayoutCache.TryGet(id, out var cached))
+        {
+            Logger.LogTrace("命中对象缓存（时间表） {}", id);
+            return cached;
+        }
         var tl = await DbContext.ProfileTimelayouts.FirstOrDefaultAsync(x => x.Id == id);
         if (tl == null)
             return null;
@@ -235,21 +255,28 @@ public class ProfileEntitiesService(
                     AttachedObjects = x.AttachedObjects
                 }
             ));
-        return new TimeLayout()
+        var timeLayout = new TimeLayout()
         {
             Name = tl.Name,
             Layouts = tp,
             AttachedObjects = tl.AttachedObjects
         };
+        ObjectsCacheService.TimeLayoutCache.Add(id, timeLayout);
+        return timeLayout;
     }
     
     public async Task<Subject?> GetSubjectEntity(Guid id)
     {
         Logger.LogDebug("获取科目：{}", id);
+        if (ObjectsCacheService.SubjectCache.TryGet(id, out var cached))
+        {
+            Logger.LogTrace("命中对象缓存（科目） {}", id);
+            return cached;
+        }
         var s = await DbContext.ProfileSubjects.FirstOrDefaultAsync(x => x.Id == id);
         if (s == null)
             return null;
-        return new Subject()
+        var subject = new Subject()
         {
             Name = s.Name,
             Initial = s.Initials,
@@ -257,5 +284,7 @@ public class ProfileEntitiesService(
             TeacherName = "",
             AttachedObjects = s.AttachedObjects
         };
+        ObjectsCacheService.SubjectCache.Add(id, subject);
+        return subject;
     }
 }

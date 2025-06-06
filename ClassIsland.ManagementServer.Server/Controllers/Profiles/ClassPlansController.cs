@@ -13,7 +13,8 @@ namespace ClassIsland.ManagementServer.Server.Controllers.Profiles;
 [ApiController]
 [Authorize]
 [Route("api/v1/profiles/classPlans")]
-public class ClassPlansController(ManagementServerContext dbContext, ProfileEntitiesService profileEntitiesService) : ControllerBase
+public class ClassPlansController(ManagementServerContext dbContext, 
+    ProfileEntitiesService profileEntitiesService) : ControllerBase
 {
     public ManagementServerContext DbContext { get; } = dbContext;
     public ProfileEntitiesService ProfileEntitiesService { get; } = profileEntitiesService;
