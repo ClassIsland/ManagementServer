@@ -1,6 +1,6 @@
 import { RouteRecordRaw } from 'vue-router';
 import { Layout } from '@/router/constant';
-import { DashboardOutlined } from '@vicons/antd';
+import { LaptopOutlined } from '@vicons/antd';
 import { renderIcon } from '@/utils/index';
 
 const routeName = 'clients';
@@ -13,7 +13,7 @@ const routes: Array<RouteRecordRaw> = [
     component: Layout,
     meta: {
       title: '实例',
-      icon: renderIcon(DashboardOutlined),
+      icon: renderIcon(LaptopOutlined),
       permissions: ['client_manage'],
       sort: 1,
     },

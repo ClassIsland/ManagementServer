@@ -10,7 +10,7 @@ const routes: Array<RouteRecordRaw> = [
     redirect: '/setting/account',
     component: Layout,
     meta: {
-      title: '设置页面',
+      title: '设置',
       icon: renderIcon(SettingOutlined),
       sort: 5,
     },
