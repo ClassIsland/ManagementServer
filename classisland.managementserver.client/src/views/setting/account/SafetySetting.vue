@@ -1,28 +1,29 @@
 <template>
-  <n-grid cols="2 s:2 m:2 l:3 xl:3 2xl:3" responsive="screen">
-    <n-grid-item>
-      <n-h3>修改密码</n-h3>
-      <n-form :label-width="80" :model="formValue" :rules="rules" ref="formRef">
-        <n-form-item label="旧密码" path="oldPassword">
-          <n-input v-model:value="formValue.oldPassword" placeholder="请输入旧密码" type="password" show-password-toggle/>
-        </n-form-item>
-    
-        <n-form-item label="新密码" path="newPassword">
-          <n-input placeholder="请输入新密码" v-model:value="formValue.newPassword" type="password" show-password-toggle/>
-        </n-form-item>
-    
-        <n-form-item label="确认密码" path="confirmNewPassword">
-          <n-input placeholder="请再输入一遍新密码" v-model:value="formValue.confirmNewPassword" type="password" show-password-toggle/>
-        </n-form-item>
-    
-        <div>
-          <n-space>
-            <n-button type="primary" @click="formSubmit" :loading="isLoading">修改密码</n-button>
-          </n-space>
-        </div>
-      </n-form>
-    </n-grid-item>
-  </n-grid>
+  <n-card title="修改密码">
+    <n-grid cols="2 s:2 m:2 l:3 xl:3 2xl:3" responsive="screen">
+      <n-grid-item>
+        <n-form :label-width="80" :model="formValue" :rules="rules" ref="formRef">
+          <n-form-item label="旧密码" path="oldPassword">
+            <n-input v-model:value="formValue.oldPassword" placeholder="请输入旧密码" type="password" show-password-toggle/>
+          </n-form-item>
+      
+          <n-form-item label="新密码" path="newPassword">
+            <n-input placeholder="请输入新密码" v-model:value="formValue.newPassword" type="password" show-password-toggle/>
+          </n-form-item>
+      
+          <n-form-item label="确认密码" path="confirmNewPassword">
+            <n-input placeholder="请再输入一遍新密码" v-model:value="formValue.confirmNewPassword" type="password" show-password-toggle/>
+          </n-form-item>
+      
+          <div>
+            <n-space>
+              <n-button type="primary" @click="formSubmit" :loading="isLoading">修改密码</n-button>
+            </n-space>
+          </div>
+        </n-form>
+      </n-grid-item>
+    </n-grid>
+  </n-card>
 </template>
 
 <script lang="ts" setup>
