@@ -24,7 +24,7 @@ public class ClassPlan : AttachableSettingsObject
     private DateTime _overlaySetupTime = DateTime.Now;
     private int _lastTimeLayoutCount = -1;
     private string _associatedGroup = ClassPlanGroup.DefaultGroupGuid.ToString();
-    private Guid? _groupId = Guid.Empty;
+    private Guid? _groupId;
 
     /// <summary>
     /// 当课程表更新时触发
