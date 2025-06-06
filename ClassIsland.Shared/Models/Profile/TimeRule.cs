@@ -9,6 +9,7 @@ public class TimeRule : ObservableRecipient
 {
     private int _weekDay = new();
     private int _weekCountDiv = 0;
+    private int _weekCountDivTotal = 2;
 
     public int WeekDay
     {
@@ -36,6 +37,25 @@ public class TimeRule : ObservableRecipient
         {
             if (value == _weekCountDiv) return;
             _weekCountDiv = value;
+            OnPropertyChanged();
+        }
+    }
+    
+    /// <summary>
+    /// 多周轮换总周数
+    /// </summary>
+    /// <value>
+    /// 2 - 双周轮换<br/>
+    /// 3 - 三周轮换<br/>
+    /// 4 - 四周轮换
+    /// </value>
+    public int WeekCountDivTotal
+    {
+        get => _weekCountDivTotal;
+        set
+        {
+            if (value == _weekCountDivTotal) return;
+            _weekCountDivTotal = value;
             OnPropertyChanged();
         }
     }

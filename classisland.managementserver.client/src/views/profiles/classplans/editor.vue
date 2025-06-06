@@ -50,6 +50,27 @@ const subjectsLayoutsEnd = ref(false);
 const isLoading = ref(false);
 const isSaving = ref(false);
 const message = useMessage();
+const weeksDays = [
+  { key: 0, name: '周日' },
+  { key: 1, name: '周一' },
+  { key: 2, name: '周二' },
+  { key: 3, name: '周三' },
+  { key: 4, name: '周四' },
+  { key: 5, name: '周五' },
+  { key: 6, name: '周六' }
+];
+const weekDivs = [
+  { key: 0, name: '不限' },
+  { key: 1, name: '第一周' },
+  { key: 2, name: '第二周' },
+  { key: 3, name: '第三周' },
+  { key: 4, name: '第四周' }
+];
+const weekDivTotals = [
+  { key: 2, name: '二周' },
+  { key: 3, name: '三周' },
+  { key: 4, name: '四周' }
+];
 
 function getTimeString(time){
    return new Date(time).toLocaleTimeString();
@@ -97,18 +118,6 @@ async function loadData(){
   }
 } 
 
-async function loadTimeLayouts(page: number) {
-  let tl = await Apis.timelayouts.get_api_v1_profiles_timelayouts({
-    params: {
-      pageSize: 50,
-      pageIndex: page
-    }
-  });
-  timeLayouts.value.push(...tl.items);
-  if (tl.items.count <= 0) {
-    timeLayoutsEnd.value = true;
-  }
-}
 
 async function loadSubjects(page: number) {
   let s = await Apis.subjects.get_api_v1_profiles_subjects({
@@ -122,19 +131,6 @@ async function loadSubjects(page: number) {
   }
 }
 
-async function handleTimeLayoutMenuScroll(e: Event) {
-  const currentTarget = e.currentTarget as HTMLElement
-  if (
-    currentTarget.scrollTop + currentTarget.offsetHeight
-    >= currentTarget.scrollHeight
-  ) {
-    console.log("loading external data");
-    if (!timeLayoutsEnd.value) {
-      timeLayoutsPage.value++;
-      await loadTimeLayouts(timeLayoutsPage.value);
-    }
-  }
-}
 
 async function saveClassPlan() {
   try {
@@ -162,8 +158,13 @@ function getTimeLayoutData(pageIndex: number, pageSize: number) {
   })
 }
 
+function getGroupData(pageIndex: number, pageSize: number) {
+  return Apis.profilegroups.get_api_v1_profiles_groups({
+    params: { pageIndex, pageSize }
+  })
+}
+
 onMounted(() => {
-  loadTimeLayouts(1);
   loadData();
   loadSubjects(1);
 });
@@ -195,9 +196,57 @@ onMounted(() => {
                   :get-data="getTimeLayoutData"
                 />
               </n-form-item>
-              
+              <n-form-item label="分组">
+                <PagedSelect
+                  v-model:value="classPlan.groupId"
+                  labelField="name"
+                  valueField="id"
+                  :get-data="getGroupData"
+                />
+              </n-form-item>
             </n-form>
             
+            <n-button type="primary" @click="saveClassPlan" :loading="isSaving">保存</n-button>
+          </n-tab-pane>
+          <n-tab-pane name="timeRule" tab="启用规则">
+            <n-form :model="classPlan">
+              <n-form-item :show-label="false">
+                <n-checkbox v-model:checked="classPlan.isEnabled">
+                  自动启用
+                </n-checkbox>
+              </n-form-item>
+              <n-form-item label="当今天是" v-if="classPlan.isEnabled">
+                <n-radio-group v-model:value="classPlan.timeRule.weekDay">
+                  <n-radio-button
+                    v-for="i in weeksDays"
+                    :key="i.key"
+                    :value="i.key"
+                    :label="i.name"
+                  />
+                </n-radio-group>
+              </n-form-item>
+              <n-form-item label="当本周是" v-if="classPlan.isEnabled">
+                <n-radio-group v-model:value="classPlan.timeRule.weekCountDiv">
+                  <n-radio-button
+                    v-for="i in weekDivs.slice(0, classPlan.timeRule.weekCountDivTotal + 1)"
+                    :key="i.key"
+                    :value="i.key"
+                    :label="i.name"
+                  />
+                </n-radio-group>
+              </n-form-item>
+              <n-form-item label="每轮周数" v-if="classPlan.isEnabled">
+                <n-radio-group v-model:value="classPlan.timeRule.weekCountDivTotal">
+                  <n-radio-button
+                    v-for="i in weekDivTotals"
+                    :key="i.key"
+                    :value="i.key"
+                    :label="i.name"
+                  />
+                </n-radio-group>
+              </n-form-item>
+            </n-form>
+
             <n-button type="primary" @click="saveClassPlan" :loading="isSaving">保存</n-button>
           </n-tab-pane>
           <n-tab-pane name="assignee" tab="分配">

@@ -20,7 +20,7 @@ public class ProfileEntitiesService(
 
     private ILogger<ProfileEntitiesService> Logger { get; } = logger;
 
-    public async Task SetSubjectEntity(Guid id, Subject subject, bool replace)
+    public async Task SetSubjectEntity(Guid id, Subject subject, bool replace, Guid? groupId = null)
     {
         Logger.LogDebug("处理科目：{}（{}）", id, subject.Name);
         var o = new ProfileSubject()
@@ -29,13 +29,20 @@ public class ProfileEntitiesService(
             Name = subject.Name,
             Initials = subject.Initial,
             AttachedObjects = subject.AttachedObjects,
-            IsOutDoor = subject.IsOutDoor
+            IsOutDoor = subject.IsOutDoor,
+            GroupId = groupId ?? ProfileGroup.DefaultGroupId
         };
         var raw = await DbContext.ProfileSubjects.FirstOrDefaultAsync(x => x.Id == id);
         if (raw != null)
         {
             if (!replace)
                 return;
+            if (groupId == null)
+            {
+                o.GroupId = raw.GroupId; // 保持原有分组
+            }
+
+            DbContext.Entry(raw).State = EntityState.Detached;
             DbContext.Entry(o).State = EntityState.Modified;
             o.CreatedTime = raw.CreatedTime;
         }
@@ -47,20 +54,26 @@ public class ProfileEntitiesService(
         await ObjectsUpdateNotifyService.NotifyObjectUpdatingAsync(id, ObjectTypes.ProfileSubject);
     }
 
-    public async Task SetTimeLayoutEntity(Guid id, TimeLayout timeLayout, bool replace)
+    public async Task SetTimeLayoutEntity(Guid id, TimeLayout timeLayout, bool replace, Guid? groupId = null)
     {
         Logger.LogDebug("处理时间表：{}（{}）", id, timeLayout.Name);
         var o = new ProfileTimeLayout()
         {
             Id = id,
             Name = timeLayout.Name,
-            AttachedObjects = timeLayout.AttachedObjects
+            AttachedObjects = timeLayout.AttachedObjects,
+            GroupId = groupId ?? ProfileGroup.DefaultGroupId
         };
         var raw = await DbContext.ProfileTimelayouts.FirstOrDefaultAsync(x => x.Id == id);
         if (raw != null)
         {
             if (!replace)
                 return;
+            if (groupId == null)
+            {
+                o.GroupId = raw.GroupId; // 保持原有分组
+            }
+            DbContext.Entry(raw).State = EntityState.Detached;
             DbContext.Entry(o).State = EntityState.Modified;
             await DbContext.ProfileTimelayoutTimepoints.Where(x => x.ParentId == id).ExecuteDeleteAsync();
             o.CreatedTime = raw.CreatedTime;
@@ -83,14 +96,14 @@ public class ProfileEntitiesService(
                 DefaultSubjectId = p.DefaultClassId,
                 IsHideDefault = p.IsHideDefault,
                 Index = index++,
-                CreatedTime = raw?.CreatedTime ?? DateTime.Now
+                CreatedTime = raw?.CreatedTime ?? DateTime.Now,
             });
         }
 
         await ObjectsUpdateNotifyService.NotifyObjectUpdatingAsync(id, ObjectTypes.ProfileTimeLayout);
     }
 
-    public async Task SetClassPlanEntity(Guid id, ClassPlan classPlan, bool replace)
+    public async Task SetClassPlanEntity(Guid id, ClassPlan classPlan, bool replace, Guid? groupId = null)
     {
         Logger.LogDebug("处理课表：{}（{}）", id, classPlan.Name);
         var timeLayout = await DbContext.ProfileTimelayouts.FirstOrDefaultAsync(x =>
@@ -107,14 +120,20 @@ public class ProfileEntitiesService(
             AttachedObjects = classPlan.AttachedObjects,
             WeekDay = classPlan.TimeRule.WeekDay,
             WeekDiv = classPlan.TimeRule.WeekCountDiv,
+            WeekCountDivTotal = classPlan.TimeRule.WeekCountDivTotal,
             TimeLayout = timeLayout,
-            IsEnabled = classPlan.IsEnabled
+            IsEnabled = classPlan.IsEnabled,
+            GroupId = classPlan.GroupId ?? groupId ?? ProfileGroup.DefaultGroupId
         };
         var cp = await DbContext.ProfileClassplans.FirstOrDefaultAsync(x => x.Id == id);
         if (cp != null)
         {
             if (!replace)
                 return;
+            if (groupId == null && classPlan.GroupId == null)
+            {
+                o.GroupId = cp.GroupId; // 保持原有分组
+            }
             DbContext.Entry(cp).State = EntityState.Detached;
             DbContext.Entry(o).State = EntityState.Modified;
             await DbContext.ProfileClassplanClasses.Where(x => x.ParentId == id).ExecuteDeleteAsync();
@@ -181,11 +200,14 @@ public class ProfileEntitiesService(
             TimeRule = new TimeRule()
             {
                 WeekDay = cp.WeekDay,
-                WeekCountDiv = cp.WeekDiv
+                WeekCountDiv = cp.WeekDiv,
+                WeekCountDivTotal = cp.WeekCountDivTotal
             },
             TimeLayoutId = cp.TimeLayoutId.ToString(),
             Classes = c,
-            AttachedObjects = cp.AttachedObjects
+            AttachedObjects = cp.AttachedObjects,
+            IsEnabled = cp.IsEnabled,
+            GroupId = cp.GroupId
         };
         return classPlan;
     }

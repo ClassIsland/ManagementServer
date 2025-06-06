@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using ClassIsland.ManagementServer.Server.Abstractions.Entities;
 using ClassIsland.Shared.Interfaces;
@@ -36,6 +37,17 @@ public partial class ProfileClassplan : IDbAttachableObject, IObjectWithTime
     /// 在多周轮换中的哪一周启用这个课表
     /// </summary>
     public int WeekDiv { get; set; }
+
+    /// <summary>
+    /// 多周轮换总周数
+    /// </summary>
+    /// <value>
+    /// 2 - 双周轮换<br/>
+    /// 3 - 三周轮换<br/>
+    /// 4 - 四周轮换
+    /// </value>
+    [DefaultValue(2)]
+    public int WeekCountDivTotal { get; set; } = 2;
 
     /// <summary>
     /// 课表所使用的时间表 ID
