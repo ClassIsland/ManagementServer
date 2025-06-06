@@ -9,10 +9,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ClassIsland.ManagementServer.Server.Services.Grpc;
 
-public class ClientRegisterService(ManagementServerContext dbContext) : ClientRegister.ClientRegisterBase
+public class ClientRegisterService(ManagementServerContext dbContext, OrganizationSettingsService organizationSettingsService) : ClientRegister.ClientRegisterBase
 {
     private ManagementServerContext DbContext { get; } = dbContext;
-    
+    public OrganizationSettingsService OrganizationSettingsService { get; } = organizationSettingsService;
+
     public override async Task<ClientRegisterScRsp> Register(ClientRegisterCsReq request, ServerCallContext context)
     {
         var result = new ClientRegisterScRsp();
@@ -24,17 +25,25 @@ public class ClientRegisterService(ManagementServerContext dbContext) : ClientRe
                 result.Message = "Client has already been registered";
                 return result;
             }
+
+            var abstractClient = await DbContext.AbstractClients.FindAsync(request.ClientId);
+            var allowUnregistered = !bool.TryParse(await OrganizationSettingsService.GetSettings("AllowUnregisteredClients"), out var r1) || r1;
+            if (abstractClient == null && !allowUnregistered)
+            {
+                result.Retcode = Retcode.InvalidRequest;
+                result.Message = "Unregistered clients are not allowed";
+                return result; 
+            }
             var newClient = new Client()
             {
                 Cuid = new Guid(request.ClientUid),
                 Id = request.ClientId,
                 RegisterTime = DateTime.Now,
-                AbstractClient = await DbContext.AbstractClients
-                    .FirstOrDefaultAsync(x => x.Id == request.ClientId) ?? new AbstractClient()
-                    {
-                        Id = request.ClientId,
-                        GroupId = ClientGroup.DefaultGroupId
-                    }
+                AbstractClient = abstractClient ?? new AbstractClient()
+                {
+                    Id = request.ClientId,
+                    GroupId = ClientGroup.DefaultGroupId
+                }
             };
             await DbContext.Clients.AddAsync(newClient);
             await DbContext.SaveChangesAsync();

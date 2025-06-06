@@ -1,26 +1,23 @@
 <template>
-  <n-card class="proCard" title="显示设置">
+  <n-card class="proCard" title="基本设置">
     <n-spin :show="isLoading">
       <n-grid cols="2 s:2 m:2 l:3 xl:3 2xl:3" responsive="screen">
         <n-grid-item>
           <n-form :label-width="80" :model="formValue" :rules="rules" ref="formRef">
-            <n-form-item  path="organizationName" label="组织名称">
-              <n-input v-model:value="formValue.organizationName" placeholder="例：XX学校"/>
+            <n-form-item  path="allowUnregisteredClients" :show-label="false">
+              <n-checkbox v-model:checked="formValue.allowUnregisteredClients">允许未预留的客户端连接集控</n-checkbox>
             </n-form-item>
-            <n-form-item path="logoUrl" label="组织 Logo URL">
-              <n-input v-model:value="formValue.logoUrl" placeholder="需要静态地址，留空使用默认值"/>
+            <n-form-item  path="allowPublicRegister" :show-label="false">
+              <n-checkbox v-model:checked="formValue.allowPublicRegister">开放用户注册</n-checkbox>
             </n-form-item>
-            <n-form-item path="customLoginBanner" label="登录背景图片 URL">
-              <n-input v-model:value="formValue.customLoginBanner" placeholder="需要静态地址，留空使用默认值"/>
+            <n-form-item path="customPublicApiUrl" label="自定义应用 API 基础 URL">
+              <n-input v-model:value="formValue.customPublicApiUrl" placeholder="客户端访问本应用的 API 端点的 URL"/>
             </n-form-item>
-            <n-form-item path="loginFormPlacement" label="登录界面对齐方式">
-              <n-radio-group v-model:value="formValue.loginFormPlacement" name="radiogroup">
-                <n-space>
-                  <n-radio v-for="i in loginFormPlacementModes" :key="i.value" :value="i.value">
-                    {{ i.label }}
-                  </n-radio>
-                </n-space>
-              </n-radio-group>
+            <n-form-item path="customPublicGrpcUrl" label="自定义应用 GRPC 基础 URL">
+              <n-input v-model:value="formValue.customPublicGrpcUrl" placeholder="客户端访问本应用的 GRPC 端点的 URL"/>
+            </n-form-item>
+            <n-form-item path="customPublicRootUrl" label="自定义应用基础 URL">
+              <n-input v-model:value="formValue.customPublicRootUrl" placeholder="用户访问本应用管理后台的 URL"/>
             </n-form-item>
             <div>
               <n-space>
@@ -60,11 +57,11 @@
   const isLoading = ref(false);
 
   const formValue = ref({
-    organizationName: "",
-    logoUrl: "",
-    customLoginBanner: "",
-    loginFormPlacement: "left"
-  });
+    "allowUnregisteredClients": true,
+    "customPublicRootUrl": "",
+    "customPublicApiUrl": "",
+    "customPublicGrpcUrl": "",
+    "allowPublicRegister": false});
   
 
   function formSubmit() {
@@ -72,7 +69,7 @@
       if (!errors) {
         try {
           isSaving.value = true;
-          await Apis.organizationsettings.post_api_v1_settings_brand({
+          await Apis.organizationsettings.post_api_v1_settings_basic({
             data: formValue.value
           });
           message.success('保存成功，部分设置将在刷新后生效');
@@ -86,7 +83,7 @@
   }
   onMounted(async () => {
     isLoading.value = true;
-    formValue.value = await Apis.organizationsettings.get_api_v1_settings_brand({});
+    formValue.value = await Apis.organizationsettings.get_api_v1_settings_basic({});
     isLoading.value = false;
   })
 </script>

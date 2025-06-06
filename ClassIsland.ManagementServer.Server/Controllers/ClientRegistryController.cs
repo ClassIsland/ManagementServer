@@ -4,6 +4,7 @@ using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
 using ClassIsland.ManagementServer.Server.Extensions;
 using ClassIsland.ManagementServer.Server.Models;
+using ClassIsland.ManagementServer.Server.Services;
 using ClassIsland.Shared.Enums;
 using ClassIsland.Shared.Models.Management;
 using Microsoft.AspNetCore.Authorization;
@@ -15,9 +16,14 @@ namespace ClassIsland.ManagementServer.Server.Controllers;
 [ApiController]
 [Authorize]
 [Route("api/v1/clients_registry")]
-public class ClientRegistryController(ManagementServerContext context) : ControllerBase
+public class ClientRegistryController(ManagementServerContext context,
+    IConfiguration configuration,
+    OrganizationSettingsService organizationSettingsService) : ControllerBase
 {
     private ManagementServerContext DataContext { get; } = context;
+    public IConfiguration Configuration { get; } = configuration;
+    public OrganizationSettingsService OrganizationSettingsService { get; } = organizationSettingsService;
+    public ManagementServerContext Context { get; } = context;
 
     /// <summary>
     /// 列举已经注册的实例。
@@ -119,13 +125,18 @@ public class ClientRegistryController(ManagementServerContext context) : Control
 
     [AllowAnonymous]
     [HttpGet("client_configure")]
-    public IActionResult DownloadClientConfigure()
+    public async Task<IActionResult> DownloadClientConfigure()
     {
-        // TODO: 返回真实服务器地址
+        var publicApiUrl = await OrganizationSettingsService.GetSettings("CustomPublicApiUrl");
+        var publicGrpcUrl = await OrganizationSettingsService.GetSettings("CustomPublicGrpcUrl");
         var json = JsonSerializer.Serialize(new ManagementSettings()
         {
-            ManagementServer = "http://localhost:5090",
-            ManagementServerGrpc = "http://localhost:5091",
+            ManagementServer = !string.IsNullOrWhiteSpace(publicApiUrl) ? publicApiUrl 
+                : (Configuration["Kestrel:Endpoints:api:Url"]
+                   ?? ""),
+            ManagementServerGrpc = !string.IsNullOrWhiteSpace(publicGrpcUrl) ? publicGrpcUrl 
+                : (Configuration["Kestrel:Endpoints:grpc:Url"]
+                   ?? ""),
             ManagementServerKind = ManagementServerKind.ManagementServer
         });
         var bytes = Encoding.UTF8.GetBytes(json);

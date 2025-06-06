@@ -16,12 +16,19 @@
 <script lang="ts" setup>
   import { reactive, h } from 'vue';
   import BrandSettings from './BrandSettings.vue';
+  import BasicSettings from './BasicSettings.vue';
 
   const typeTabList = [
     {
-      name: '显示设置',
+      name: '基本',
       desc: '系统常规设置',
       key: 1,
+      element: h(BasicSettings)
+    },
+    {
+      name: '显示',
+      desc: '系统外观等',
+      key: 2,
       element: h(BrandSettings)
     }
   ];

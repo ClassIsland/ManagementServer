@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using ClassIsland.ManagementServer.Server.Context;
+using ClassIsland.ManagementServer.Server.Entities;
 using ClassIsland.ManagementServer.Server.Models.Identity;
 using ClassIsland.ManagementServer.Server.Services;
 using ClassIsland.ManagementServer.Server.Services.Grpc;
@@ -60,6 +61,7 @@ builder.Services.AddScoped<ObjectsUpdateNotifyService>();
 builder.Services.AddScoped<ObjectsAssigneeService>();
 builder.Services.AddScoped<ProfileEntitiesService>();
 builder.Services.AddScoped<ClientCommandDeliverService>();
+builder.Services.AddScoped<OrganizationSettingsService>();
 builder.Services.AddSingleton<ObjectsCacheService>();
 builder.WebHost.ConfigureKestrel((context, options) =>
 {

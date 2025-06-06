@@ -120,6 +120,7 @@ export type TimeRule = {
   isActive?: boolean;
   weekDay?: number;
   weekCountDiv?: number;
+  weekCountDivTotal?: number;
 };
 export type ClassInfo = {
   isActive?: boolean;
@@ -137,6 +138,7 @@ export type ClassPlan = {
   overlaySetupTime?: string;
   isEnabled?: boolean;
   associatedGroup?: string | null;
+  groupId?: string | null;
 };
 export type CommandTypes = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 export type SendNotification = {
@@ -201,22 +203,17 @@ export type ClientGroup = {
   colorHex?: string | null;
 };
 export type BrandInfo = {
-  /**
-   * [required]
-   */
-  organizationName: string;
-  /**
-   * [required]
-   */
-  logoUrl: string;
-  /**
-   * [required]
-   */
-  customLoginBanner: string;
-  /**
-   * [required]
-   */
-  loginFormPlacement: string;
+  organizationName?: string | null;
+  logoUrl?: string | null;
+  customLoginBanner?: string | null;
+  loginFormPlacement?: string | null;
+};
+export type BasicSettings = {
+  allowUnregisteredClients?: boolean;
+  customPublicRootUrl?: string | null;
+  customPublicApiUrl?: string | null;
+  customPublicGrpcUrl?: string | null;
+  allowPublicRegister?: boolean;
 };
 export type ManagementPolicy = {
   isActive?: boolean;
@@ -331,6 +328,7 @@ export type ProfileClassplan = {
   groupId?: string;
   weekDay?: number;
   weekDiv?: number;
+  weekCountDivTotal?: number;
   timeLayoutId?: string;
   isEnabled?: boolean;
   group?: ProfileGroup;
@@ -387,6 +385,7 @@ export type UserCreateBody = {
   password?: string | null;
 };
 export type UserInfo = {
+  userName?: string | null;
   name?: string | null;
   emailAddress?: string | null;
   phoneNumber?: string | null;
@@ -1026,14 +1025,12 @@ declare global {
       >(
         config: Config
       ): Alova2Method<unknown, 'auth.post_api_v1_auth_refresh', Config>;
-    };
-    brandsettings: {
       /**
        * ---
        *
-       * [GET]
+       * [POST]
        *
-       * **path:** /api/v1/brand
+       * **path:** /api/v1/auth/logout
        *
        * ---
        *
@@ -1042,9 +1039,9 @@ declare global {
        * type Response = unknown
        * ```
        */
-      get_api_v1_brand<Config extends Alova2MethodConfig<unknown>>(
+      post_api_v1_auth_logout<Config extends Alova2MethodConfig<unknown>>(
         config?: Config
-      ): Alova2Method<unknown, 'brandsettings.get_api_v1_brand', Config>;
+      ): Alova2Method<unknown, 'auth.post_api_v1_auth_logout', Config>;
     };
     classplans: {
       /**
@@ -1100,6 +1097,7 @@ declare global {
        *     isActive?: boolean
        *     weekDay?: number
        *     weekCountDiv?: number
+       *     weekCountDivTotal?: number
        *   }
        *   classes?: Array<{
        *     isActive?: boolean
@@ -1111,6 +1109,7 @@ declare global {
        *   overlaySetupTime?: string
        *   isEnabled?: boolean
        *   associatedGroup?: string | null
+       *   groupId?: string | null
        * }
        * ```
        *
@@ -1193,6 +1192,7 @@ declare global {
        *     isActive?: boolean
        *     weekDay?: number
        *     weekCountDiv?: number
+       *     weekCountDivTotal?: number
        *   }
        *   classes?: Array<{
        *     isActive?: boolean
@@ -1204,6 +1204,7 @@ declare global {
        *   overlaySetupTime?: string
        *   isEnabled?: boolean
        *   associatedGroup?: string | null
+       *   groupId?: string | null
        * }
        * ```
        *
@@ -2340,14 +2341,10 @@ declare global {
        * **RequestBody**
        * ```ts
        * type RequestBody = {
-       *   // [required]
-       *   organizationName: string
-       *   // [required]
-       *   logoUrl: string
-       *   // [required]
-       *   customLoginBanner: string
-       *   // [required]
-       *   loginFormPlacement: string
+       *   organizationName?: string | null
+       *   logoUrl?: string | null
+       *   customLoginBanner?: string | null
+       *   loginFormPlacement?: string | null
        * }
        * ```
        *
@@ -2365,6 +2362,57 @@ declare global {
       >(
         config: Config
       ): Alova2Method<unknown, 'organizationsettings.post_api_v1_settings_brand', Config>;
+      /**
+       * ---
+       *
+       * [GET]
+       *
+       * **path:** /api/v1/settings/basic
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      get_api_v1_settings_basic<Config extends Alova2MethodConfig<unknown>>(
+        config?: Config
+      ): Alova2Method<unknown, 'organizationsettings.get_api_v1_settings_basic', Config>;
+      /**
+       * ---
+       *
+       * [POST]
+       *
+       * **path:** /api/v1/settings/basic
+       *
+       * ---
+       *
+       * **RequestBody**
+       * ```ts
+       * type RequestBody = {
+       *   allowUnregisteredClients?: boolean
+       *   customPublicRootUrl?: string | null
+       *   customPublicApiUrl?: string | null
+       *   customPublicGrpcUrl?: string | null
+       *   allowPublicRegister?: boolean
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      post_api_v1_settings_basic<
+        Config extends Alova2MethodConfig<unknown> & {
+          data: BasicSettings;
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'organizationsettings.post_api_v1_settings_basic', Config>;
     };
     policies: {
       /**
@@ -2772,6 +2820,7 @@ declare global {
        *         isActive?: boolean
        *         weekDay?: number
        *         weekCountDiv?: number
+       *         weekCountDivTotal?: number
        *       }
        *       classes?: Array<{
        *         isActive?: boolean
@@ -2783,6 +2832,7 @@ declare global {
        *       overlaySetupTime?: string
        *       isEnabled?: boolean
        *       associatedGroup?: string | null
+       *       groupId?: string | null
        *     }
        *   > | null
        *   subjects?: Record<
@@ -2905,6 +2955,7 @@ declare global {
        *       groupId?: string
        *       weekDay?: number
        *       weekDiv?: number
+       *       weekCountDivTotal?: number
        *       timeLayoutId?: string
        *       isEnabled?: boolean
        *       group?: ProfileGroup
@@ -3016,6 +3067,7 @@ declare global {
        *       groupId?: string
        *       weekDay?: number
        *       weekDiv?: number
+       *       weekCountDivTotal?: number
        *       timeLayoutId?: string
        *       isEnabled?: boolean
        *       group?: ProfileGroup
@@ -3409,6 +3461,7 @@ declare global {
        * **RequestBody**
        * ```ts
        * type RequestBody = {
+       *   userName?: string | null
        *   name?: string | null
        *   emailAddress?: string | null
        *   phoneNumber?: string | null
