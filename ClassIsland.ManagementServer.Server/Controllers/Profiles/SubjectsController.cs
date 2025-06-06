@@ -52,7 +52,7 @@ public class SubjectsController(ManagementServerContext dbContext,
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete([FromRoute] Guid id)
     {
-        var entity = await DbContext.ProfileSubjects.FirstOrDefaultAsync(x => x.Id == id);
+        var entity = await DbContext.ProfileSubjects.FindAsync(id);
         if (entity == null) 
         {
             return NotFound(new Error("找不到请求的对象"));

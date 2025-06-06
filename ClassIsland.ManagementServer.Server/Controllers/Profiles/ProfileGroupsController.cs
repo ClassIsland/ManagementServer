@@ -26,11 +26,13 @@ public class ProfileGroupsController(ManagementServerContext dbContext) : Contro
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Put([FromBody] ProfileGroup payload, [FromRoute] Guid id)
     {
-        var prev = await DbContext.ProfileGroups.AnyAsync(x => x.Id == id);
-        if (!prev)
+        var prev = await DbContext.ProfileGroups.FindAsync(id);
+        if (prev == null)
         {
             return NotFound(new Error("找不到请求的对象"));
         }
+
+        DbContext.Entry(prev).State = EntityState.Detached;
         DbContext.Entry(payload).State = EntityState.Modified;
         await DbContext.SaveChangesAsync();
         return Ok();
@@ -48,7 +50,7 @@ public class ProfileGroupsController(ManagementServerContext dbContext) : Contro
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete([FromRoute] Guid id)
     {
-        var entity = await DbContext.ProfileGroups.FirstOrDefaultAsync(x => x.Id == id);
+        var entity = await DbContext.ProfileGroups.FindAsync(id);
         if (entity == null) 
         {
             return NotFound(new Error("找不到请求的对象"));

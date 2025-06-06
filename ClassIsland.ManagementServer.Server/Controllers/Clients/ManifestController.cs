@@ -22,7 +22,7 @@ public class ManifestController(ManagementServerContext dataContext,
     [HttpGet]
     public async Task<IActionResult> GetManifest([FromRoute] Guid cuid)
     {
-        var client = DataContext.Clients.FirstOrDefault(i => i.Cuid == cuid);
+        var client = await DataContext.Clients.FindAsync(cuid);
         if (client == null)
         {
             return NotFound(new Error("找不到请求的对象"));

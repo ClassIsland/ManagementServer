@@ -38,7 +38,7 @@ public class ProfileEntitiesService(
             IsOutDoor = subject.IsOutDoor,
             GroupId = groupId ?? ProfileGroup.DefaultGroupId
         };
-        var raw = await DbContext.ProfileSubjects.FirstOrDefaultAsync(x => x.Id == id);
+        var raw = await DbContext.ProfileSubjects.FindAsync(id);
         if (raw != null)
         {
             if (!replace)
@@ -71,7 +71,7 @@ public class ProfileEntitiesService(
             AttachedObjects = timeLayout.AttachedObjects,
             GroupId = groupId ?? ProfileGroup.DefaultGroupId
         };
-        var raw = await DbContext.ProfileTimelayouts.FirstOrDefaultAsync(x => x.Id == id);
+        var raw = await DbContext.ProfileTimelayouts.FindAsync(id);
         if (raw != null)
         {
             if (!replace)
@@ -114,8 +114,7 @@ public class ProfileEntitiesService(
     public async Task SetClassPlanEntity(Guid id, ClassPlan classPlan, bool replace, Guid? groupId = null)
     {
         Logger.LogDebug("处理课表：{}（{}）", id, classPlan.Name);
-        var timeLayout = await DbContext.ProfileTimelayouts.FirstOrDefaultAsync(x =>
-            x.Id == GuidHelpers.TryParseGuidOrEmpty(classPlan.TimeLayoutId));
+        var timeLayout = await DbContext.ProfileTimelayouts.FindAsync(GuidHelpers.TryParseGuidOrEmpty(classPlan.TimeLayoutId) );
         if (timeLayout == null)
         {
             Logger.LogWarning("课表时间表不存在：{}", classPlan.TimeLayoutId);
@@ -133,7 +132,7 @@ public class ProfileEntitiesService(
             IsEnabled = classPlan.IsEnabled,
             GroupId = classPlan.GroupId ?? groupId ?? ProfileGroup.DefaultGroupId
         };
-        var cp = await DbContext.ProfileClassplans.FirstOrDefaultAsync(x => x.Id == id);
+        var cp = await DbContext.ProfileClassplans.FindAsync(id);
         if (cp != null)
         {
             if (!replace)
@@ -157,8 +156,7 @@ public class ProfileEntitiesService(
         {
             Logger.LogDebug("处理课程：{}", p.SubjectId);
             var subject =
-                await DbContext.ProfileSubjects.FirstOrDefaultAsync(x =>
-                    x.Id == GuidHelpers.TryParseGuidOrEmpty(p.SubjectId));
+                await DbContext.ProfileSubjects.FindAsync(GuidHelpers.TryParseGuidOrEmpty(p.SubjectId));
             if (subject == null)
                 continue;
             await DbContext.ProfileClassplanClasses.AddAsync(new ProfileClassPlanClass()
@@ -189,7 +187,7 @@ public class ProfileEntitiesService(
             Logger.LogTrace("命中对象缓存（课表） {}", id);
             return cached;
         }
-        var cp = await DbContext.ProfileClassplans.FirstOrDefaultAsync(x => x.Id == id);
+        var cp = await DbContext.ProfileClassplans.FindAsync(id);
         if (cp == null)
             return null;
         var c = new ObservableCollection<ClassInfo>((
@@ -235,7 +233,7 @@ public class ProfileEntitiesService(
             Logger.LogTrace("命中对象缓存（时间表） {}", id);
             return cached;
         }
-        var tl = await DbContext.ProfileTimelayouts.FirstOrDefaultAsync(x => x.Id == id);
+        var tl = await DbContext.ProfileTimelayouts.FindAsync(id);
         if (tl == null)
             return null;
         var tp = new ObservableCollection<TimeLayoutItem>((
@@ -273,7 +271,7 @@ public class ProfileEntitiesService(
             Logger.LogTrace("命中对象缓存（科目） {}", id);
             return cached;
         }
-        var s = await DbContext.ProfileSubjects.FirstOrDefaultAsync(x => x.Id == id);
+        var s = await DbContext.ProfileSubjects.FindAsync(id);
         if (s == null)
             return null;
         var subject = new Subject()
