@@ -20,6 +20,13 @@ if (($os -eq "any" ) -and ($arch -eq "any")) {
     $runtimeIdentifier = " -r $os-$arch"
 }
 
+# PNPM Install
+Write-Host "Installing Node Denpendencies..." -ForegroundColor Cyan
+cd classisland.managementserver.client
+pnpm install
+cd ..
+
+Write-Host "Building CIMS..." -ForegroundColor Cyan
 dotnet publish .\ClassIsland.ManagementServer.Server\ClassIsland.ManagementServer.Server.csproj -c Release -p:PublishDir=$PUBLISH_TARGET $runtimeIdentifier
 
 Write-Host "Packaging..." -ForegroundColor Cyan
