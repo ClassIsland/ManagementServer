@@ -39,7 +39,7 @@
     "guid-typescript": "^1.0.9",
     "lodash-es": "^4.17.21",
     "mockjs": "^1.1.0",
-    "naive-ui": "^2.39.0",
+    "naive-ui": "^2.41.0",
     "pinia": "^2.2.2",
     "pinia-plugin-persistedstate": "^4.1.3",
     "qs": "^6.13.0",

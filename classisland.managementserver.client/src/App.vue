@@ -49,6 +49,9 @@
       LoadingBar: {
         colorLoading: appTheme,
       },
+      Input: {
+        heightMedium: "36px"
+      }
     };
   });
 
