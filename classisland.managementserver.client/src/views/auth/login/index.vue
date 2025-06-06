@@ -40,22 +40,12 @@
           </template>
         </n-input>
       </n-form-item>
-      <n-form-item class="default-color" :show-feedback="false">
-        <div class="flex justify-between">
-          <div class="flex-initial">
-            <n-checkbox v-model:checked="autoLogin">自动登录</n-checkbox>
-          </div>
-        </div>
-      </n-form-item>
       <n-form-item :show-feedback="false">
         <div class="flex flex-col view-account-actions">
           <n-button type="primary" attr-type="submit" @click="handleSubmit" size="large" :loading="loading" block>
             登录
           </n-button>
           <div class="flex view-account-other">
-            <n-button quaternary type="primary" size="small">
-              登陆时遇到问题？
-            </n-button>
           </div>
         </div>
       </n-form-item>
