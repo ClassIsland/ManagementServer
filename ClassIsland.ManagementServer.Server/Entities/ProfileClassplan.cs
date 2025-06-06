@@ -59,7 +59,7 @@ public partial class ProfileClassplan : IDbAttachableObject, IObjectWithTime
     /// </summary>
     public bool IsEnabled { get; set; } = true;
 
-    public virtual ProfileGroup Group { get; set; } = new();
+    public virtual ProfileGroup? Group { get; set; }
 
     public virtual ICollection<ProfileClassPlanClass> ProfileClassPlanClasses { get; set; } = new List<ProfileClassPlanClass>();
 
