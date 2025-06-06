@@ -97,7 +97,11 @@ export default {
   'timelayouts.get_api_v1_profiles_timelayouts_id': ['GET', '/api/v1/profiles/timeLayouts/{id}'],
   'timelayouts.put_api_v1_profiles_timelayouts_id': ['PUT', '/api/v1/profiles/timeLayouts/{id}'],
   'timelayouts.delete_api_v1_profiles_timelayouts_id': ['DELETE', '/api/v1/profiles/timeLayouts/{id}'],
-  'users.post_api_v1_users_manage': ['POST', '/api/v1/users/manage'],
+  'users.post_api_v1_users_create': ['POST', '/api/v1/users/create'],
+  'users.get_api_v1_users_all': ['GET', '/api/v1/users/all'],
+  'users.post_api_v1_users_id': ['POST', '/api/v1/users/{id}'],
+  'users.delete_api_v1_users_id': ['DELETE', '/api/v1/users/{id}'],
+  'users.post_api_v1_users_id_set_password': ['POST', '/api/v1/users/{id}/set-password'],
   'users.get_api_v1_users_current': ['GET', '/api/v1/users/current'],
   'users.post_api_v1_users_current': ['POST', '/api/v1/users/current'],
   'users.post_api_v1_users_change_password': ['POST', '/api/v1/users/change-password']

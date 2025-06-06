@@ -31,6 +31,14 @@ const routes: Array<RouteRecordRaw> = [
         },
         component: () => import('@/views/setting/system/system.vue'),
       },
+      {
+        path: 'users',
+        name: 'setting-users',
+        meta: {
+          title: '用户管理',
+        },
+        component: () => import('@/views/setting/users/index.vue'),
+      },
     ],
   },
 ];

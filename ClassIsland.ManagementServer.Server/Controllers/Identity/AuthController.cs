@@ -29,11 +29,16 @@ public class AuthController(ILogger<AuthController> logger,
         {
             return NotFound(new Error($"找不到用户 {request.Username}"));
         }
+
+        if (request.Password == string.Empty)
+        {
+            return BadRequest(new Error("密码不可为空"));
+        }
         
         var result = await SignInManager.PasswordSignInAsync(user, request.Password, false, false);
         if (!result.Succeeded)
         {
-            return Unauthorized(new Error("密码错误。"));
+            return Unauthorized(new Error("密码错误"));
         }
 
         var principal = await SignInManager.CreateUserPrincipalAsync(user);

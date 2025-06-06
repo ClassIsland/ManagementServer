@@ -379,6 +379,7 @@ export type User = {
   accessFailedCount?: number;
   name?: string | null;
   createdTime?: string;
+  updatedTime?: string;
 };
 export type UserCreateBody = {
   user?: User;
@@ -3388,7 +3389,7 @@ declare global {
        *
        * [POST]
        *
-       * **path:** /api/v1/users/manage
+       * **path:** /api/v1/users/create
        *
        * ---
        *
@@ -3413,6 +3414,7 @@ declare global {
        *     accessFailedCount?: number
        *     name?: string | null
        *     createdTime?: string
+       *     updatedTime?: string
        *   }
        *   password?: string | null
        * }
@@ -3425,13 +3427,179 @@ declare global {
        * type Response = unknown
        * ```
        */
-      post_api_v1_users_manage<
+      post_api_v1_users_create<
         Config extends Alova2MethodConfig<unknown> & {
           data: UserCreateBody;
         }
       >(
         config: Config
-      ): Alova2Method<unknown, 'users.post_api_v1_users_manage', Config>;
+      ): Alova2Method<unknown, 'users.post_api_v1_users_create', Config>;
+      /**
+       * ---
+       *
+       * [GET]
+       *
+       * **path:** /api/v1/users/all
+       *
+       * ---
+       *
+       * **Query Parameters**
+       * ```ts
+       * type QueryParameters = {
+       *   pageIndex?: number
+       *   pageSize?: number
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      get_api_v1_users_all<
+        Config extends Alova2MethodConfig<unknown> & {
+          params: {
+            pageIndex?: number;
+            pageSize?: number;
+          };
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'users.get_api_v1_users_all', Config>;
+      /**
+       * ---
+       *
+       * [POST]
+       *
+       * **path:** /api/v1/users/{id}
+       *
+       * ---
+       *
+       * **Path Parameters**
+       * ```ts
+       * type PathParameters = {
+       *   // [required]
+       *   id: string
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **RequestBody**
+       * ```ts
+       * type RequestBody = {
+       *   userName?: string | null
+       *   name?: string | null
+       *   emailAddress?: string | null
+       *   phoneNumber?: string | null
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      post_api_v1_users_id<
+        Config extends Alova2MethodConfig<unknown> & {
+          pathParams: {
+            /**
+             * [required]
+             */
+            id: string;
+          };
+          data: UserInfo;
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'users.post_api_v1_users_id', Config>;
+      /**
+       * ---
+       *
+       * [DELETE]
+       *
+       * **path:** /api/v1/users/{id}
+       *
+       * ---
+       *
+       * **Path Parameters**
+       * ```ts
+       * type PathParameters = {
+       *   // [required]
+       *   id: string
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      delete_api_v1_users_id<
+        Config extends Alova2MethodConfig<unknown> & {
+          pathParams: {
+            /**
+             * [required]
+             */
+            id: string;
+          };
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'users.delete_api_v1_users_id', Config>;
+      /**
+       * ---
+       *
+       * [POST]
+       *
+       * **path:** /api/v1/users/{id}/set-password
+       *
+       * ---
+       *
+       * **Path Parameters**
+       * ```ts
+       * type PathParameters = {
+       *   // [required]
+       *   id: string
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **RequestBody**
+       * ```ts
+       * type RequestBody = {
+       *   oldPassword?: string | null
+       *   newPassword?: string | null
+       * }
+       * ```
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      post_api_v1_users_id_set_password<
+        Config extends Alova2MethodConfig<unknown> & {
+          pathParams: {
+            /**
+             * [required]
+             */
+            id: string;
+          };
+          data: ChangePasswordRequestBody;
+        }
+      >(
+        config: Config
+      ): Alova2Method<unknown, 'users.post_api_v1_users_id_set_password', Config>;
       /**
        * ---
        *
