@@ -24,17 +24,49 @@ builder.Configuration.AddJsonFile("./data/appsettings.json", optional: true, rel
 builder.Services.AddDbContext<ManagementServerContext>(options =>
 {
     var dbType = builder.Configuration["DatabaseType"];
-    switch (dbType)
+    var connectionString = builder.Configuration.GetConnectionString(
+#if DEBUG
+        "Development"
+#else
+        "Production"
+#endif
+    );
+    if (string.IsNullOrEmpty(dbType))
+    {
+        dbType = "sqlite"; // Default to SQLite if not specified
+        connectionString = $"Data Source={Path.Combine("data", "classisland.db")}";
+        // Ensure data directory exists
+        var dataDir = Path.Combine(AppContext.BaseDirectory, "data");
+        if (!Directory.Exists(dataDir))
+        {
+            Directory.CreateDirectory(dataDir);
+        }
+    }
+
+    switch (dbType.ToLower())
     {
         case "mysql":
-            options.UseMySql(
-                builder.Configuration.GetConnectionString(
-        #if DEBUG
-                    "Development"
-        #else
-                    "Production"
-        #endif
-                    ),ServerVersion.Parse("8.0.0-mysql"));
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                throw new InvalidOperationException("Connection string for MySQL is not configured.");
+            }
+            options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+            break;
+        case "sqlite":
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                connectionString = $"Data Source={Path.Combine("data", "classisland.db")}";
+            }
+            // Ensure data directory exists if using default path
+            if (connectionString.Contains(Path.Combine("data", "classisland.db")))
+            {
+                var dataDir = Path.GetDirectoryName(Path.Combine(AppContext.BaseDirectory, connectionString.Split('=')[1]));
+                if (dataDir != null && !Directory.Exists(dataDir))
+                {
+                    Directory.CreateDirectory(dataDir);
+                }
+            }
+            options.UseSqlite(connectionString);
             break;
         default:
             throw new InvalidOperationException($"Unsupported database type: {dbType}");

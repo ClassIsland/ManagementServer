@@ -73,7 +73,7 @@ namespace ClassIsland.ManagementServer.Server.Migrations
                 name: "ClientGroups",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
+                    Id = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
@@ -88,7 +88,7 @@ namespace ClassIsland.ManagementServer.Server.Migrations
                 name: "Policies",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     Name = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     IsEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false),
@@ -105,7 +105,7 @@ namespace ClassIsland.ManagementServer.Server.Migrations
                 name: "ProfileGroups",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     Name = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Description = table.Column<string>(type: "longtext", nullable: false)
@@ -121,7 +121,7 @@ namespace ClassIsland.ManagementServer.Server.Migrations
                 name: "Settings",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     Name = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Description = table.Column<string>(type: "longtext", nullable: false)
@@ -266,7 +266,7 @@ namespace ClassIsland.ManagementServer.Server.Migrations
                 name: "Clients",
                 columns: table => new
                 {
-                    Cuid = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Cuid = table.Column<Guid>(type: "char(36)", nullable: false),
                     Id = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     RegisterTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
@@ -293,8 +293,8 @@ namespace ClassIsland.ManagementServer.Server.Migrations
                 name: "ProfileSubjects",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    GroupId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
+                    GroupId = table.Column<Guid>(type: "char(36)", nullable: true),
                     Name = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Initials = table.Column<string>(type: "longtext", nullable: false)
@@ -318,10 +318,10 @@ namespace ClassIsland.ManagementServer.Server.Migrations
                 name: "ProfileTimelayouts",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     Name = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    GroupId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    GroupId = table.Column<Guid>(type: "char(36)", nullable: true),
                     AttachedObjects = table.Column<string>(type: "json", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
@@ -340,13 +340,13 @@ namespace ClassIsland.ManagementServer.Server.Migrations
                 name: "ObjectsAssignees",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
+                    Id = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    ObjectId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    ObjectId = table.Column<Guid>(type: "char(36)", nullable: false),
                     ObjectType = table.Column<int>(type: "int", nullable: false),
                     TargetClientId = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    TargetClientCuid = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    TargetClientCuid = table.Column<Guid>(type: "char(36)", nullable: true),
                     TargetGroupId = table.Column<long>(type: "bigint", nullable: true),
                     AssigneeType = table.Column<int>(type: "int", nullable: false)
                 },
@@ -372,11 +372,11 @@ namespace ClassIsland.ManagementServer.Server.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    ObjectId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    ObjectId = table.Column<Guid>(type: "char(36)", nullable: false),
                     ObjectType = table.Column<int>(type: "int", nullable: false),
-                    TargetCuid = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    TargetCuid = table.Column<Guid>(type: "char(36)", nullable: false),
                     UpdateTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    TargetClientCuid = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                    TargetClientCuid = table.Column<Guid>(type: "char(36)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -394,13 +394,13 @@ namespace ClassIsland.ManagementServer.Server.Migrations
                 name: "ProfileClassplans",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     Name = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    GroupId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    GroupId = table.Column<Guid>(type: "char(36)", nullable: true),
                     WeekDay = table.Column<int>(type: "int", nullable: false),
                     WeekDiv = table.Column<int>(type: "int", nullable: false),
-                    TimeLayoutId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    TimeLayoutId = table.Column<Guid>(type: "char(36)", nullable: false),
                     IsEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     AttachedObjects = table.Column<string>(type: "json", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
@@ -426,9 +426,9 @@ namespace ClassIsland.ManagementServer.Server.Migrations
                 name: "ProfileTimelayoutTimepoints",
                 columns: table => new
                 {
-                    InternalId = table.Column<long>(type: "bigint", nullable: false)
+                    InternalId = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    ParentId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    ParentId = table.Column<Guid>(type: "char(36)", nullable: false),
                     Index = table.Column<int>(type: "int", nullable: false),
                     Start = table.Column<TimeOnly>(type: "time(6)", nullable: false),
                     End = table.Column<TimeOnly>(type: "time(6)", nullable: false),
@@ -455,11 +455,11 @@ namespace ClassIsland.ManagementServer.Server.Migrations
                 name: "ProfileClassplanClasses",
                 columns: table => new
                 {
-                    InternalId = table.Column<long>(type: "bigint", nullable: false)
+                    InternalId = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Index = table.Column<int>(type: "int", nullable: false),
-                    ParentId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    SubjectId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    ParentId = table.Column<Guid>(type: "char(36)", nullable: false),
+                    SubjectId = table.Column<Guid>(type: "char(36)", nullable: false),
                     AttachedObjects = table.Column<string>(type: "json", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
