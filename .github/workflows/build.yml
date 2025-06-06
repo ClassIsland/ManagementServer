@@ -1,0 +1,86 @@
+name: Build
+
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: '发布标签'
+        required: true
+        type: string
+      primary_version:
+        description: '主发布版本'
+        required: true
+        type: string
+      channels:
+        description: '发布通道'
+        required: true
+        type: string
+      is_test_mode:
+        description: '是否处于测试发布模式'
+        required: false
+        type: boolean
+
+jobs:
+  build_app:
+    runs-on: windows-latest  # For a list of available runner types, refer to
+    # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
+    env:
+      artifact_name: out_app_windows_${{ matrix.arch }}_${{ matrix.trim_assets == 'true' && 'trimmed' || 'full' }}_${{ matrix.package }}
+      isTestMode: ${{ github.event.inputs.is_test_mode }}
+      arch: ${{ matrix.arch }}
+    strategy:
+      matrix:
+        arch: ['x64', 'x86', 'arm64']
+        os: ['win', 'linux']
+        include:
+          - arch: any
+            os: any
+    name: Build_${{ matrix.os }}_${{ matrix.arch }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: List files
+        run: ls
+      
+      # Install the .NET Core workload
+      - name: Install .NET Core
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0.x
+      
+      # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
+      - name: Setup MSBuild.exe
+        uses: microsoft/setup-msbuild@v1.0.2
+        
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.9.0+sha512.60c18acd138bff695d339be6ad13f7e936eea6745660d4cc4a776d5247c540d0edee1a563695c183a66eb917ef88f2b4feb1fc25f32a7adcadc7aaf3438e99c1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Build application
+        env:
+          is_release: ${{ startsWith(github.ref, 'refs/tags/') }}
+          arch: ${{ matrix.arch }}
+          os: ${{ matrix.os }}
+        run: |
+          ls
+          pwsh -ep Bypass -c ./tools/release-gen/publish.ps1 $env:os $env:arch
+      - name: Upload Unsigned APP to artifacts
+        id: upload-unsigned-artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.artifact_name }}
+          path: |
+            ./out/*.zip
+            ./out/*.appx
