@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using ClassIsland.ManagementServer.Server.Authorization;
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Extensions;
 using ClassIsland.ManagementServer.Server.Models;
@@ -23,6 +24,7 @@ public class UsersController(ILogger<UsersController> logger,
     public ManagementServerContext DbContext { get; } = dbContext;
 
     [HttpPost("create")]
+    [Authorize(Roles = Roles.UsersManager)]
     public async Task<IActionResult> CreateUser([FromBody] UserCreateBody body)
     {
         var result = await UserManager.CreateAsync(body.User, body.Password);
@@ -35,6 +37,7 @@ public class UsersController(ILogger<UsersController> logger,
     }
     
     [HttpGet("all")]
+    [Authorize(Roles = Roles.UsersManager)]
     public async Task<IActionResult> ListUsers([FromQuery] int pageIndex, [FromQuery] int pageSize)
     {
         var users = await UserManager.Users.Select(x => x)
@@ -51,6 +54,7 @@ public class UsersController(ILogger<UsersController> logger,
     }
 
     [HttpPost("{id:guid}")]
+    [Authorize(Roles = Roles.UsersManager)]
     public async Task<IActionResult> UpdateUserInfo([FromBody] UserInfo body, [FromRoute] Guid id)
     {
         var info = await UserManager.FindByIdAsync(id.ToString());
@@ -79,6 +83,7 @@ public class UsersController(ILogger<UsersController> logger,
     }
 
     [HttpDelete("{id:guid}")]
+    [Authorize(Roles = Roles.UsersManager)]
     public async Task<IActionResult> DeleteUser([FromRoute] Guid id)
     {
         var info = await UserManager.FindByIdAsync(id.ToString());
@@ -101,6 +106,7 @@ public class UsersController(ILogger<UsersController> logger,
     }
 
     [HttpPost("{id:guid}/set-password")]
+    [Authorize(Roles = Roles.UsersManager)]
     public async Task<IActionResult> SetUserPassword([FromBody] ChangePasswordRequestBody body, [FromRoute] Guid id)
     {
         var info = await UserManager.FindByIdAsync(id.ToString());

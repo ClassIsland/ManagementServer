@@ -2,6 +2,7 @@ using ClassIsland.ManagementServer.Server.Models;
 using ClassIsland.ManagementServer.Server.Models.Identity;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.BearerToken;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Options;
 namespace ClassIsland.ManagementServer.Server.Controllers.Identity;
 
 [ApiController]
+[AllowAnonymous]
 [Route("/api/v1/auth")]
 public class AuthController(ILogger<AuthController> logger,
     UserManager<User> userManager,

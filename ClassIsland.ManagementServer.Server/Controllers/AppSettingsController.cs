@@ -1,3 +1,4 @@
+using ClassIsland.ManagementServer.Server.Authorization;
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
 using ClassIsland.ManagementServer.Server.Models;
@@ -33,6 +34,7 @@ public class AppSettingsController(ManagementServerContext dbContext) : Controll
     }
     
     [HttpPost("{id}")]
+    [Authorize(Roles = Roles.ObjectsWrite)]
     public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] Setting setting)
     {
         var o = await DbContext.Settings.Where(x => x.Id == id).AsNoTracking().FirstOrDefaultAsync();
@@ -52,6 +54,7 @@ public class AppSettingsController(ManagementServerContext dbContext) : Controll
     }
     
     [HttpPost]
+    [Authorize(Roles = Roles.ObjectsWrite)]
     public async Task<IActionResult> Update([FromBody] Setting setting)
     {
         setting.Id = Guid.NewGuid();
@@ -61,6 +64,7 @@ public class AppSettingsController(ManagementServerContext dbContext) : Controll
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = Roles.ObjectsDelete)]
     public async Task<IActionResult> Delete([FromRoute] Guid id)
     {
         var o = await DbContext.Settings.Where(x => x.Id == id).FirstOrDefaultAsync();

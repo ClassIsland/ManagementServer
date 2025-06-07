@@ -1,3 +1,4 @@
+using ClassIsland.ManagementServer.Server.Authorization;
 using ClassIsland.ManagementServer.Server.Models;
 using ClassIsland.ManagementServer.Server.Models.Command;
 using ClassIsland.ManagementServer.Server.Services;
@@ -10,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ClassIsland.ManagementServer.Server.Controllers;
 
 [ApiController]
-[Authorize]
+[Authorize(Roles = Roles.CommandsUser)]
 [Route("api/v1/client-commands/")]
 public class ClientCommandDeliverController(ClientCommandDeliverService clientCommandDeliverService) : ControllerBase
 {

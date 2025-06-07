@@ -1,9 +1,11 @@
 using System.Text.Json;
+using ClassIsland.ManagementServer.Server.Authorization;
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
 using ClassIsland.ManagementServer.Server.Enums;
 using ClassIsland.ManagementServer.Server.Helpers;
 using ClassIsland.ManagementServer.Server.Models;
+using ClassIsland.ManagementServer.Server.Models.Identity;
 using ClassIsland.ManagementServer.Server.Services;
 using ClassIsland.Shared.Models.Profile;
 using Microsoft.AspNetCore.Authorization;
@@ -25,6 +27,7 @@ public class ProfilesController(ManagementServerContext dbContext,
 
     private ProfileEntitiesService ProfileEntitiesService { get; } = profileEntitiesService;
 
+    [Authorize(Roles = Roles.ObjectsWrite)]
     [HttpPost("upload")]
     public async Task<IActionResult> UploadProfile([FromBody] Profile profile, [FromQuery] bool replace=false)
     {

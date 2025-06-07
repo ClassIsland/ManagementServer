@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json;
+using ClassIsland.ManagementServer.Server.Authorization;
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
 using ClassIsland.ManagementServer.Server.Extensions;
@@ -45,6 +46,7 @@ public class ClientRegistryController(ManagementServerContext context,
     }
     
     [HttpPut("abstract")]
+    [Authorize(Roles = Roles.ClientsWrite)]
     public async Task<IActionResult> CreateAbstract([FromBody] AbstractClient group)
     {
         await DataContext.AbstractClients.AddAsync(group);
@@ -54,6 +56,7 @@ public class ClientRegistryController(ManagementServerContext context,
     }
     
     [HttpPut("abstract/{id:long}")]
+    [Authorize(Roles = Roles.ClientsWrite)]
     public async Task<IActionResult> UpdateAbstract(long id, [FromBody] AbstractClient client)
     {   
         var prev = await DataContext.AbstractClients.AnyAsync(x => x.InternalId == id);
@@ -67,6 +70,7 @@ public class ClientRegistryController(ManagementServerContext context,
     }
     
     [HttpDelete("abstract/{id:long}")]
+    [Authorize(Roles = Roles.ClientsDelete)]
     public async Task<IActionResult> DeleteAbstract(long id)
     {
         var client = await DataContext.AbstractClients.FirstOrDefaultAsync(x => x.InternalId == id);
@@ -80,27 +84,8 @@ public class ClientRegistryController(ManagementServerContext context,
         return Ok();
     }
     
-    [HttpPost("register")]
-    [Obsolete]
-    public IActionResult Register([FromQuery] Guid cuid, [FromQuery] string id)
-    {
-        if (DataContext.Clients.Any(x => x.Cuid == cuid))
-        {
-            return BadRequest("这个实例已经注册。");
-        }
-
-        var newClient = new Client()
-        {
-            Cuid = cuid,
-            Id = id,
-            RegisterTime = DateTime.Now
-        };
-        DataContext.Clients.Add(newClient);
-        DataContext.SaveChanges();
-        return Ok(newClient);
-    }
-    
     [HttpDelete("unregister")]
+    [Authorize(Roles = Roles.ClientsDelete)]
     public IActionResult Unregister([FromQuery] Client client)
     {
         if (!DataContext.Clients.Any(x => x.Cuid == client.Cuid))

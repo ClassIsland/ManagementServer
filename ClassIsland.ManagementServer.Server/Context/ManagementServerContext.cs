@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using ClassIsland.ManagementServer.Server.Entities;
+using ClassIsland.ManagementServer.Server.Models.Authorization;
 using ClassIsland.ManagementServer.Server.Models.Identity;
 using ClassIsland.Shared.Models.Management;
 using Microsoft.AspNetCore.Identity;
@@ -12,7 +13,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ClassIsland.ManagementServer.Server.Context;
 
-public partial class ManagementServerContext : IdentityDbContext<User>
+public partial class ManagementServerContext : IdentityDbContext<User, Role, string>
 {
     public ManagementServerContext(DbContextOptions<ManagementServerContext> options)
         : base(options)

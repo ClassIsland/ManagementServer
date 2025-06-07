@@ -1,3 +1,4 @@
+using ClassIsland.ManagementServer.Server.Authorization;
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Models;
 using ClassIsland.ManagementServer.Server.Models.OrganizationSettings;
@@ -8,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ClassIsland.ManagementServer.Server.Controllers;
 
-[Authorize]
+[Authorize(Roles = Roles.Admin)]
 [ApiController]
 [Route("api/v1/settings")]
 public class OrganizationSettingsController(ManagementServerContext dbContext, OrganizationSettingsService organizationSettingsService) : ControllerBase

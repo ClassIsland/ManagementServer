@@ -1,13 +1,16 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using ClassIsland.ManagementServer.Server.Authorization;
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
+using ClassIsland.ManagementServer.Server.Models.Authorization;
 using ClassIsland.ManagementServer.Server.Models.Identity;
 using ClassIsland.ManagementServer.Server.Services;
 using ClassIsland.ManagementServer.Server.Services.Grpc;
 using ClassIsland.ManagementServer.Server.Services.Logging;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Console;
@@ -40,7 +43,7 @@ builder.Services.AddDbContext<ManagementServerContext>(options =>
             throw new InvalidOperationException($"Unsupported database type: {dbType}");
     }
 });
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorizationBuilder();
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = IdentityConstants.BearerScheme;
@@ -63,6 +66,7 @@ builder.Services.AddScoped<ProfileEntitiesService>();
 builder.Services.AddScoped<ClientCommandDeliverService>();
 builder.Services.AddScoped<OrganizationSettingsService>();
 builder.Services.AddSingleton<ObjectsCacheService>();
+builder.Services.AddSingleton<IAuthorizationHandler, AdminAccessHandler>();
 builder.WebHost.ConfigureKestrel((context, options) =>
 {
     
@@ -72,6 +76,7 @@ builder.Services.AddIdentityApiEndpoints<User>(options =>
     {
         
     })
+    .AddRoles<Role>()
     .AddEntityFrameworkStores<ManagementServerContext>()
     .AddDefaultTokenProviders();
 
@@ -123,13 +128,30 @@ using (var scope = app.Services.CreateScope())
     await db.SetupDatabase();
 
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
+    foreach (var role in Roles.AllRoles.Where(x => !roleManager.Roles.Any(y => y.Id == x)).ToList())
+    {
+        await roleManager.CreateAsync(new Role()
+        {
+            Id = role,
+            Name = role
+        });
+    }
     if (!await userManager.Users.AnyAsync())
     {
         await userManager.CreateAsync(new User()
         {
             Name = "root",
-            UserName = "root"
+            UserName = "root",
         }, "ClassIslandAdmin123!");
+        var rootUser = await userManager.FindByNameAsync("root");
+        if (rootUser != null)
+        {
+            foreach (var role in Roles.AllRoles)
+            {
+                await userManager.AddToRoleAsync(rootUser, role);
+            }
+        }
         logger.LogInformation("已创建初始用户：用户名 root, 密码 ClassIslandAdmin123!");
     }
 }

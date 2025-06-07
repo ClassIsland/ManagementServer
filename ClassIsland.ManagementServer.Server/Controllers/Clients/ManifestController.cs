@@ -4,11 +4,13 @@ using ClassIsland.ManagementServer.Server.Models;
 using ClassIsland.ManagementServer.Server.Services;
 using ClassIsland.Shared.Enums;
 using ClassIsland.Shared.Models.Management;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClassIsland.ManagementServer.Server.Controllers.Clients;
 
+[AllowAnonymous]
 [ApiController]
 [Route("api/v1/client/{cuid}/manifest")]
 public class ManifestController(ManagementServerContext dataContext, 

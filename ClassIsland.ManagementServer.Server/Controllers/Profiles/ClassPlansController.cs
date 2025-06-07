@@ -1,3 +1,4 @@
+using ClassIsland.ManagementServer.Server.Authorization;
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
 using ClassIsland.ManagementServer.Server.Extensions;
@@ -45,6 +46,7 @@ public class ClassPlansController(ManagementServerContext dbContext,
     }
 
     [HttpPut("{id:guid}")]
+    [Authorize(Roles = Roles.ObjectsWrite)]
     public async Task<IActionResult> Put([FromBody] ClassPlan payload, [FromRoute] Guid id)
     {
         var prev = await DbContext.ProfileClassplans.FirstOrDefaultAsync(x => x.Id == id);
@@ -59,6 +61,7 @@ public class ClassPlansController(ManagementServerContext dbContext,
     }
     
     [HttpPut]
+    [Authorize(Roles = Roles.ObjectsWrite)]
     public async Task<IActionResult> Put([FromBody] ClassPlan payload)
     {
         var id = new Guid();
@@ -68,6 +71,7 @@ public class ClassPlansController(ManagementServerContext dbContext,
     }
 
     [HttpDelete("{id:guid}")]
+    [Authorize(Roles = Roles.ObjectsDelete)]
     public async Task<IActionResult> Delete([FromRoute] Guid id)
     {
         var entity = await DbContext.ProfileClassplans.FirstOrDefaultAsync(x => x.Id == id);

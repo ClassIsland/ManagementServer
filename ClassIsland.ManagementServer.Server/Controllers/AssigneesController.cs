@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using ClassIsland.ManagementServer.Server.Authorization;
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
 using ClassIsland.ManagementServer.Server.Enums;
@@ -36,6 +37,7 @@ public class AssigneesController(ManagementServerContext dbContext,
     }
     
     [HttpPost("all/{id:int}")]
+    [Authorize(Roles = Roles.ObjectsWrite)]
     public async Task<IActionResult> Update([FromBody] ObjectsAssignee content, [FromRoute] int? id = null)
     {
         var raw = await DbContext.ObjectsAssignees.FirstOrDefaultAsync(x => x.Id == id);
@@ -56,6 +58,7 @@ public class AssigneesController(ManagementServerContext dbContext,
     }
     
     [HttpPost("all")]
+    [Authorize(Roles = Roles.ObjectsWrite)]
     public async Task<IActionResult> Update([FromBody] ObjectsAssignee content)
     {
         DbContext.ObjectsAssignees.Add(content);
@@ -67,6 +70,7 @@ public class AssigneesController(ManagementServerContext dbContext,
     }
     
     [HttpDelete("all/{id:int}")]
+    [Authorize(Roles = Roles.ObjectsDelete)]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
         var v = DbContext.ObjectsAssignees.FirstOrDefault(x => x.Id == id);

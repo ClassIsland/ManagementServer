@@ -1,3 +1,4 @@
+using ClassIsland.ManagementServer.Server.Authorization;
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
 using ClassIsland.ManagementServer.Server.Models;
@@ -33,6 +34,7 @@ public class PoliciesController(ManagementServerContext dbContext) : ControllerB
     }
     
     [HttpPost("{id}")]
+    [Authorize(Roles = Roles.ObjectsWrite)]
     public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] Policy policy)
     {
         var o = await DbContext.Policies.Where(x => x.Id == id).AsNoTracking().FirstOrDefaultAsync();
@@ -52,6 +54,7 @@ public class PoliciesController(ManagementServerContext dbContext) : ControllerB
     }
     
     [HttpPost]
+    [Authorize(Roles = Roles.ObjectsWrite)]
     public async Task<IActionResult> Update([FromBody] Policy policy)
     {
         policy.Id = Guid.NewGuid();
@@ -61,6 +64,7 @@ public class PoliciesController(ManagementServerContext dbContext) : ControllerB
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = Roles.ObjectsDelete)]
     public async Task<IActionResult> Delete([FromRoute] Guid id)
     {
         var o = await DbContext.Policies.Where(x => x.Id == id).FirstOrDefaultAsync();

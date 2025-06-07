@@ -1,3 +1,4 @@
+using ClassIsland.ManagementServer.Server.Authorization;
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
 using ClassIsland.ManagementServer.Server.Extensions;
@@ -41,6 +42,7 @@ public class ClientGroupController(ILogger<ClientGroupController> logger, Manage
     }
     
     [HttpPut]
+    [Authorize(Roles = Roles.ClientsWrite)]
     public async Task<IActionResult> CreateGroup([FromBody] ClientGroup group)
     {
         await DbContext.ClientGroups.AddAsync(group);
@@ -50,6 +52,7 @@ public class ClientGroupController(ILogger<ClientGroupController> logger, Manage
     }
     
     [HttpPut("{id:long}")]
+    [Authorize(Roles = Roles.ClientsWrite)]
     public async Task<IActionResult> UpdateGroup(long id, [FromBody] ClientGroup group)
     {   
         var prev = await DbContext.ClientGroups.AnyAsync(x => x.Id == id);
@@ -63,6 +66,7 @@ public class ClientGroupController(ILogger<ClientGroupController> logger, Manage
     }
     
     [HttpDelete("{id:long}")]
+    [Authorize(Roles = Roles.ClientsDelete)]
     public async Task<IActionResult> DeleteGroup(long id)
     {
         var group = await DbContext.ClientGroups.FirstOrDefaultAsync(x => x.Id == id);

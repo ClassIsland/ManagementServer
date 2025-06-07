@@ -9,11 +9,13 @@ using ClassIsland.ManagementServer.Server.Services;
 using ClassIsland.Shared;
 using ClassIsland.Shared.Models.Management;
 using ClassIsland.Shared.Models.Profile;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClassIsland.ManagementServer.Server.Controllers.Clients;
 
+[AllowAnonymous]
 [ApiController]
 [Route("api/v1/client/{cuid}/")]
 public class ObjectsDeliveryController(
