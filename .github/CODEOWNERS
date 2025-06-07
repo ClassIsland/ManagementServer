@@ -1,0 +1,26 @@
+* @HelloWRC @ClassIsland/Developers-MgmtServer
+
+# 关键文件
+/.github/ @HelloWRC
+/tools/ @HelloWRC
+*.md @HelloWRC
+*.ps1 @HelloWRC
+
+# 构建关键文件
+*.csproj @HelloWRC
+*.props @HelloWRC
+*.targets @HelloWRC
+
+# 关键文件
+/ClassIsland.ManagementServer.Server/Program.cs @HelloWRC
+
+# 类别：集控/Protobuf
+*.proto @Doctor-yoi @HelloWRC
+
+# 类别：集控/Web
+/classisland.managementserver.client/ @HelloWRC @hello8693
+
+# 类别：集控/数据库
+/ClassIsland.ManagementServer.Server/Entities @HelloWRC
+/ClassIsland.ManagementServer.Server/Context @HelloWRC
+
