@@ -74,4 +74,12 @@ public class OrganizationSettingsController(ManagementServerContext dbContext, O
         
         return Ok();
     }
+
+    [HttpPost("complete-oobe")]
+    public async Task<IActionResult> CompleteOobe()
+    {
+        await OrganizationSettingsService.SetOrganizationSettings("IsOobeCompleted", "Oobe", "true");
+        await DbContext.SaveChangesAsync();
+        return Ok();
+    }
 }

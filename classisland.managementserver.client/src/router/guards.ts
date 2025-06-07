@@ -72,9 +72,9 @@ export function createRouterGuards(router: Router) {
       router.addRoute(ErrorPageRoute as unknown as RouteRecordRaw);
     }
 
-    const redirectPath = (from.query.redirect || to.path) as string;
-    const redirect = decodeURIComponent(redirectPath);
-    const nextData = to.path === redirect ? { ...to, replace: true } : { path: redirect };
+    // const redirectPath = (from.query.redirect || to.path) as string;
+    // const redirect = decodeURIComponent(redirectPath);
+    const nextData = { ...to, replace: true };
     asyncRouteStore.setDynamicRouteAdded(true);
     next(nextData);
     Loading && Loading.finish();

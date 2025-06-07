@@ -378,6 +378,7 @@ export type User = {
   lockoutEnabled?: boolean;
   accessFailedCount?: number;
   name?: string | null;
+  allowChangePassword?: boolean;
   createdTime?: string;
   updatedTime?: string;
 };
@@ -390,6 +391,12 @@ export type UserInfo = {
   name?: string | null;
   emailAddress?: string | null;
   phoneNumber?: string | null;
+  id?: string | null;
+  allowChangePassword?: boolean;
+  roles?: string[] | null;
+  redirectToOobe?: boolean;
+  createdTime?: string;
+  updatedTime?: string;
 };
 export type ChangePasswordRequestBody = {
   oldPassword?: string | null;
@@ -1867,40 +1874,6 @@ declare global {
       /**
        * ---
        *
-       * [POST]
-       *
-       * **path:** /api/v1/clients_registry/register
-       *
-       * ---
-       *
-       * **Query Parameters**
-       * ```ts
-       * type QueryParameters = {
-       *   cuid?: string
-       *   id?: string
-       * }
-       * ```
-       *
-       * ---
-       *
-       * **Response**
-       * ```ts
-       * type Response = unknown
-       * ```
-       */
-      post_api_v1_clients_registry_register<
-        Config extends Alova2MethodConfig<unknown> & {
-          params: {
-            cuid?: string;
-            id?: string;
-          };
-        }
-      >(
-        config: Config
-      ): Alova2Method<unknown, 'clientregistry.post_api_v1_clients_registry_register', Config>;
-      /**
-       * ---
-       *
        * [DELETE]
        *
        * **path:** /api/v1/clients_registry/unregister
@@ -2414,6 +2387,23 @@ declare global {
       >(
         config: Config
       ): Alova2Method<unknown, 'organizationsettings.post_api_v1_settings_basic', Config>;
+      /**
+       * ---
+       *
+       * [POST]
+       *
+       * **path:** /api/v1/settings/complete-oobe
+       *
+       * ---
+       *
+       * **Response**
+       * ```ts
+       * type Response = unknown
+       * ```
+       */
+      post_api_v1_settings_complete_oobe<Config extends Alova2MethodConfig<unknown>>(
+        config?: Config
+      ): Alova2Method<unknown, 'organizationsettings.post_api_v1_settings_complete_oobe', Config>;
     };
     policies: {
       /**
@@ -3413,6 +3403,7 @@ declare global {
        *     lockoutEnabled?: boolean
        *     accessFailedCount?: number
        *     name?: string | null
+       *     allowChangePassword?: boolean
        *     createdTime?: string
        *     updatedTime?: string
        *   }
@@ -3494,6 +3485,12 @@ declare global {
        *   name?: string | null
        *   emailAddress?: string | null
        *   phoneNumber?: string | null
+       *   id?: string | null
+       *   allowChangePassword?: boolean
+       *   roles?: string[] | null
+       *   redirectToOobe?: boolean
+       *   createdTime?: string
+       *   updatedTime?: string
        * }
        * ```
        *
@@ -3633,6 +3630,12 @@ declare global {
        *   name?: string | null
        *   emailAddress?: string | null
        *   phoneNumber?: string | null
+       *   id?: string | null
+       *   allowChangePassword?: boolean
+       *   roles?: string[] | null
+       *   redirectToOobe?: boolean
+       *   createdTime?: string
+       *   updatedTime?: string
        * }
        * ```
        *

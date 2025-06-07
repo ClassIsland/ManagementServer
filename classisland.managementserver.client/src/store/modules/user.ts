@@ -19,6 +19,7 @@ export type UserInfoType = {
   name: string;
   email: string;
   phoneNumber: string;
+  redirectToOobe: bool;
 };
 
 export interface IUserState {

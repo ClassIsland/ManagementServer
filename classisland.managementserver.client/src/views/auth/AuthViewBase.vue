@@ -3,15 +3,19 @@
 import {websiteConfig} from "@/config/website.config";
 import {useBrand} from "@/store/modules/brand";
 import {computed, ref} from "vue";
+import {useRouter} from 'vue-router';
 
 const brand = useBrand();
 
+const router = useRouter();
 const bannerUrl = computed(() => {
   return "url(\"" + (brand.customLoginBanner ?? "") + "\")";
 });
 const bannerUrlRef = ref(bannerUrl);
 const isDefaultBackground = ref(brand.customLoginBanner == null || brand.customLoginBanner === "");
 const loginFormPlacement = ref<"left" | "center" | "right">(brand.loginFormPlacement ?? "left");
+const overrideDefaultAuthContainer = ref(router.currentRoute.value?.meta?.overrideDefaultAuthContainer === true);
+const contentWidth = ref(`${router.currentRoute.value?.meta?.width ?? 384}px`);
 
 </script>
 
@@ -23,8 +27,8 @@ const loginFormPlacement = ref<"left" | "center" | "right">(brand.loginFormPlace
       left: loginFormPlacement === 'left',
       center: loginFormPlacement === 'center',
       right: loginFormPlacement === 'right',
-    }">
-      <template #header>
+    }" >
+      <template #header v-if="!overrideDefaultAuthContainer">
         <div class="view-account-header">
           <img :src="websiteConfig.loginImage" alt="" width="36" height="36"
               class="align-middle"/>
@@ -50,8 +54,8 @@ const loginFormPlacement = ref<"left" | "center" | "right">(brand.loginFormPlace
     margin-top: 0;
     flex-grow: 0;
     align-self: center;
-    max-width: 384px;
-    min-width: 384px;
+    max-width: v-bind(contentWidth);
+    min-width: v-bind(contentWidth);
     @media (max-width: 640px) {
       border: none !important;
       align-self: stretch;

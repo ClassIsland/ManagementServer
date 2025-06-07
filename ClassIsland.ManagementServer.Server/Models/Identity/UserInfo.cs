@@ -18,6 +18,8 @@ public class UserInfo : IObjectWithTime
 
     public List<string> Roles { get; set; } = [];
 
+    public bool RedirectToOobe { get; set; } = false;
+
     public DateTime CreatedTime { get; set; } = DateTime.Now;
     public DateTime UpdatedTime { get; set; } = DateTime.Now;
 }

@@ -112,7 +112,7 @@
           await userStore.login(params);
           message.destroyAll();
           message.success('登录成功，即将进入系统');
-          redirect();
+          await redirect();
         }
         finally {
           loading.value = false;
@@ -129,11 +129,15 @@
     }
   }
   
-  function redirect() {
+  async function redirect() {
+    if (userStore.info.redirectToOobe) {
+      await router.push('/get_started/wizard');
+      return;
+    }
     const toPath = decodeURIComponent((route.query?.redirect || '/') as string);
     if (route.name === LOGIN_NAME) {
-      router.push('/');
-    } else router.push(toPath);
+      await router.push('/');
+    } else await router.push(toPath);
   }
   
   onMounted(() => {

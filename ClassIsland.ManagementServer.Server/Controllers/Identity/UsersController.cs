@@ -4,6 +4,7 @@ using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Extensions;
 using ClassIsland.ManagementServer.Server.Models;
 using ClassIsland.ManagementServer.Server.Models.Identity;
+using ClassIsland.ManagementServer.Server.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
@@ -17,11 +18,13 @@ namespace ClassIsland.ManagementServer.Server.Controllers.Identity;
 [Route("api/v1/users")]
 public class UsersController(ILogger<UsersController> logger, 
     UserManager<User> userManager,
-    ManagementServerContext dbContext) : ControllerBase
+    ManagementServerContext dbContext,
+    OrganizationSettingsService organizationSettingsService) : ControllerBase
 {
     public ILogger<UsersController> Logger { get; } = logger;
     public UserManager<User> UserManager { get; } = userManager;
     public ManagementServerContext DbContext { get; } = dbContext;
+    public OrganizationSettingsService OrganizationSettingsService { get; } = organizationSettingsService;
 
     [HttpPost("create")]
     [Authorize(Roles = Roles.UsersManager)]
@@ -164,6 +167,8 @@ public class UsersController(ILogger<UsersController> logger,
             CreatedTime = user.CreatedTime,
             UpdatedTime = user.UpdatedTime,
             Roles = (await UserManager.GetRolesAsync(user)).ToList(),
+            RedirectToOobe = await OrganizationSettingsService.GetSettings("IsOobeCompleted") != "true"
+                             && await UserManager.IsInRoleAsync(user, Roles.Admin)
         };
     }
 
