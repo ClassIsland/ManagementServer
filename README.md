@@ -49,8 +49,7 @@ ClassIsland 集控服务器。
 **请确保您的设备满足以下推荐需求：**
 
 - Windows / Linux 系统  
-- [Windows .NET 8.0 桌面运行时](https://dotnet.microsoft.com/zh-cn/download/dotnet/thank-you/runtime-desktop-8.0.7-windows-x64-installer)
-- [Linux .NET 8.0 桌面运行时](https://learn.microsoft.com/zh-cn/dotnet/core/install/linux)
+- [ASP.NET Core 8.0 运行时](https://dotnet.microsoft.com/zh-cn/download/dotnet/8.0)
 
 > [!IMPORTANT]
 > 
