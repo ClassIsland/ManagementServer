@@ -101,13 +101,10 @@
       <div class="layout-header-trigger layout-header-trigger-min">
         <n-dropdown trigger="hover" @select="avatarSelect" :options="avatarOptions">
           <div class="avatar">
-            <n-avatar :src="websiteConfig.logo">
-              <template #icon>
-                <UserOutlined />
-              </template>
-            </n-avatar>
-            <n-divider vertical />
-            <span>{{ username }}</span>
+            <n-icon size="18">
+              <component :is="UserOutlined"/>
+            </n-icon>
+            <span class="ml-2">{{ username }}</span>
           </div>
         </n-dropdown>
       </div>
@@ -129,9 +126,15 @@
   import { AsideMenu } from '@/layout/components/Menu';
   import { useProjectSetting } from '@/hooks/setting/useProjectSetting';
   import { websiteConfig } from '@/config/website.config';
+  import {UserOutlined} from "@vicons/antd";
 
   export default defineComponent({
     name: 'PageHeader',
+    computed: {
+      UserOutlined() {
+        return UserOutlined
+      }
+    },
     components: { ...components, NDialogProvider, ProjectSetting, AsideMenu },
     props: {
       collapsed: {
