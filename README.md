@@ -2,7 +2,7 @@
 
 ClassIsland 集控服务器。
 
-> **注意：本项目是ClassIsland集控服务器。如果您要查找ClassIsland软件本体，请前往仓库[HelloWRC/ClassIsland](https://github.com/HelloWRC/ClassIsland)**
+> **注意：本项目是ClassIsland集控服务器。如果您要查找ClassIsland软件本体，请前往仓库[ClassIsland/ClassIsland](https://github.com/ClassIsland/ClassIsland)**
 
 ## 功能
 
