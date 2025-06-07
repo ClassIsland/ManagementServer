@@ -79,7 +79,7 @@ ClassIsland 集控服务器。
      2. 替换 `{User Id}` 为数据库用户名
      3. 替换 `{Your Password}` 为数据库密码
      4. 替换 `classisland_management` 为实际使用的数据库名
-   - 修改 `DatabaseType` 为您使用的数据库类型（例如 MySQL、PostgreSQL、SQLite 等）
+   - 添加/修改键 `DatabaseType` 为MySQL（目前仅支持 MySQL）
 5. 如果您是 Windows 用户，可直接运行 `.ps1` 启动脚本启动服务
 6. 如果您是 Linux 用户，并希望长期运行服务，可参考[此文档](https://blog.csdn.net/Pan_peter/article/details/128875714)进行配置
 
