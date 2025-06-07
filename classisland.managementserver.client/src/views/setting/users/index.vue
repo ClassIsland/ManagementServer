@@ -18,28 +18,47 @@
 
   <n-drawer v-model:show="isEditingDrawerVisible" :width="500" placement="right">
     <n-drawer-content title="编辑用户信息">
-      <n-form v-model="editingFormRef">
-        <n-form-item label="用户名" path="userName">
-          <n-input v-model:value="editingFormRef.userName" disabled/>
-        </n-form-item>
+      <n-tabs animated>
+        <n-tab-pane name="basic" label="基本">
+          <n-form v-model="editingFormRef">
+            <n-form-item label="用户名" path="userName">
+              <n-input v-model:value="editingFormRef.userName" disabled/>
+            </n-form-item>
+    
+            <n-form-item label="昵称" path="name">
+              <n-input v-model:value="editingFormRef.name" placeholder="请输入昵称" />
+            </n-form-item>
+    
+            <n-form-item label="邮箱" path="emailAddress">
+              <n-input placeholder="请输入邮箱" v-model:value="editingFormRef.emailAddress" />
+            </n-form-item>
+    
+            <n-form-item label="联系电话" path="phoneNumber">
+              <n-input placeholder="请输入联系电话" v-model:value="editingFormRef.phoneNumber" />
+            </n-form-item>
+            <n-form-item :show-label="false" path="allowChangePassword">
+              <n-checkbox v-model:checked="editingFormRef.allowChangePassword">允许用户修改密码</n-checkbox>
+            </n-form-item>
+          </n-form>
+          
+        </n-tab-pane>
+        <n-tab-pane name="roles" label="角色">
+          <n-alert type="info" v-show="editingFormRef.userName === 'root'"
+                   class="mb-4">你不能编辑超级管理员用户的角色。</n-alert>
+          <n-checkbox-group v-model:value="editingFormRef.roles" :disabled="editingFormRef.userName === 'root'">
+            <n-space item-style="" class="d-flex flex-column gap-4">
+              <n-checkbox v-for="role in roles" :key="role.id" :value="role.id"
+                          :disabled="editingFormRef.userName === 'root' || user.roles.indexOf(role.id) === -1">
+                <n-thing :title="role.name" :description="role.description"/>
+              </n-checkbox>
+            </n-space>
+          </n-checkbox-group>
+        </n-tab-pane>
+      </n-tabs>
 
-        <n-form-item label="昵称" path="name">
-          <n-input v-model:value="editingFormRef.name" placeholder="请输入昵称" />
-        </n-form-item>
-
-        <n-form-item label="邮箱" path="emailAddress">
-          <n-input placeholder="请输入邮箱" v-model:value="editingFormRef.emailAddress" />
-        </n-form-item>
-
-        <n-form-item label="联系电话" path="phoneNumber">
-          <n-input placeholder="请输入联系电话" v-model:value="editingFormRef.phoneNumber" />
-        </n-form-item>
-        <n-form-item :show-label="false">
-          <n-button type="primary" attr-type="submit" @click="saveEntry" :loading="isSaving">
-            保存
-          </n-button>
-        </n-form-item>
-      </n-form>
+      <n-button type="primary" class="mt-4" attr-type="submit" @click="saveEntry" :loading="isSaving">
+        保存
+      </n-button>
     </n-drawer-content>
   </n-drawer>
 
@@ -81,7 +100,10 @@ import {Subject} from "@/api/globals";
 import { Guid } from 'guid-typescript';
 import {BasicForm, FormSchema, useForm} from "@/components/Form";
 import {useModal} from "@/components/Modal";
+import {useUser} from "@/store/modules/user";
+import roles from "@/models/roles";
 
+const user = useUser();
 const message = useMessage();
 const dialog = useDialog();
 const actionRef = ref();
@@ -92,6 +114,7 @@ const isAdding = ref(false);
 const modalRef: any = ref(null);
 const newUserFormRef = ref({});
 const setPasswordFormRef= ref({});
+
 
 const [modalRegister, modalRegisterActions] = useModal({
   title: '添加用户',

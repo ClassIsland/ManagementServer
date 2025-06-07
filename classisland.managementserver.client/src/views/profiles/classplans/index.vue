@@ -11,7 +11,8 @@
       :scroll-x="1360"
       @update:checked-row-keys="onCheckedRow">
       <template v-slot:toolbar>
-        <n-button type="primary" @click="handleAdd">添加课表</n-button>
+        <n-button type="primary" @click="handleAdd"
+                  v-if="hasPermission(['ObjectsWrite'])">添加课表</n-button>
       </template>
     </BasicTable>
   </n-card>
@@ -29,7 +30,9 @@ import { Guid } from 'guid-typescript';
 import {useAsyncRoute} from "@/store/modules/asyncRoute";
 import Router from "@/router";
 import { useRouter } from 'vue-router';
+import {usePermission} from "@/hooks/web/usePermission";
 
+const { hasPermission } = usePermission();
 const message = useMessage();
 const dialog = useDialog();
 const actionRef = ref();
@@ -91,13 +94,13 @@ function createActions(record) {
       icon: DeleteOutlined,
       onClick: handleDelete.bind(null, record),
       // 根据权限控制是否显示: 有权限，会显示，支持多个
-      auth: [],
+      auth: ["ObjectsDelete"],
     },
     {
       label: '编辑',
       icon: EditOutlined,
       onClick: handleEdit.bind(null, record),
-      auth: [],
+      auth: ["ObjectsWrite"],
     },
   ];
 }

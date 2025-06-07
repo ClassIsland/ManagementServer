@@ -28,6 +28,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'setting-system',
         meta: {
           title: '系统设置',
+          roles: ['Admin']
         },
         component: () => import('@/views/setting/system/system.vue'),
       },
@@ -36,6 +37,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'setting-users',
         meta: {
           title: '用户管理',
+          roles: ['UsersManager']
         },
         component: () => import('@/views/setting/users/index.vue'),
       },

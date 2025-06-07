@@ -8,8 +8,8 @@ export function usePermission() {
    * @param accesses
    */
   function _somePermissions(accesses: string[]) {
-    return userStore.getPermissions.some((item) => {
-      const { value }: any = item;
+    return userStore.roles.some((item) => {
+      const value: any = item;
       return accesses.includes(value);
     });
   }
@@ -28,7 +28,7 @@ export function usePermission() {
    * @param accesses
    */
   function hasEveryPermission(accesses: string[]): boolean {
-    const permissionsList = userStore.getPermissions;
+    const permissionsList = userStore.roles;
     if (Array.isArray(accesses)) {
       return permissionsList.every((access: any) => accesses.includes(access.value));
     }
@@ -41,7 +41,7 @@ export function usePermission() {
    * @param accessMap
    */
   function hasSomePermission(accesses: string[]): boolean {
-    const permissionsList = userStore.getPermissions;
+    const permissionsList = userStore.roles;
     if (Array.isArray(accesses)) {
       return permissionsList.some((access: any) => accesses.includes(access.value));
     }

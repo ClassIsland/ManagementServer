@@ -57,9 +57,9 @@ export function createRouterGuards(router: Router) {
     }
 
     // TODO: 根据用户信息自动生成 router
-    // const userInfo = await userStore.getInfo();
+    const userInfo = userStore.getUserInfo;
 
-    const routes = await asyncRouteStore.generateRoutes({});
+    const routes = await asyncRouteStore.generateRoutes(userInfo);
 
     // 动态添加可访问路由表
     routes.forEach((item) => {

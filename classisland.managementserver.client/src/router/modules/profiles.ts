@@ -31,6 +31,7 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           title: '编辑课表',
           hidden: true,
+          roles: ['ObjectsWrite']
         },
         component: () => import('@/views/profiles/classplans/editor.vue'),
       },
@@ -67,6 +68,7 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           title: '上传',
           icon: renderIcon(UploadOutlined),
+          roles: ['ObjectsWrite']
         },
         component: () => import('@/views/profiles/upload/index.vue'),
       },

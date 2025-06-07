@@ -10,6 +10,8 @@ public class User : IdentityUser, IObjectWithTime
     [MaxLength(32)]
     public string Name { get; set; }
     
+    public bool AllowChangePassword { get; set; } = true;
+    
     public DateTime CreatedTime { get; set; } = DateTime.Now;
     public DateTime UpdatedTime { get; set; } = DateTime.Now;
 }

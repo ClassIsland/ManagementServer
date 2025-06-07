@@ -27,6 +27,7 @@ export interface IUserState {
   welcome: string;
   avatar: string;
   permissions: any[];
+  roles: any[];
   info: UserInfoType;
   refreshToken: string;
   tokenExpireTime: number;
@@ -38,8 +39,8 @@ export const useUserStore = defineStore({
     token: storage.get(ACCESS_TOKEN, ''),
     username: '',
     welcome: '',
-    avatar: '',
-    permissions: [],
+    avatar: '', 
+    roles: [],
     info: storage.get(CURRENT_USER, {}),
     refreshToken: storage.get(REFRESH_TOKEN, ''),
     tokenExpireTime: storage.get(TOKEN_EXPIRE_TIME, 0),
@@ -53,9 +54,6 @@ export const useUserStore = defineStore({
     },
     getNickname(): string {
       return this.username;
-    },
-    getPermissions(): [any][] {
-      return this.permissions;
     },
     getUserInfo(): UserInfoType {
       return this.info;
@@ -74,9 +72,6 @@ export const useUserStore = defineStore({
     setAvatar(avatar: string) {
       this.avatar = avatar;
     },
-    setPermissions(permissions) {
-      this.permissions = permissions;
-    },
     setUserInfo(info: UserInfoType) {
       this.info = info;
     },
@@ -90,7 +85,7 @@ export const useUserStore = defineStore({
     async login(params: any) {
       const response = await login(params);
       this.setupToken(response);
-      const userInfo = await getUserInfo();
+      const userInfo = await this.getInfo();
       this.setUserInfo(userInfo as UserInfoType);
       
       return response;
@@ -107,13 +102,17 @@ export const useUserStore = defineStore({
       //   throw new Error('getInfo: permissionsList must be a non-null array !');
       // }
       // this.setAvatar(result.avatar);
+      this.roles = [];
       this.setUserInfo(data);
+      for (const rolesKey in data.roles) {
+        this.roles.push(data.roles[rolesKey]);
+      }
       return data;
     },
 
     // 登出
     async logout() {
-      this.setPermissions([]);
+      this.roles = [];
       this.setUserInfo({ userName: '', email: '' });
       
       storage.remove(ACCESS_TOKEN);
@@ -165,6 +164,7 @@ export const useUserStore = defineStore({
           await this.getInfo();
         } catch (e) {
           console.error('获取用户信息失败', e);
+          await this.logout();
         }
       }
     }

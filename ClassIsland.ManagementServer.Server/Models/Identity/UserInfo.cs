@@ -14,6 +14,10 @@ public class UserInfo : IObjectWithTime
 
     public string Id { get; set; } = "";
 
-    public DateTime CreatedTime { get; } = DateTime.Now;
-    public DateTime UpdatedTime { get; } = DateTime.Now;
+    public bool AllowChangePassword { get; set; } = true;
+
+    public List<string> Roles { get; set; } = [];
+
+    public DateTime CreatedTime { get; set; } = DateTime.Now;
+    public DateTime UpdatedTime { get; set; } = DateTime.Now;
 }

@@ -11,7 +11,7 @@
       :scroll-x="1360"
       @update:checked-row-keys="onCheckedRow">
       <template v-slot:toolbar>
-        <n-button type="primary" @click="handleAdd">添加分组</n-button>
+        <n-button type="primary" @click="handleAdd" v-if="hasPermission(['ObjectsWrite'])">添加分组</n-button>
       </template>
     </BasicTable>
   </n-card>
@@ -59,6 +59,9 @@ const editingFormRef = ref<ProfileGroup | null>(null);
 const isEditingDrawerVisible = ref(false);
 const isSaving = ref(false);
 const isAdding = ref(false);
+import {usePermission} from "@/hooks/web/usePermission";
+
+const { hasPermission } = usePermission();
 
 const params = reactive({
   pageSize: 5,
@@ -115,13 +118,13 @@ function createActions(record) {
       icon: DeleteOutlined,
       onClick: handleDelete.bind(null, record),
       // 根据权限控制是否显示: 有权限，会显示，支持多个
-      auth: [],
+      auth: ["ObjectsDelete"],
     },
     {
       label: '编辑',
       icon: EditOutlined,
       onClick: handleEdit.bind(null, record),
-      auth: [],
+      auth: ["ObjectsWrite"],
     },
   ];
 }

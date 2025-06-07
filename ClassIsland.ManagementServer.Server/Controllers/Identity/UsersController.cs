@@ -42,14 +42,10 @@ public class UsersController(ILogger<UsersController> logger,
     {
         var users = await UserManager.Users.Select(x => x)
             .ToPaginatedListAsync(pageIndex, pageSize);
-        var result = users.Items.Select(x => new UserInfo()
-        {
-            EmailAddress = x.Email ?? "",
-            UserName = x.UserName ?? "",
-            Name = x.Name,
-            PhoneNumber = x.PhoneNumber ?? "",
-            Id = x.Id
-        }).ToList().ToPaginatedList(pageIndex, pageSize);
+        var result = users.Items
+            .Select(x => GetUserInfoFromUser(x).Result)
+            .ToList()
+            .ToPaginatedList(pageIndex, pageSize);
         return Ok(result);
     }
 
@@ -63,9 +59,27 @@ public class UsersController(ILogger<UsersController> logger,
             return NotFound(new Error("当前用户信息未找到。"));
         }
 
+        var currentUser = await UserManager.GetUserAsync(User);
+        if (currentUser == null)
+        {
+            return BadRequest(new Error("登录状态无效"));
+        }
+
+        var currentRoles = await UserManager.GetRolesAsync(currentUser);
+
+        var rolesRaw = await UserManager.GetRolesAsync(info);
+        var rolesAdd = body.Roles.Where(x => !rolesRaw.Contains(x)).ToList();
+        var rolesDelete = rolesRaw.Where(x => !body.Roles.Contains(x)).ToList();
+        if (rolesAdd.Exists(x => !currentRoles.Contains(x)))
+        {
+            return BadRequest(new Error("不能为用户添加自身拥有的角色以外的角色"));
+        }
+        
+        
         info.Name = body.Name;
         info.Email = body.EmailAddress;
         info.PhoneNumber = body.PhoneNumber;
+        info.AllowChangePassword = body.AllowChangePassword;
         info.UpdatedTime = DateTime.Now;
         info.CreatedTime = info.CreatedTime;
         
@@ -74,12 +88,19 @@ public class UsersController(ILogger<UsersController> logger,
         {
             return BadRequest(new Error($"更新用户信息失败：{string.Join(';', result.Errors.Select(e => e.Description))}"));
         }
-        return Ok(new UserInfo()
+
+        var resultAddRole = await UserManager.AddToRolesAsync(info, rolesAdd);
+        if (!resultAddRole.Succeeded)
         {
-            Name = info.Name,
-            EmailAddress = info.Email ?? "",
-            PhoneNumber = info.PhoneNumber ?? "",
-        });
+            return BadRequest(new Error($"更新用户信息失败：{string.Join(';', resultAddRole.Errors.Select(e => e.Description))}"));
+        }
+        var resultDeleteRole = await UserManager.RemoveFromRolesAsync(info, rolesDelete);
+        if (!resultDeleteRole.Succeeded)
+        {
+            return BadRequest(new Error($"更新用户信息失败：{string.Join(';', resultDeleteRole.Errors.Select(e => e.Description))}"));
+        }
+        
+        return Ok(await GetUserInfoFromUser(info));
     }
 
     [HttpDelete("{id:guid}")]
@@ -130,6 +151,22 @@ public class UsersController(ILogger<UsersController> logger,
         return Ok();
     }
 
+    private async Task<UserInfo> GetUserInfoFromUser(User user)
+    {
+        return new UserInfo()
+        {
+            UserName = user.UserName ?? "",
+            Name = user.Name,
+            EmailAddress = user.Email ?? "",
+            PhoneNumber = user.PhoneNumber ?? "",
+            Id = user.Id,
+            AllowChangePassword = user.AllowChangePassword,
+            CreatedTime = user.CreatedTime,
+            UpdatedTime = user.UpdatedTime,
+            Roles = (await UserManager.GetRolesAsync(user)).ToList(),
+        };
+    }
+
     [HttpGet("current")]
     public async Task<IActionResult> GetCurrentUserInfo()
     {
@@ -138,14 +175,7 @@ public class UsersController(ILogger<UsersController> logger,
         {
             return NotFound(new Error("当前用户信息未找到。"));
         }
-        return Ok(new UserInfo()
-        {
-            UserName = info.UserName ?? "",
-            Name = info.Name,
-            EmailAddress = info.Email ?? "",
-            PhoneNumber = info.PhoneNumber ?? "",
-            Id = info.Id
-        });
+        return Ok(await GetUserInfoFromUser(info));
     }
     
     [HttpPost("current")]
@@ -183,6 +213,11 @@ public class UsersController(ILogger<UsersController> logger,
         if (info == null)
         {
             return NotFound(new Error("当前用户信息未找到。"));
+        }
+
+        if (!info.AllowChangePassword)
+        {
+            return BadRequest(new Error("当前用户不允许修改密码"));
         }
         
         var result = await UserManager.ChangePasswordAsync(info, request.OldPassword, request.NewPassword);

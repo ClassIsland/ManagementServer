@@ -12,7 +12,7 @@
       @update:checked-row-keys="onCheckedRow">
       <template v-slot:toolbar>
         <div class="d-flex gap-x-2">
-          <n-button :onclick="createAbstractClient">添加客户端</n-button>
+          <n-button :onclick="createAbstractClient" v-if="hasPermission(['ClientsWrite'])">添加客户端</n-button>
           <n-button type="primary" :onclick="addClient">下载集控配置</n-button>
         </div>
       </template>
@@ -69,6 +69,9 @@ const clientGroupEnd = ref<null | ClientGroup>(null);
 const clientGroupPage = ref(1);
 const isCreating = ref(false);
 const isSaving = ref(false);
+import {usePermission} from "@/hooks/web/usePermission";
+
+const { hasPermission } = usePermission();
 
 const params = reactive({
   pageSize: 5,
@@ -97,13 +100,13 @@ function createActions(record) {
       icon: DeleteOutlined,
       onClick: handleDelete.bind(null, record),
       // 根据权限控制是否显示: 有权限，会显示，支持多个
-      // auth: ['basic_list'],
+      auth: ["ClientsDelete"],
     },
     {
       label: '编辑',
       icon: EditOutlined,
       onClick: handleEdit.bind(null, record),
-      // auth: ['basic_list'],
+      auth: ["ClientsWrite"],
     },
   ];
 }
