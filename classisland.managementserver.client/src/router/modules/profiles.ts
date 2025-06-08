@@ -36,13 +36,23 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/profiles/classplans/editor.vue'),
       },
       {
-        path: 'timetables',
-        name: `${routeName}_timetables`,
+        path: 'time_layouts',
+        name: `${routeName}_time_layouts`,
         meta: {
           title: '时间表',
           icon: renderIcon(CalendarOutlined),
         },
-        component: () => import('@/views/profiles/subjects/index.vue'),
+        component: () => import('@/views/profiles/timeLayouts/index.vue'),
+      },
+      {
+        path: 'time_layouts/:id',
+        name: `${routeName}_time_layouts_editor`,
+        meta: {
+          title: '编辑时间表',
+          hidden: true,
+          roles: ['ObjectsWrite']
+        },
+        component: () => import('@/views/profiles/timeLayouts/editor.vue'),
       },
       {
         path: 'subjects',

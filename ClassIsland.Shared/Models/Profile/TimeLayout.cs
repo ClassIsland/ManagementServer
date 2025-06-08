@@ -14,6 +14,7 @@ public class TimeLayout : AttachableSettingsObject
     private string _name = "新时间表";
     private bool _isActivated = false;
     private bool _isActivatedManually = false;
+    private Guid? _groupId;
 
     /// <summary>
     /// 初始化对象
@@ -149,6 +150,20 @@ public class TimeLayout : AttachableSettingsObject
         {
             if (value == _isActivatedManually) return;
             _isActivatedManually = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// 对象分组 ID
+    /// </summary>
+    public Guid? GroupId
+    {
+        get => _groupId;
+        set
+        {
+            if (Nullable.Equals(value, _groupId)) return;
+            _groupId = value;
             OnPropertyChanged();
         }
     }

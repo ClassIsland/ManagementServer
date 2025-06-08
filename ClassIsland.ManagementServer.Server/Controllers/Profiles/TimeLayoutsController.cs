@@ -1,3 +1,4 @@
+using ClassIsland.ManagementServer.Server.Authorization;
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
 using ClassIsland.ManagementServer.Server.Extensions;
@@ -36,6 +37,7 @@ public class TimeLayoutsController(ManagementServerContext dbContext, ProfileEnt
     }
 
     [HttpPut("{id:guid}")]
+    [Authorize(Roles = Roles.ObjectsWrite)]
     public async Task<IActionResult> Put([FromBody] TimeLayout payload, [FromRoute] Guid id)
     {
         var prev = await DbContext.ProfileTimelayouts.FirstOrDefaultAsync(x => x.Id == id);
@@ -50,6 +52,7 @@ public class TimeLayoutsController(ManagementServerContext dbContext, ProfileEnt
     }
     
     [HttpPut]
+    [Authorize(Roles = Roles.ObjectsWrite)]
     public async Task<IActionResult> Put([FromBody] TimeLayout payload)
     {
         var id = new Guid();
@@ -59,12 +62,18 @@ public class TimeLayoutsController(ManagementServerContext dbContext, ProfileEnt
     }
 
     [HttpDelete("{id:guid}")]
+    [Authorize(Roles = Roles.ObjectsDelete)]
     public async Task<IActionResult> Delete([FromRoute] Guid id)
     {
         var entity = await DbContext.ProfileTimelayouts.FirstOrDefaultAsync(x => x.Id == id);
         if (entity == null) 
         {
             return NotFound(new Error("找不到请求的对象"));
+        }
+
+        if (await DbContext.ProfileClassplans.AnyAsync(x => x.TimeLayoutId == id))
+        {
+            return BadRequest(new Error("不能删除此时间表，因为有课表引用了此时间表"));
         }
 
         DbContext.ProfileTimelayouts.Remove(entity);

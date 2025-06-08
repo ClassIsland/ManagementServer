@@ -69,14 +69,14 @@ public class ProfileEntitiesService(
             Id = id,
             Name = timeLayout.Name,
             AttachedObjects = timeLayout.AttachedObjects,
-            GroupId = groupId ?? ProfileGroup.DefaultGroupId
+            GroupId = timeLayout.GroupId ?? groupId ?? ProfileGroup.DefaultGroupId
         };
         var raw = await DbContext.ProfileTimelayouts.FindAsync(id);
         if (raw != null)
         {
             if (!replace)
                 return;
-            if (groupId == null)
+            if (groupId == null && timeLayout.GroupId == null)
             {
                 o.GroupId = raw.GroupId; // 保持原有分组
             }
@@ -257,7 +257,8 @@ public class ProfileEntitiesService(
         {
             Name = tl.Name,
             Layouts = tp,
-            AttachedObjects = tl.AttachedObjects
+            AttachedObjects = tl.AttachedObjects,
+            GroupId = tl.GroupId
         };
         ObjectsCacheService.TimeLayoutCache.Add(id, timeLayout);
         return timeLayout;
