@@ -19,7 +19,7 @@
 
   <basicModal @register="modalCreate" class="basicModal" @on-ok="okCreateTimeLayout">
     <template #default>
-      <n-form v-model="createTimeLayoutForm">
+      <n-form :model="createTimeLayoutForm" :rules="createFormRules" ref="createFormRef">
         <n-form-item label="名称" path="name">
           <n-input v-model:value="createTimeLayoutForm.name" />
         </n-form-item>
@@ -66,6 +66,14 @@ const closeCreateModal = modalCreateActions.closeModal;
 const setCreateSubLoading = modalCreateActions.setSubLoading;
 
 const { hasPermission } = usePermission();
+
+const createFormRules = {
+  groupId: {
+    required: true,
+    message: '请指定对象组'
+  }
+}
+const createFormRef = ref();
 
 const params = reactive({
   pageSize: 5,
@@ -157,16 +165,23 @@ function handleAdd() {
 }
 
 async function okCreateTimeLayout() {
-  try {
-    await Apis.timelayouts.put_api_v1_profiles_timelayouts({
-      data: createTimeLayoutForm.value
-    });
-    closeCreateModal();
-    message.success("创建成功");
-    actionRef.value?.reload();
-  } finally {
-    setCreateSubLoading(false);
-  }
+  createFormRef.value?.validate(async errors => {
+    if (!errors) {
+      try {
+        await Apis.timelayouts.put_api_v1_profiles_timelayouts({
+          data: createTimeLayoutForm.value
+        });
+        closeCreateModal();
+        message.success("创建成功");
+        actionRef.value?.reload();
+      } finally {
+        setCreateSubLoading(false);
+      }
+    } else {
+      setCreateSubLoading(false);
+      message.error("请完整填写信息");
+    }
+  })
 }
 </script>
 
