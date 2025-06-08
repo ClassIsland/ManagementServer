@@ -16,24 +16,41 @@
     </BasicTable>
   </n-card>
 
-  <n-drawer v-model:show="isEditingDrawerVisible" :width="320" placement="right">
+  <n-drawer v-model:show="isEditingDrawerVisible" :width="500" placement="right">
     <n-drawer-content title="编辑科目">
-      <n-form v-model="editingFormRef">
-        <n-form-item label="科目名称" path="name">
-          <n-input v-model:value="editingFormRef.name"/>
-        </n-form-item>
-        <n-form-item label="科目简称" path="initials">
-          <n-input v-model:value="editingFormRef.initials"/>
-        </n-form-item>
-        <n-form-item :show-label="false" path="isOutDoor">
-          <n-checkbox label="该科目是户外课程" v-model:checked="editingFormRef.isOutDoor"/>
-        </n-form-item>
-        <n-form-item :show-label="false">
-          <n-button type="primary" attr-type="submit" @click="saveEntry" :loading="isSaving">
-            保存
-          </n-button>
-        </n-form-item>
-      </n-form>
+      <n-tabs>
+        <n-tab-pane name="basic" label="基本">
+          <n-form v-model="editingFormRef">
+            <n-form-item label="科目名称" path="name">
+              <n-input v-model:value="editingFormRef.name"/>
+            </n-form-item>
+            <n-form-item label="科目简称" path="initials">
+              <n-input v-model:value="editingFormRef.initials"/>
+            </n-form-item>
+            <n-form-item :show-label="false" path="isOutDoor">
+              <n-checkbox label="该科目是户外课程" v-model:checked="editingFormRef.isOutDoor"/>
+            </n-form-item>
+            <n-form-item label="分组">
+              <PagedSelect
+                v-model:value="editingFormRef.groupId"
+                labelField="name"
+                valueField="id"
+                :get-data="getGroupData"
+              />
+            </n-form-item>
+            <n-form-item :show-label="false">
+              <n-button type="primary" attr-type="submit" @click="saveEntry" :loading="isSaving">
+                保存
+              </n-button>
+            </n-form-item>
+          </n-form>
+        </n-tab-pane>
+
+        <n-tab-pane name="assignees" label="分配">
+          <AssigneeTable :object-id="editingFormRef.id"
+                         :object-type="3"/>
+        </n-tab-pane>
+      </n-tabs>
     </n-drawer-content>
   </n-drawer>
 </template>
@@ -138,6 +155,12 @@ function onCheckedRow(rowKeys) {
   console.log(rowKeys);
 }
 
+function getGroupData(pageIndex: number, pageSize: number) {
+  return Apis.profilegroups.get_api_v1_profiles_groups({
+    params: { pageIndex, pageSize }
+  })
+}
+
 function handleDelete(record) {
   console.log(record);
   dialog.info({
@@ -168,7 +191,7 @@ function handleEdit(record) {
 function handleAdd() {
   editingFormRef.value = {
     id: Guid.create().toString(),
-    groupId: null,
+    groupId: "00000000-0000-0000-0000-000000000001",
     name: '',
     initials: '',
     isOutDoor: false,
