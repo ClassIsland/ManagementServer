@@ -29,26 +29,27 @@ public class ProfilesController(ManagementServerContext dbContext,
 
     [Authorize(Roles = Roles.ObjectsWrite)]
     [HttpPost("upload")]
-    public async Task<IActionResult> UploadProfile([FromBody] Profile profile, [FromQuery] bool replace=false)
+    public async Task<IActionResult> UploadProfile([FromBody] Profile profile, [FromQuery] bool replace=false, [FromQuery] Guid? groupId=null)
     {
+        groupId ??= ProfileGroup.DefaultGroupId;
         // 处理科目
         foreach (var i in profile.Subjects)
         {
-            await ProfileEntitiesService.SetSubjectEntity(GuidHelpers.TryParseGuidOrEmpty(i.Key), i.Value, replace);
+            await ProfileEntitiesService.SetSubjectEntity(GuidHelpers.TryParseGuidOrEmpty(i.Key), i.Value, replace, groupId);
         }
         await DbContext.SaveChangesAsync();
         
         // 处理时间表
         foreach (var i in profile.TimeLayouts)
         {
-            await ProfileEntitiesService.SetTimeLayoutEntity(GuidHelpers.TryParseGuidOrEmpty(i.Key), i.Value, replace);
+            await ProfileEntitiesService.SetTimeLayoutEntity(GuidHelpers.TryParseGuidOrEmpty(i.Key), i.Value, replace, groupId);
         }
         await DbContext.SaveChangesAsync();
         
         // 处理课表
         foreach (var i in profile.ClassPlans)
         {
-            await ProfileEntitiesService.SetClassPlanEntity(GuidHelpers.TryParseGuidOrEmpty(i.Key), i.Value, replace);
+            await ProfileEntitiesService.SetClassPlanEntity(GuidHelpers.TryParseGuidOrEmpty(i.Key), i.Value, replace, groupId);
         }
         await DbContext.SaveChangesAsync();
         return Ok();

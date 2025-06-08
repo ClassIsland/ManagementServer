@@ -256,6 +256,7 @@ export type TimeLayout = {
   attachedObjects?: Record<string, unknown | null> | null;
   name?: string | null;
   layouts?: TimeLayoutItem[] | null;
+  groupId?: string | null;
 };
 export type Subject = {
   isActive?: boolean;
@@ -2774,6 +2775,7 @@ declare global {
        * ```ts
        * type QueryParameters = {
        *   replace?: boolean
+       *   groupId?: string
        * }
        * ```
        *
@@ -2799,6 +2801,7 @@ declare global {
        *         isHideDefault?: boolean
        *         defaultClassId?: string | null
        *       }> | null
+       *       groupId?: string | null
        *     }
        *   > | null
        *   classPlans?: Record<
@@ -2868,6 +2871,7 @@ declare global {
         Config extends Alova2MethodConfig<unknown> & {
           params: {
             replace?: boolean;
+            groupId?: string;
           };
           data: Profile;
         }
@@ -3226,6 +3230,7 @@ declare global {
        *     isHideDefault?: boolean
        *     defaultClassId?: string | null
        *   }> | null
+       *   groupId?: string | null
        * }
        * ```
        *
@@ -3313,6 +3318,7 @@ declare global {
        *     isHideDefault?: boolean
        *     defaultClassId?: string | null
        *   }> | null
+       *   groupId?: string | null
        * }
        * ```
        *

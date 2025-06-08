@@ -10,6 +10,7 @@ const message = useMessage();
 const override = ref(false);
 const upload = ref<UploadInst | null>(null);
 const isLoading = ref(false);
+const groupId = ref("00000000-0000-0000-0000-000000000001");
 
 const customRequest = async ({
                          file,
@@ -30,6 +31,7 @@ const customRequest = async ({
       },
       params: {
         replace: override.value,
+        groupId: groupId.value
       }
     });
   } catch (e) {
@@ -63,13 +65,19 @@ function handleUpdate(fileList: UploadFileInfo[]){
   console.log(fileList);
 }
 
+function getGroupData(pageIndex: number, pageSize: number) {
+  return Apis.profilegroups.get_api_v1_profiles_groups({
+    params: { pageIndex, pageSize }
+  })
+}
+
 </script>
 
 <template>
   <n-card :bordered="false" title="上传档案">
     将本地的 ClassIsland 档案导入到集控服务器中。
   </n-card>
-  <n-card :bordered="false" class="proCard mt-4" content-class="">
+  <n-card :bordered="false" class="proCard mt-4" content-class="d-flex flex-col ga-3 items-start">
     <n-upload
       multiple
       ref="upload"
@@ -97,12 +105,23 @@ function handleUpdate(fileList: UploadFileInfo[]){
         </n-p>
       </n-upload-dragger>
     </n-upload>
+    <n-form-item label="分组" feedback="此文件中的对象将被分配到的对象组。">
+      <PagedSelect
+        style="min-width: 250px"
+        v-model:value="groupId"
+        labelField="name"
+        valueField="id"
+        :get-data="getGroupData"
+      />
+    </n-form-item>
     <n-checkbox v-model:checked="override">
       覆盖存在的项目
     </n-checkbox>
-    <n-button @click="handleSubmit" :loading="isLoading" type="primary" >
-      上传
-    </n-button>
+    <div>
+      <n-button @click="handleSubmit" :loading="isLoading" type="primary" class="">
+        上传
+      </n-button>
+    </div>
   </n-card>
 </template>
 
