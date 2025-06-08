@@ -146,7 +146,7 @@ function handleDelete(record) {
   console.log(record);
   dialog.info({
     title: '提示',
-    content: `您想删除分组 ${record.name} 吗？`,
+    content: `您想删除分组 ${record.name} 吗？删除后，此分组内的所有对象也将被删除。`,
     positiveText: '确定',
     negativeText: '取消',
     onPositiveClick: async () => {

@@ -59,6 +59,11 @@ public class ProfileGroupsController(ManagementServerContext dbContext) : Contro
         {
             return NotFound(new Error("找不到请求的对象"));
         }
+        
+        if (id == ProfileGroup.DefaultGroupId)
+        {
+            return BadRequest(new Error("不能删除默认分组"));
+        }
 
         DbContext.ProfileGroups.Remove(entity);
         await DbContext.SaveChangesAsync();
