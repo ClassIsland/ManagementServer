@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using ClassIsland.ManagementServer.Server;
 using ClassIsland.ManagementServer.Server.Authorization;
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
@@ -15,6 +16,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Console;
 using Pastel;
+using Spectre.Console;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +25,16 @@ var builder = WebApplication.CreateBuilder(args);
 var config = new ConfigurationBuilder()
     .AddCommandLine(args)
     .Build();
+var setupMode = config["setup"] == "true";
+var migrateMode = config["migrate"] == "true";
+if (setupMode)
+{
+    var result = Setup.SetupPhase1(builder);
+    if (!result)
+    {
+        return;
+    }
+}
 builder.Configuration.AddJsonFile("./data/appsettings.json", optional: true, reloadOnChange: true);
 builder.Services.AddDbContext<ManagementServerContext>(options =>
 {
@@ -32,12 +44,8 @@ builder.Services.AddDbContext<ManagementServerContext>(options =>
         case "mysql":
             options.UseMySql(
                 builder.Configuration.GetConnectionString(
-        #if DEBUG
-                    "Development"
-        #else
-                    "Production"
-        #endif
-                    ),ServerVersion.Parse("8.0.0-mysql"));
+                    builder.Environment.IsDevelopment() ? "Development" : "Production"
+                ),ServerVersion.Parse("8.0.0-mysql"));
             break;
         default:
             throw new InvalidOperationException($"Unsupported database type: {dbType}");
@@ -113,10 +121,15 @@ using (var scope = app.Services.CreateScope())
         db.Database.Migrate();
     }
 
-    if (config["migrate"] == "true")
+    if (migrateMode || setupMode)
     {
         db.Database.Migrate();
-        return;
+
+        if (!setupMode)
+        {
+            logger.LogInformation("已完成数据库迁移，应用即将退出");
+            return;
+        }
     }
 
     var migrations = await db.Database.GetPendingMigrationsAsync();
@@ -137,13 +150,9 @@ using (var scope = app.Services.CreateScope())
             Name = role
         });
     }
-    if (!await userManager.Users.AnyAsync())
+    if (setupMode && !await userManager.Users.AnyAsync())
     {
-        await userManager.CreateAsync(new User()
-        {
-            Name = "root",
-            UserName = "root",
-        }, "ClassIslandAdmin123!");
+        await Setup.SetupPhase2(userManager);
         var rootUser = await userManager.FindByNameAsync("root");
         if (rootUser != null)
         {
@@ -152,8 +161,15 @@ using (var scope = app.Services.CreateScope())
                 await userManager.AddToRoleAsync(rootUser, role);
             }
         }
-        logger.LogInformation("已创建初始用户：用户名 root, 密码 ClassIslandAdmin123!");
     }
+}
+
+if (setupMode)
+{
+    AnsiConsole.MarkupLine(
+        $"[purple](!)[/] 恭喜！您已完成 ClassIsland.ManagementServer 的基本设置，运行 start.sh/start.ps1 即可启动服务。按任意键继续。");
+    Console.ReadKey();
+    return;
 }
 
 app.Run();
