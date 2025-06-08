@@ -96,6 +96,24 @@ async function loadData(){
         id: cp.timeLayoutId ?? ""
       }
     }) as TimeLayout;
+    let validTimePoints = 0;
+    for (const tl of timeLayout.value.layouts) {
+      if (tl.timeType == 0) {
+        validTimePoints++;
+      }
+    }
+    const diffCount = validTimePoints - cp.classes?.length;
+    if (diffCount < 0) {
+      for (let i = cp.classes?.length; i > -diffCount; i--) {
+        delete cp.classes[i];
+      }
+    } else {
+      for (let i = 0; i < diffCount; i++) {
+        cp.classes?.push({
+          subjectId: ""
+        });
+      }
+    }
     const entries: IClassInfoEditingEntry[] = [];
     let ic = 0;
     cp.classes?.forEach((c, i) => {
