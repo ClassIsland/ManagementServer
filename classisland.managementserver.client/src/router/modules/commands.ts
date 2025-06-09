@@ -29,7 +29,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'reboot',
         name: `${routeName}_reboot`,
-        component: () => import("@/views/commands/broadcast/index.vue"),
+        component: () => import("@/views/commands/reboot/index.vue"),
         meta: {
           title: '重启实例',
           icon: renderIcon(ReloadOutlined)
