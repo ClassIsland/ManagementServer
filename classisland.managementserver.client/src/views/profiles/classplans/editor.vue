@@ -8,6 +8,7 @@ import {useRouter} from "vue-router";
 import {onMounted} from 'vue';
 import { NSelect } from 'naive-ui'
 import { useDialog, useMessage } from 'naive-ui';
+import PagedSelect from '@/components/PagedSelect/index.vue';
 
 
 const classPlan = ref<ClassPlan | null>({} as ClassPlan);
@@ -28,13 +29,24 @@ const mainTableColumns : DataTableColumns<IClassInfoEditingEntry> = [
     title: "科目",
     key: "subjectName",
     render(row, index) {
-      return h(NSelect, {
+      return h(PagedSelect, {
         value: row.classInfo.subjectId,
-        options: subjects.value,
         valueField: "id",
         labelField: "name",
+        sharedStates: subjectsSharedState,
+        onUpdateSharedStates (v) {
+          subjectsSharedState.value = v;
+        },
         onUpdateValue(v) {
           classPlanEditingEntries.value[index].classInfo.subjectId = v
+        },
+        async getData (pageIndex, pageSize) {
+          return Apis.subjects.get_api_v1_profiles_subjects({
+            params: {
+              pageSize: pageSize,
+              pageIndex: pageIndex
+            }
+          });
         }
       })
     }
@@ -50,6 +62,7 @@ const subjectsLayoutsEnd = ref(false);
 const isLoading = ref(false);
 const isSaving = ref(false);
 const message = useMessage();
+const subjectsSharedState = ref(null);
 const weeksDays = [
   { key: 0, name: '周日' },
   { key: 1, name: '周一' },
@@ -134,21 +147,7 @@ async function loadData(){
   } finally {
     isLoading.value = false;
   }
-} 
-
-
-async function loadSubjects(page: number) {
-  let s = await Apis.subjects.get_api_v1_profiles_subjects({
-    params: {
-      pageSize: 50
-    }
-  });
-  subjects.value.push(...s.items);
-  if (s.items.count <= 0) {
-    subjectsLayoutsEnd.value = true;
-  }
 }
-
 
 async function saveClassPlan() {
   try {
@@ -184,7 +183,6 @@ function getGroupData(pageIndex: number, pageSize: number) {
 
 onMounted(() => {
   loadData();
-  loadSubjects(1);
 });
 
 </script>

@@ -36,6 +36,7 @@
                 labelField="name"
                 valueField="id"
                 :get-data="getGroupData"
+                v-model:shared-states="groupSelectSharedState"
               />
             </n-form-item>
             <n-form-item :show-label="false">
@@ -63,7 +64,9 @@ import { getTableList } from '@/api/table/list';
 import { useDialog, useMessage } from 'naive-ui';
 import { DeleteOutlined, EditOutlined } from '@vicons/antd';
 import {Subject} from "@/api/globals";
+import {usePermission} from "@/hooks/web/usePermission";
 import { Guid } from 'guid-typescript';
+import {IPagedSelectState} from "@/components/PagedSelect/IPagedSelectState";
 
 const message = useMessage();
 const dialog = useDialog();
@@ -72,7 +75,7 @@ const editingFormRef = ref<Subject | null>(null);
 const isEditingDrawerVisible = ref(false);
 const isSaving = ref(false);
 const isAdding = ref(false);
-import {usePermission} from "@/hooks/web/usePermission";
+const groupSelectSharedState = ref<IPagedSelectState | null>(null);
 
 const { hasPermission } = usePermission();
 

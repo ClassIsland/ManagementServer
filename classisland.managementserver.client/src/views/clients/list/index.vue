@@ -30,13 +30,12 @@
           <n-input v-model:value="editingFormRef.id" :disabled="!isCreating"/>
         </n-form-item>
         <n-form-item label="分组">
-          <n-select
+          <PagedSelect
             v-model:value="editingFormRef.groupId"
-            :options="clientGroups"
-            :reset-menu-on-options-change="false"
-            @scroll="handleGroupsScroll"
-            label-field="name"
-            value-field="id"
+            labelField="name"
+            valueField="id"
+            :get-data="loadClientGroups"
+            v-model:shared-states="groupSharedState"
           />
         </n-form-item>
         <n-form-item :show-label="false">
@@ -69,7 +68,9 @@ const clientGroupEnd = ref<null | ClientGroup>(null);
 const clientGroupPage = ref(1);
 const isCreating = ref(false);
 const isSaving = ref(false);
+const groupSharedState = ref(null);
 import {usePermission} from "@/hooks/web/usePermission";
+import PagedSelect from "@/components/PagedSelect/index.vue";
 
 const { hasPermission } = usePermission();
 
@@ -186,36 +187,15 @@ function createAbstractClient() {
   isEditingDrawerActive.value = true;
 }
 
-async function handleGroupsScroll(e: Event) {
-  const currentTarget = e.currentTarget as HTMLElement
-  if (
-    currentTarget.scrollTop + currentTarget.offsetHeight
-    >= currentTarget.scrollHeight
-  ) {
-    console.log("loading external data");
-    if (!clientGroupEnd.value) {
-      clientGroupPage.value++;
-      await loadClientGroups(clientGroupPage.value);
-    }
-  }
-}
 
-async function loadClientGroups(page: number) {
-  let tl = await Apis.clientgroup.get_api_v1_client_groups({
+async function loadClientGroups(page: number, pageSize: number) {
+  return Apis.clientgroup.get_api_v1_client_groups({
     params: {
-      pageSize: 50,
+      pageSize: pageSize,
       pageIndex: page
     }
   });
-  clientGroups.value.push(...tl.items);
-  if (tl.items.count <= 0) {
-    clientGroupEnd.value = true;
-  }
 }
-
-onMounted(() => {
-  loadClientGroups(1);
-});
 </script>
 
 <style lang="less" scoped></style>

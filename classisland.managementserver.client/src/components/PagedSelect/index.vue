@@ -1,22 +1,28 @@
 <script setup lang="ts">
 import { ref, defineProps, onMounted, toRefs, watch, defineEmits} from 'vue';
+import {IPagedSelectState} from "@/components/PagedSelect/IPagedSelectState";
 
-const props = defineProps({
-  labelField: String,
-  valueField: String,
-  value: [String, Number, Object],
-  getData: Function<number, number>,
-  seek: Function<number>
-});
+const props = defineProps<{
+  labelField: string,
+  valueField: string,
+  value?: string | number | object | null | undefined,
+  getData: Function,
+  seek?: Function,
+  sharedStates?: IPagedSelectState | null,
+  onUpdateSharedStates?: Function
+}>();
 
-const { value } = toRefs(props)
+const { value, sharedStates } = toRefs(props)
 
 const myValueRef = ref(value.value);
-const pageEnd = ref(false);
-const pageIndex = ref(1);
-const items = ref([]);
 const seekedItem = ref(null);
-const emits = defineEmits(['update:value']);
+const mySharedStates = ref<IPagedSelectState>({
+  pageEnd: false,
+  pageIndex: 1,
+  items: [],
+  isLoading: false
+});
+const emits = defineEmits(['update:value', 'update:sharedStates']);
 
 watch(
   () => value.value,
@@ -31,6 +37,22 @@ watch(
   }
 )
 
+watch(
+  () => sharedStates.value,
+  (newVal) => {
+    mySharedStates.value = newVal;
+  }
+);
+watch(
+  () => mySharedStates.value,
+  (newVal) => {
+    emits('update:sharedStates', newVal);
+    if (props.onUpdateSharedStates) {
+      props.onUpdateSharedStates(newVal);
+    }
+  }
+)
+
 async function handleScroll(e: Event) {
   const currentTarget = e.currentTarget as HTMLElement
   if (
@@ -38,31 +60,55 @@ async function handleScroll(e: Event) {
     >= currentTarget.scrollHeight
   ) {
     console.log("loading external data");
-    if (!pageEnd.value) {
-      pageIndex.value++;
-      await loadData(pageIndex.value, 50);
+    if (!mySharedStates.value.pageEnd) {
+      mySharedStates.value.pageIndex++;
+      await loadData(mySharedStates.value.pageIndex, 50);
     }
   }
 }
 
 async function loadData(page: number) {
-  let s = await props.getData(page, 50);
-  if (s.items.count <= 0) {
-    pageEnd.value = true;
+  try {
+    console.log(`loading data of page ${page}`)
+    mySharedStates.value.isLoading = true;
+    let s = await props.getData(page, 50);
+    if (s.items.length < 50) {
+      mySharedStates.value.pageEnd = true;
+    }
+    // s.items.remove(seekedItem);
+    // console.log(s)
+    mySharedStates.value.items.push(...s.items);
+  } finally {
+    mySharedStates.value.isLoading = false;
   }
-  // s.items.remove(seekedItem);
-  console.log(s)
-  items.value.push(...s.items);
 }
 
 onMounted(async () => {
-  if (props.seek !== null && props.seek !== undefined) {
-    const v = await props.seek(props.value);
-    if (v !== null && v !== undefined) {
-      items.value.push(v);
+  if (props.sharedStates && !(props.sharedStates?.__v_isRef === true && !props.sharedStates?.value )) {
+    mySharedStates.value = props.sharedStates;
+  } else {
+    emits('update:sharedStates', mySharedStates.value);
+    if (props.onUpdateSharedStates) {
+      props.onUpdateSharedStates(mySharedStates.value);
     }
   }
-  await loadData(1);
+  
+  if (props.seek) {
+    try {
+      mySharedStates.value.isLoading = true;
+      const v = await props.seek(props.value);
+      if (v && mySharedStates.value.items.indexOf(v) !== -1) {
+        mySharedStates.value.items.push(v);
+      }
+    } finally {
+      mySharedStates.value.isLoading = false;
+    }
+  }
+  
+  if (!mySharedStates.value.isLoading && mySharedStates.value.pageIndex <= 1 && !mySharedStates.value.pageEnd) {
+    mySharedStates.value.isLoading = true;
+    await loadData(1);
+  }
 });
 
 </script>
@@ -70,11 +116,12 @@ onMounted(async () => {
 <template>
   <n-select
     v-model:value="myValueRef"
-    :options="items"
+    :options="mySharedStates.items"
     :reset-menu-on-options-change="false"
     @scroll="handleScroll"
     :label-field="props.labelField"
     :value-field="props.valueField"
+    :loading="mySharedStates.isLoading"
   />
 </template>
 
