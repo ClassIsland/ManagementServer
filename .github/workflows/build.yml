@@ -92,6 +92,9 @@ jobs:
     runs-on: windows-latest
     name: Publish
     if: ${{ startsWith(github.ref, 'refs/tags/') }}
+    needs: [ build_app ]
+    concurrency:
+      group: "publish-public"
     steps:
       - name: Checkout
         uses: actions/checkout@v3
