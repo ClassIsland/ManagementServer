@@ -13,7 +13,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       title: '命令',
       roles: ["CommandsUser"],
-      sort: 2,
+      sort: 98,
       icon: renderIcon(RocketOutlined)
     },
     children: [

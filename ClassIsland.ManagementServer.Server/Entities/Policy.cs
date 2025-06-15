@@ -40,4 +40,8 @@ public partial class Policy : IObjectWithTime
     /// 上次修改时间
     /// </summary>
     public DateTime UpdatedTime { get; set; } = DateTime.Now;
+    
+    public Guid GroupId { get; set; } = ProfileGroup.DefaultGroupId;
+    
+    public virtual ProfileGroup? Group { get; set; }
 }

@@ -1,6 +1,7 @@
 using ClassIsland.ManagementServer.Server.Authorization;
 using ClassIsland.ManagementServer.Server.Context;
 using ClassIsland.ManagementServer.Server.Entities;
+using ClassIsland.ManagementServer.Server.Extensions;
 using ClassIsland.ManagementServer.Server.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,15 +17,19 @@ public class PoliciesController(ManagementServerContext dbContext) : ControllerB
     private ManagementServerContext DbContext { get; } = dbContext;
 
     [HttpGet]
-    public async Task<IActionResult> List()
+    public async Task<IActionResult> List([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 20)
     {
-        return Ok(await DbContext.Policies.Select(i => i).ToListAsync());
+        return Ok(await DbContext.Policies.Select(i => i)
+            .Include(x => x.Group)
+            .ToPaginatedListAsync(pageIndex, pageSize));
     }
     
     [HttpGet("{id}")]
     public async Task<IActionResult> Get([FromRoute] Guid id)
     {
-        var o = await DbContext.Policies.Where(x => x.Id == id).FirstOrDefaultAsync();
+        var o = await DbContext.Policies.Where(x => x.Id == id)
+            .Include(x => x.Group)
+            .FirstOrDefaultAsync();
         if (o == null)
         {
             return NotFound(new Error("找不到请求的对象"));

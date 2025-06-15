@@ -226,14 +226,6 @@ export type ManagementPolicy = {
   disableDebugMenu?: boolean;
   allowExitManagement?: boolean;
 };
-export type Policy = {
-  id?: string;
-  name?: string | null;
-  isEnabled?: boolean;
-  content?: ManagementPolicy;
-  createdTime?: string;
-  updatedTime?: string;
-};
 export type ProfileGroup = {
   id?: string;
   name?: string | null;
@@ -241,6 +233,16 @@ export type ProfileGroup = {
   colorHex?: string | null;
   createdTime?: string;
   updatedTime?: string;
+};
+export type Policy = {
+  id?: string;
+  name?: string | null;
+  isEnabled?: boolean;
+  content?: ManagementPolicy;
+  createdTime?: string;
+  updatedTime?: string;
+  groupId?: string;
+  group?: ProfileGroup;
 };
 export type TimeLayoutItem = {
   isActive?: boolean;
@@ -2416,13 +2418,30 @@ declare global {
        *
        * ---
        *
+       * **Query Parameters**
+       * ```ts
+       * type QueryParameters = {
+       *   pageIndex?: number
+       *   pageSize?: number
+       * }
+       * ```
+       *
+       * ---
+       *
        * **Response**
        * ```ts
        * type Response = unknown
        * ```
        */
-      get_api_v1_policies<Config extends Alova2MethodConfig<unknown>>(
-        config?: Config
+      get_api_v1_policies<
+        Config extends Alova2MethodConfig<unknown> & {
+          params: {
+            pageIndex?: number;
+            pageSize?: number;
+          };
+        }
+      >(
+        config: Config
       ): Alova2Method<unknown, 'policies.get_api_v1_policies', Config>;
       /**
        * ---
@@ -2452,6 +2471,15 @@ declare global {
        *   }
        *   createdTime?: string
        *   updatedTime?: string
+       *   groupId?: string
+       *   group?: {
+       *     id?: string
+       *     name?: string | null
+       *     description?: string | null
+       *     colorHex?: string | null
+       *     createdTime?: string
+       *     updatedTime?: string
+       *   }
        * }
        * ```
        *
@@ -2543,6 +2571,15 @@ declare global {
        *   }
        *   createdTime?: string
        *   updatedTime?: string
+       *   groupId?: string
+       *   group?: {
+       *     id?: string
+       *     name?: string | null
+       *     description?: string | null
+       *     colorHex?: string | null
+       *     createdTime?: string
+       *     updatedTime?: string
+       *   }
        * }
        * ```
        *

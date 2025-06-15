@@ -47,7 +47,7 @@
           </n-form>
         </n-tab-pane>
 
-        <n-tab-pane name="assignees" label="分配">
+        <n-tab-pane name="assignees" label="分配" :disabled="isAdding">
           <AssigneeTable :object-id="editingFormRef.id"
                          :object-type="3"/>
         </n-tab-pane>
