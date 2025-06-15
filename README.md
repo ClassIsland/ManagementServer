@@ -52,7 +52,7 @@ ClassIsland 集控服务器。
 
 - Windows / Linux 系统  
 - 已安装[ASP.NET Core 8.0 运行时](https://dotnet.microsoft.com/zh-cn/download/dotnet/8.0)
-- 已安装[MySQL 8.0]
+- 已安装[MySQL 8.0](https://dev.mysql.com/downloads/mysql/8.0.html)
 
 > [!IMPORTANT]
 > **本版本为预览版，仅用于测试和开发环境，请勿在生产环境中使用。**  
