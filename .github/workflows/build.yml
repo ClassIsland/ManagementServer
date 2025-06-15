@@ -111,7 +111,10 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
-          path: ./out
+          path: ./out_artifacts
+
+      - name: Process Artifacts
+        run: pwsh -ep bypass ./tools/release-gen/proc-artifacts.ps1
       
       - name: Generate SHA256
         run: pwsh -ep bypass ./tools/release-gen/gen-hash.ps1 ./out
