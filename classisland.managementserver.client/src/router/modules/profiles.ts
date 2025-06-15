@@ -64,15 +64,6 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/profiles/subjects/index.vue'),
       },
       {
-        path: 'groups',
-        name: `${routeName}_groups`,
-        meta: {
-          title: '分组',
-          icon: renderIcon(GroupOutlined),
-        },
-        component: () => import('@/views/profiles/groups/index.vue'),
-      },
-      {
         path: 'upload',
         name: `${routeName}_upload`,
         meta: {
