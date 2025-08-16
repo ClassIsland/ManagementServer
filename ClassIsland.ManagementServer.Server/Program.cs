@@ -8,6 +8,7 @@ using ClassIsland.ManagementServer.Server.Models.Authorization;
 using ClassIsland.ManagementServer.Server.Models.Identity;
 using ClassIsland.ManagementServer.Server.Services;
 using ClassIsland.ManagementServer.Server.Services.Grpc;
+using ClassIsland.ManagementServer.Server.Services.GrpcInterceptors;
 using ClassIsland.ManagementServer.Server.Services.Logging;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -67,13 +68,17 @@ builder.Services.AddControllers()
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddGrpc();
+builder.Services.AddGrpc(options =>
+{
+    options.Interceptors.Add<CyreneMspFrontedInterceptor>();
+});
 builder.Services.AddScoped<ObjectsUpdateNotifyService>();
 builder.Services.AddScoped<ObjectsAssigneeService>();
 builder.Services.AddScoped<ProfileEntitiesService>();
 builder.Services.AddScoped<ClientCommandDeliverService>();
 builder.Services.AddScoped<OrganizationSettingsService>();
 builder.Services.AddSingleton<ObjectsCacheService>();
+builder.Services.AddSingleton<CyreneMspConnectionService>();
 builder.Services.AddSingleton<IAuthorizationHandler, AdminAccessHandler>();
 builder.WebHost.ConfigureKestrel((context, options) =>
 {
@@ -110,6 +115,7 @@ app.MapGrpcService<ClientRegisterService>();
 app.MapGrpcService<ClientCommandDeliverFrontedService>();
 app.MapGrpcService<AuditService>();
 app.MapGrpcService<ConfigUploadService>();
+app.MapGrpcService<HandshakeService>();
 
 app.MapFallbackToFile("/index.html");
 
@@ -172,4 +178,5 @@ if (setupMode)
     return;
 }
 
+await app.Services.GetRequiredService<CyreneMspConnectionService>().InitServerKey();
 app.Run();

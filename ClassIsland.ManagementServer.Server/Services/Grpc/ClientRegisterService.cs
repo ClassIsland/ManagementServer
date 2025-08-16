@@ -9,14 +9,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ClassIsland.ManagementServer.Server.Services.Grpc;
 
-public class ClientRegisterService(ManagementServerContext dbContext, OrganizationSettingsService organizationSettingsService) : ClientRegister.ClientRegisterBase
+public class ClientRegisterService(ManagementServerContext dbContext,
+    OrganizationSettingsService organizationSettingsService,
+    CyreneMspConnectionService cyreneMspConnectionService) : ClientRegister.ClientRegisterBase
 {
     private ManagementServerContext DbContext { get; } = dbContext;
     public OrganizationSettingsService OrganizationSettingsService { get; } = organizationSettingsService;
+    private CyreneMspConnectionService CyreneMspConnectionService { get; } = cyreneMspConnectionService;
 
     public override async Task<ClientRegisterScRsp> Register(ClientRegisterCsReq request, ServerCallContext context)
     {
         var result = new ClientRegisterScRsp();
+        result.ServerPublicKey = CyreneMspConnectionService.ServerPublicKeyArmored;
         try
         {
             if (await DbContext.Clients.AnyAsync(x => x.Cuid.ToString() == request.ClientUid))
@@ -43,7 +47,8 @@ public class ClientRegisterService(ManagementServerContext dbContext, Organizati
                 {
                     Id = request.ClientId,
                     GroupId = ClientGroup.DefaultGroupId
-                }
+                },
+                Mac = request.ClientMac
             };
             await DbContext.Clients.AddAsync(newClient);
             await DbContext.SaveChangesAsync();

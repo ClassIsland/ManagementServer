@@ -68,6 +68,12 @@ public partial class Client : IObjectWithTime
     /// </summary>
     public DateTime UpdatedTime { get; set; } = DateTime.Now;
 
+    /// <summary>
+    /// 客户端 MAC 地址
+    /// </summary>
+    [MaxLength(16)]
+    public string Mac { get; set; } = "";
+
     [ForeignKey("Id")]
     public virtual AbstractClient AbstractClient { get; set; } = new();
 }

@@ -11,15 +11,19 @@ using Grpc.Core;
 
 namespace ClassIsland.ManagementServer.Server.Services.Grpc;
 
-public class ClientCommandDeliverFrontedService(ClientCommandDeliverService clientCommandDeliverService, ILogger<ClientCommandDeliverFrontedService> logger) : ClientCommandDeliver.ClientCommandDeliverBase
+public class ClientCommandDeliverFrontedService(ClientCommandDeliverService clientCommandDeliverService,
+    ILogger<ClientCommandDeliverFrontedService> logger,
+    CyreneMspConnectionService cyreneMspConnectionService) : ClientCommandDeliver.ClientCommandDeliverBase
 {
     private ClientCommandDeliverService ClientCommandDeliverService { get; } = clientCommandDeliverService;
 
     private ILogger<ClientCommandDeliverFrontedService> Logger { get; } = logger;
-    
+    private CyreneMspConnectionService CyreneMspConnectionService { get; } = cyreneMspConnectionService;
+
     public override async Task ListenCommand(IAsyncStreamReader<ClientCommandDeliverScReq> requestStream, IServerStreamWriter<ClientCommandDeliverScRsp> responseStream, ServerCallContext context)
     {
-        if (!Guid.TryParse(context.RequestHeaders.GetValue("cuid"), out var cuid))
+        if (!Guid.TryParse(context.RequestHeaders.GetValue("cuid"), out var cuid) ||
+            !CyreneMspConnectionService.Sessions.TryGetValue(cuid, out var session))
         {
             await responseStream.WriteAsync(new ClientCommandDeliverScRsp()
             {
@@ -28,9 +32,11 @@ public class ClientCommandDeliverFrontedService(ClientCommandDeliverService clie
             return;
         }
 
-        ClientCommandDeliverService.Streams[cuid] = responseStream;
+        session.CommandFlowWriter = responseStream;
+        session.IsActivated = true;
+        
         Logger.LogInformation("与 {} 建立命令流连接", cuid);
-        await ClientCommandDeliverService.DeliverCommandAsync(CommandTypes.ServerConnected, new Empty(),
+        await ClientCommandDeliverService.DeliverCommandAsync(CommandTypes.Pong, new Empty(),
             new ObjectsAssignee()
             {
                 AssigneeType = AssigneeTypes.ClientUid,
@@ -65,7 +71,8 @@ public class ClientCommandDeliverFrontedService(ClientCommandDeliverService clie
                 break;
             }
         }
-        ClientCommandDeliverService.Streams.Remove(ClientCommandDeliverService.Streams.FirstOrDefault(x => x.Value == responseStream).Key);
+
+        CyreneMspConnectionService.DestroyConnection(cuid);
         Logger.LogInformation("断开与 {} 命令流连接", cuid);
     }
 }
