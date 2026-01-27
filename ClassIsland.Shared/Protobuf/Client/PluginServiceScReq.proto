@@ -1,0 +1,44 @@
+syntax = "proto3";
+package ClassIsland.Shared.Protobuf.Client;
+option csharp_namespace = "ClassIsland.Shared.Protobuf.Client";
+
+message PluginInfo {
+  string Identifier = 1;
+  string Version = 2;
+  bool IsPureLocal = 3;
+}
+
+message PluginRegisterReq {
+  repeated PluginInfo Plugins = 1;
+}
+
+message PluginRegisterRsp {
+  repeated string CompatiblePlugins = 1;
+  repeated string IncompatiblePlugins = 2;
+}
+
+message GetServerPluginsReq {
+}
+
+message PluginClientToServerReq {
+  string PluginIdentifier = 1;
+  string MessageType = 2;
+  bytes Payload = 3;
+}
+
+message PluginClientToServerRsp {
+  int32 RetCode = 1;
+  string PluginIdentifier = 2;
+  string MessageType = 3;
+  bytes Payload = 4;
+}
+
+message PluginDisableAck {
+  string PluginIdentifier = 1;
+  bool Success = 2;
+}
+
+message PluginEnableAck {
+  string PluginIdentifier = 1;
+  bool Success = 2;
+}

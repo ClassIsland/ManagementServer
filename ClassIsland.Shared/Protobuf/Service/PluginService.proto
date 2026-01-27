@@ -1,0 +1,18 @@
+syntax = "proto3";
+package ClassIsland.Shared.Protobuf.Service;
+option csharp_namespace = "ClassIsland.Shared.Protobuf.Service";
+
+import "Protobuf/Client/PluginServiceScReq.proto";
+import "Protobuf/Server/PluginServiceScRsp.proto";
+
+service PluginService {
+  rpc RegisterPlugins (Client.PluginRegisterReq) returns (Client.PluginRegisterRsp);
+  
+  rpc GetServerPlugins (Client.GetServerPluginsReq) returns (Server.PluginListRsp);
+  
+  rpc SendPluginMessage (Client.PluginClientToServerReq) returns (Client.PluginClientToServerRsp);
+  
+  rpc AcknowledgePluginDisable (Client.PluginDisableAck) returns (Client.PluginClientToServerRsp);
+  
+  rpc AcknowledgePluginEnable (Client.PluginEnableAck) returns (Client.PluginClientToServerRsp);
+}

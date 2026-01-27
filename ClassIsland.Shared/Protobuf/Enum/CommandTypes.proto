@@ -8,10 +8,16 @@ enum CommandTypes {
   // Heartbeat
   Ping=10;
   Pong=11;
-  
+
   // MiscCommands
   RestartApp=101;
   SendNotification=102;
   DataUpdated=103;
   GetClientConfig=104;
+
+  // Plugin Commands
+  PluginMessage=200;
+  PluginStateChange=201;
+  PluginDisableRequest=202;
+  PluginEnableRequest=203;
 }

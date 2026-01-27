@@ -13,5 +13,10 @@ enum Retcode {
     Registered = 10001;
     ClientNotFound = 10002;
     // service: ClientCommandDeliver
-    
+
+    // service: Plugin
+    PluginNotFound = 20001;
+    PluginIncompatible = 20002;
+    PluginDisabled = 20003;
+    PluginBusy = 20004;
 }
