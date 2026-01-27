@@ -1,2 +1,2 @@
-#!/usr/bin/env /usr/bin/sh
+#!/usr/bin/env sh
 dotnet ./ClassIsland.ManagementServer.Server.dll --setup=true
