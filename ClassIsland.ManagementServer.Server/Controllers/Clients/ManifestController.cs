@@ -91,6 +91,7 @@ public class ManifestController(ManagementServerContext dataContext,
         {
             OrganizationName = (await DataContext.OrganizationSettings.FindAsync("OrganizationName"))?.Value ?? "",
             ServerKind = ManagementServerKind.ManagementServer,
+            CoreVersion = ClassIsland.Shared.IAppHost.CoreVersion,
             SubjectsSource = new ReVersionString {
                 Value = "{host}/api/v1/client/{cuid}/subjects",
                 Version = client.SubjectsVersion

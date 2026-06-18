@@ -1,6 +1,6 @@
 import { RouteRecordRaw } from 'vue-router';
 import { Layout } from '@/router/constant';
-import { LaptopOutlined } from '@vicons/antd';
+import { LaptopOutlined, AppstoreOutlined } from '@vicons/antd';
 import { renderIcon } from '@/utils/index';
 
 const routeName = 'clients';
@@ -33,6 +33,15 @@ const routes: Array<RouteRecordRaw> = [
           title: '分组',
         },
         component: () => import('@/views/clients/groups/index.vue'),
+      },
+      {
+        path: '/clients/plugins',
+        name: `${routeName}_plugins`,
+        meta: {
+          title: '插件管理',
+          icon: renderIcon(AppstoreOutlined),
+        },
+        component: () => import('@/views/plugins/index.vue'),
       },
     ],
   },

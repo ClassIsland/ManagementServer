@@ -48,6 +48,20 @@ public partial class ManagementServerContext : IdentityDbContext<User, Role, str
 
     public virtual DbSet<Setting> Settings { get; set; }
 
+    public virtual DbSet<AuditLog> AuditLogs { get; set; }
+
+    public virtual DbSet<ClientConfigSnapshot> ClientConfigSnapshots { get; set; }
+
+    public virtual DbSet<ComponentTemplate> ComponentTemplates { get; set; }
+
+    public virtual DbSet<ClientComponentConfig> ClientComponentConfigs { get; set; }
+
+    public virtual DbSet<ClientAutomationConfig> ClientAutomationConfigs { get; set; }
+
+    public virtual DbSet<ClientPluginInfo> ClientPluginInfos { get; set; }
+
+    public virtual DbSet<ClientPluginInstallRequest> ClientPluginInstallRequests { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         MapJsonConverter(modelBuilder.Entity<ProfileClassplan>().Property(e => e.AttachedObjects));

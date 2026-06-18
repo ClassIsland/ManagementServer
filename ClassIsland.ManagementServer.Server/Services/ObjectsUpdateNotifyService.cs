@@ -5,11 +5,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ClassIsland.ManagementServer.Server.Services;
 
-public class ObjectsUpdateNotifyService(ManagementServerContext context, ObjectsAssigneeService objectsAssigneeService)
+public class ObjectsUpdateNotifyService(
+    ManagementServerContext context,
+    ObjectsAssigneeService objectsAssigneeService,
+    ILogger<ObjectsUpdateNotifyService> logger)
 {
     private ManagementServerContext DbContext { get; } = context;
-
     private ObjectsAssigneeService ObjectsAssigneeService { get; } = objectsAssigneeService;
+    private ILogger<ObjectsUpdateNotifyService> Logger { get; } = logger;
 
     public async Task NotifyObjectUpdatingAsync(Guid id, ObjectTypes objectType)
     {
@@ -24,6 +27,7 @@ public class ObjectsUpdateNotifyService(ManagementServerContext context, Objects
                 UpdateTime = DateTime.Now
             });
         }
+        await DbContext.SaveChangesAsync();
     }
     
     public async Task NotifyClientUpdatingAsync(Guid? cuid=null, string? id=null, long? group=null)
@@ -41,6 +45,7 @@ public class ObjectsUpdateNotifyService(ManagementServerContext context, Objects
                 UpdateTime = DateTime.Now
             });
         }
+        await DbContext.SaveChangesAsync();
     }
 
     public void NotifyClientUpdated(string cuid, string id)

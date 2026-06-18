@@ -90,7 +90,7 @@ const mainTableColumns : DataTableColumns<IClassInfoEditingEntry> = [
   },
   {
     title: "操作",
-    key: "endSecond",
+    key: "actions",
     render(x){
       return h(
         "div", {
@@ -100,7 +100,7 @@ const mainTableColumns : DataTableColumns<IClassInfoEditingEntry> = [
             size: "small",
             onClick(e) {
               const i = timeLayout.value?.layouts.indexOf(x);
-              delete timeLayout.value?.layouts[i];
+              if (i >= 0) timeLayout.value?.layouts.splice(i, 1);
             },
           }, {
             default: () => "删除"
@@ -143,7 +143,7 @@ function formatSafeTime(date: Date) {
 }
 
 function contactDateTime(date: Date, time: string) {
-  return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}T${time}`
+  return `${date.getFullYear()}-${padNumber(date.getMonth() + 1, 2)}-${padNumber(date.getDate(), 2)}T${time}`
 }
 
 function insertTimePointAfter(type, index) {
@@ -210,8 +210,8 @@ async function saveTimeLayout() {
   try{
     isSaving.value = true;
     const today = new Date();
-    for (const i in timeLayout.layouts) {
-      const point = timeLayout.layouts[i];
+    const layouts = timeLayout.value?.layouts ?? [];
+    for (const point of layouts) {
       point.startSecond = contactDateTime(today, point.startSecondSafe);
       point.endSecond = contactDateTime(today, point.endSecondSafe);
     }

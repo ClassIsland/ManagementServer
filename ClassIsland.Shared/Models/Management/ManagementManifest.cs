@@ -33,6 +33,16 @@ public class ManagementManifest
     public ReVersionString PolicySource { get; set; } = new();
 
     /// <summary>
+    /// 组件设置源
+    /// </summary>
+    public ReVersionString ComponentsSource { get; set; } = new();
+
+    /// <summary>
+    /// 凭据设置源
+    /// </summary>
+    public ReVersionString CredentialSource { get; set; } = new();
+
+    /// <summary>
     /// 集控服务器类型
     /// </summary>
     public ManagementServerKind ServerKind { get; set; } = ManagementServerKind.Serverless;
@@ -41,4 +51,9 @@ public class ManagementManifest
     /// 组织名称
     /// </summary>
     public string OrganizationName { get; set; } = "组织名称";
+
+    /// <summary>
+    /// 核心版本
+    /// </summary>
+    public Version CoreVersion { get; set; } = new Version(0, 0, 0, 0);
 }

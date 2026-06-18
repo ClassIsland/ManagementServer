@@ -22,31 +22,36 @@ public class PaginatedList<T>(List<T> items, int count, int pageIndex, int pageS
     public static async Task<PaginatedList<T>> CreateAsync(IQueryable<T> source, int pageIndex, int pageSize
         , bool decreasing = false, bool orderByUpdatedTime = false) 
     {
-        if (pageIndex <= 0)
+        if (pageIndex < 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(pageIndex), "Page index should larger than 0");
+            throw new ArgumentOutOfRangeException(nameof(pageIndex), "Page index should be non-negative");
         }
+        
+        // Normalize: accept 0-based or 1-based indexing
+        var normalizedIndex = pageIndex == 0 ? 1 : pageIndex;
         
         var count = await source.CountAsync();
         var query = source;
         query = decreasing ? query.OrderByDescending(x => orderByUpdatedTime ? x.UpdatedTime : x.CreatedTime) 
             : query.OrderBy(x => orderByUpdatedTime ? x.UpdatedTime : x.CreatedTime);
         var items = await query
-            .Skip((pageIndex - 1) * pageSize)
+            .Skip((normalizedIndex - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
-        return new PaginatedList<T>(items, count, pageIndex, pageSize);
+        return new PaginatedList<T>(items, count, normalizedIndex, pageSize);
     }
     
     public static PaginatedList<T> CreateFromRawList(IList<T> source, int pageIndex, int pageSize)
     {
-        if (pageIndex <= 0)
+        if (pageIndex < 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(pageIndex), "Page index should larger than 0");
+            throw new ArgumentOutOfRangeException(nameof(pageIndex), "Page index should be non-negative");
         }
         
+        var normalizedIndex = pageIndex == 0 ? 1 : pageIndex;
+        
         var count = source.Count;
-        var items = source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
-        return new PaginatedList<T>(items, count, pageIndex, pageSize);
+        var items = source.Skip((normalizedIndex - 1) * pageSize).Take(pageSize).ToList();
+        return new PaginatedList<T>(items, count, normalizedIndex, pageSize);
     }
 }

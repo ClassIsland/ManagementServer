@@ -12,7 +12,7 @@ const routes: Array<RouteRecordRaw> = [
     component: Layout,
     meta: {
       title: '命令',
-      roles: ["CommandsUser"],
+      roles: ["ClientsWrite"],
       sort: 98,
       icon: renderIcon(RocketOutlined)
     },

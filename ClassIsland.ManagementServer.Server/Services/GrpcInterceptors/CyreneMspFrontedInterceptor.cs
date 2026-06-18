@@ -23,6 +23,7 @@ public class CyreneMspFrontedInterceptor(ILogger<CyreneMspFrontedInterceptor> lo
         }
 
         if (!context.Method.StartsWith("/ClassIsland.Shared.Protobuf.Service.Handshake/") &&
+            !context.Method.StartsWith("/ClassIsland.Shared.Protobuf.Service.ClientRegister/") &&
             (!CyreneMspConnectionService.Sessions.TryGetValue(Guid.Parse(context.RequestHeaders.GetValue("cuid")!),
                  out var session) ||
              session?.SessionId != context.RequestHeaders.GetValue("session"))

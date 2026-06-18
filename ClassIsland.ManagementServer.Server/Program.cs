@@ -37,6 +37,28 @@ if (setupMode)
     }
 }
 builder.Configuration.AddJsonFile("./data/appsettings.json", optional: true, reloadOnChange: true);
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenLocalhost(20723, listenOptions =>
+    {
+        listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http1;
+    });
+    options.ListenLocalhost(20724, listenOptions =>
+    {
+        listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2;
+        using var store = new System.Security.Cryptography.X509Certificates.X509Store(
+            System.Security.Cryptography.X509Certificates.StoreName.My,
+            System.Security.Cryptography.X509Certificates.StoreLocation.LocalMachine);
+        store.Open(System.Security.Cryptography.X509Certificates.OpenFlags.ReadOnly);
+        var certs = store.Certificates.Find(
+            System.Security.Cryptography.X509Certificates.X509FindType.FindBySubjectName,
+            "localhost", false);
+        if (certs.Count > 0)
+        {
+            listenOptions.UseHttps(certs[0]);
+        }
+    });
+});
 builder.Services.AddDbContext<ManagementServerContext>(options =>
 {
     var dbType = builder.Configuration["DatabaseType"];
@@ -79,6 +101,7 @@ builder.Services.AddScoped<ClientCommandDeliverService>();
 builder.Services.AddScoped<OrganizationSettingsService>();
 builder.Services.AddSingleton<ObjectsCacheService>();
 builder.Services.AddSingleton<CyreneMspConnectionService>();
+builder.Services.AddSingleton<PendingConfigRequestService>();
 builder.Services.AddSingleton<IAuthorizationHandler, AdminAccessHandler>();
 builder.WebHost.ConfigureKestrel((context, options) =>
 {
@@ -107,8 +130,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.UseHttpsRedirection();
 
 app.MapControllers();
 app.MapGrpcService<ClientRegisterService>();

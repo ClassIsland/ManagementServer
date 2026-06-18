@@ -32,7 +32,7 @@
     "@vueup/vue-quill": "^1.2.0",
     "@vueuse/core": "^9.13.0",
     "alova": "^3.0.16",
-    "date-fns": "^2.30.0",
+    "date-fns": "^3.6.0",
     "dayjs": "^1.11.13",
     "echarts": "^5.5.1",
     "element-resize-detector": "^1.2.4",

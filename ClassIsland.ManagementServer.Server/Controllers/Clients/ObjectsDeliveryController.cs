@@ -129,7 +129,7 @@ public class ObjectsDeliveryController(
             var cp = await ProfileEntitiesService.GetClassPlanEntity(i.ObjectId);
             if (cp != null)
             {
-                classPlans.Add(i.ObjectId.ToString(), cp);
+                classPlans.TryAdd(i.ObjectId.ToString(), cp);
             }
         }
         

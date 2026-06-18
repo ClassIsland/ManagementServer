@@ -92,4 +92,15 @@ public class CyreneMspConnectionService(ILogger<CyreneMspConnectionService> logg
         session.IsActivated = false;
         Sessions.Remove(clientUid);
     }
+
+    /// <summary>
+    /// 验证客户端会话是否有效
+    /// </summary>
+    public bool ValidateSession(Guid clientUid, string? sessionId)
+    {
+        if (string.IsNullOrEmpty(sessionId))
+            return false;
+        return Sessions.TryGetValue(clientUid, out var session) &&
+               session.SessionId == sessionId;
+    }
 }

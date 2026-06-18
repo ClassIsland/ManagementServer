@@ -128,6 +128,7 @@ public class ProfileEntitiesService(
             WeekDay = classPlan.TimeRule.WeekDay,
             WeekDiv = classPlan.TimeRule.WeekCountDiv,
             WeekCountDivTotal = classPlan.TimeRule.WeekCountDivTotal,
+            TimeLayoutId = timeLayout.Id,
             TimeLayout = timeLayout,
             IsEnabled = classPlan.IsEnabled,
             GroupId = classPlan.GroupId ?? groupId ?? ProfileGroup.DefaultGroupId

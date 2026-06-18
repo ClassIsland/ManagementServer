@@ -76,12 +76,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: false,
     },
     server: {
-      proxy: {
-        '/api': {
-          target: 'http://localhost:5090',
-          secure: false
-        }
-      },
+      proxy: createProxy(VITE_PROXY as unknown as [string, string][]),
       port: 5173
     },
     optimizeDeps: {

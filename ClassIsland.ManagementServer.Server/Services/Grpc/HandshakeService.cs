@@ -19,14 +19,27 @@ public class HandshakeService(ILogger<HandshakeService> logger,
     public override async Task<HandshakeScBeginHandShakeRsp> BeginHandshake(HandshakeScBeginHandShakeReq request,
         ServerCallContext context)
     {
-        Logger.LogInformation("准备与客户端 {} 握手", request.ClientUid);
+        Logger.LogInformation("准备与客户端 {ClientUid} 握手", request.ClientUid);
+        Logger.LogInformation("客户端上报 MAC: {ClientMac}", request.ClientMac);
         var client = await DbContext.Clients.FindAsync(Guid.Parse(request.ClientUid));
-        if (client == null || !string.Equals(client.Mac, request.ClientMac, StringComparison.CurrentCultureIgnoreCase))
+        if (client == null)
         {
+            Logger.LogWarning("找不到客户端 {ClientUid}", request.ClientUid);
             return new HandshakeScBeginHandShakeRsp()
             {
                 Retcode = Retcode.HandshakeClientRejected,
-                Message = client == null ? "找不到对应的客户端" : "客户端 MAC 地址验证失败"
+                Message = "找不到对应的客户端"
+            };
+        }
+        Logger.LogInformation("数据库 MAC: {DbMac}, 客户端 MAC: {ClientMac}, 匹配: {Match}", 
+            client.Mac, request.ClientMac, string.Equals(client.Mac, request.ClientMac, StringComparison.CurrentCultureIgnoreCase));
+        if (!string.Equals(client.Mac, request.ClientMac, StringComparison.CurrentCultureIgnoreCase))
+        {
+            Logger.LogWarning("MAC 验证失败");
+            return new HandshakeScBeginHandShakeRsp()
+            {
+                Retcode = Retcode.HandshakeClientRejected,
+                Message = "客户端 MAC 地址验证失败"
             };
         }
 

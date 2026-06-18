@@ -1,158 +1,158 @@
 <template>
-  <div class="console d-flex flex-col gap-y-2">
+  <div class="dashboard d-flex flex-col gap-y-4">
+    <!-- 统计卡片 -->
+    <n-grid :cols="4" :x-gap="12" :y-gap="12">
+      <n-gi>
+        <n-card>
+          <n-statistic label="在线客户端" :value="data.onlineCount">
+            <template #prefix>
+              <n-icon :size="20" color="#18a058"><WifiOutlined /></n-icon>
+            </template>
+          </n-statistic>
+        </n-card>
+      </n-gi>
+      <n-gi>
+        <n-card>
+          <n-statistic label="客户端总数" :value="data.totalCount">
+            <template #prefix>
+              <n-icon :size="20" color="#2080f0"><DesktopOutlined /></n-icon>
+            </template>
+          </n-statistic>
+        </n-card>
+      </n-gi>
+      <n-gi>
+        <n-card>
+          <n-statistic label="在线率" :value="onlineRate">
+            <template #suffix>%</template>
+          </n-statistic>
+        </n-card>
+      </n-gi>
+      <n-gi>
+        <n-card>
+          <n-statistic label="策略覆盖率" :value="policyRate">
+            <template #suffix>%</template>
+          </n-statistic>
+        </n-card>
+      </n-gi>
+    </n-grid>
 
-    <!--导航卡片-->
-    <n-card title="ClassIsland 集控控制台">
-      <span>欢迎使用 ClassIsland 集控控制台！</span>
-    </n-card>
-    
-    <n-card>
-      <div class="d-flex flex-col items-center gap-2 my-4">
+    <!-- 图表区域 -->
+    <n-grid :cols="2" :x-gap="12" :y-gap="12">
+      <!-- 审计事件趋势 -->
+      <n-gi>
+        <n-card title="审计事件趋势（近7天）">
+          <div ref="auditChartRef" style="height: 300px"></div>
+        </n-card>
+      </n-gi>
 
-        <img src="../../../assets/stickers/缇宝_炸飞.png" height="81" width="81"
-             alt="缇宝_炸飞" title="缇宝_炸飞"/>
-        <h2 class="text-h5 font-weight-bold">施工中</h2>
-        <p>此项目正在施工中，可能存在未完工的功能和缺陷。当前版本不代表最终品质。</p>
-      </div>
-    </n-card>
+      <!-- 分组分布 -->
+      <n-gi>
+        <n-card title="客户端分组分布">
+          <div ref="groupChartRef" style="height: 300px"></div>
+        </n-card>
+      </n-gi>
+    </n-grid>
   </div>
 </template>
+
 <script lang="ts" setup>
-  import { ref, onMounted } from 'vue';
-  import { getConsoleInfo } from '@/api/dashboard/console';
-  import VisiTab from './components/VisiTab.vue';
-  import { CountTo } from '@/components/CountTo/index';
-  import {
-    CaretUpOutlined,
-    CaretDownOutlined,
-    UsergroupAddOutlined,
-    BarChartOutlined,
-    ShoppingCartOutlined,
-    AccountBookOutlined,
-    CreditCardOutlined,
-    MailOutlined,
-    TagsOutlined,
-    SettingOutlined,
-  } from '@vicons/antd';
+import { ref, reactive, computed, onMounted, onUnmounted, nextTick } from 'vue';
+import { NGrid, NGi, NCard, NStatistic, NIcon } from 'naive-ui';
+import { WifiOutlined, DesktopOutlined } from '@vicons/antd';
+import { getDashboardOverview, type DashboardOverview } from '@/api/dashboard/overview';
+import * as echarts from 'echarts';
 
-  interface InVisits {
-    dayVisits: number;
-    rise: number;
-    decline: number;
-    amount: number;
-  }
+const data = reactive<DashboardOverview>({
+  onlineCount: 0,
+  totalCount: 0,
+  groupDistribution: [],
+  auditEventTrend: [],
+  versionDistribution: [],
+  policyCoverage: { totalClients: 0, coveredClients: 0, coverageRate: 0 },
+});
 
-  interface InSaleroom {
-    weekSaleroom: number;
-    amount: number;
-    degree: number;
-  }
+const onlineRate = computed(() =>
+  data.totalCount > 0 ? Math.round((data.onlineCount / data.totalCount) * 100) : 0
+);
+const policyRate = computed(() =>
+  data.policyCoverage.totalClients > 0
+    ? Math.round(data.policyCoverage.coverageRate * 100)
+    : 0
+);
 
-  interface InOrderLarge {
-    weekLarge: number;
-    rise: number;
-    decline: number;
-    amount: number;
-  }
+const auditChartRef = ref<HTMLElement>();
+const groupChartRef = ref<HTMLElement>();
+let auditChart: echarts.ECharts | null = null;
+let groupChart: echarts.ECharts | null = null;
 
-  interface InVolume {
-    weekLarge: number;
-    rise: number;
-    decline: number;
-    amount: number;
-  }
-
-  const loading = ref(true);
-  const visits = ref({} as InVisits);
-  const saleroom = ref({} as InSaleroom);
-  const orderLarge = ref({} as InOrderLarge);
-  const volume = ref({} as InVolume);
-
-  // 图标列表
-  const iconList = [
-    {
-      icon: UsergroupAddOutlined,
-      size: '32',
-      title: '用户',
-      color: '#69c0ff',
-      eventObject: {
-        click: () => {},
+function renderAuditChart() {
+  if (!auditChartRef.value) return;
+  if (!auditChart) auditChart = echarts.init(auditChartRef.value);
+  auditChart.setOption({
+    tooltip: { trigger: 'axis' },
+    xAxis: { type: 'category', data: data.auditEventTrend.map((i) => i.date) },
+    yAxis: { type: 'value', minInterval: 1 },
+    series: [
+      {
+        type: 'line',
+        data: data.auditEventTrend.map((i) => i.count),
+        smooth: true,
+        areaStyle: { opacity: 0.3 },
+        itemStyle: { color: '#2080f0' },
       },
-    },
-    {
-      icon: BarChartOutlined,
-      size: '32',
-      title: '分析',
-      color: '#69c0ff',
-      eventObject: {
-        click: () => {},
-      },
-    },
-    {
-      icon: ShoppingCartOutlined,
-      size: '32',
-      title: '商品',
-      color: '#ff9c6e',
-      eventObject: {
-        click: () => {},
-      },
-    },
-    {
-      icon: AccountBookOutlined,
-      size: '32',
-      title: '订单',
-      color: '#b37feb',
-      eventObject: {
-        click: () => {},
-      },
-    },
-    {
-      icon: CreditCardOutlined,
-      size: '32',
-      title: '票据',
-      color: '#ffd666',
-      eventObject: {
-        click: () => {},
-      },
-    },
-    {
-      icon: MailOutlined,
-      size: '32',
-      title: '消息',
-      color: '#5cdbd3',
-      eventObject: {
-        click: () => {},
-      },
-    },
-    {
-      icon: TagsOutlined,
-      size: '32',
-      title: '标签',
-      color: '#ff85c0',
-      eventObject: {
-        click: () => {},
-      },
-    },
-    {
-      icon: SettingOutlined,
-      size: '32',
-      title: '配置',
-      color: '#ffc069',
-      eventObject: {
-        click: () => {},
-      },
-    },
-  ];
-
-  onMounted(async () => {
-    const data = await getConsoleInfo();
-    visits.value = data.visits;
-    saleroom.value = data.saleroom;
-    orderLarge.value = data.orderLarge;
-    volume.value = data.volume;
-    loading.value = false;
+    ],
+    grid: { left: 40, right: 20, top: 20, bottom: 30 },
   });
-  
-</script>
+}
 
-<style lang="less" scoped></style>
+function renderGroupChart() {
+  if (!groupChartRef.value) return;
+  if (!groupChart) groupChart = echarts.init(groupChartRef.value);
+  groupChart.setOption({
+    tooltip: { trigger: 'item' },
+    series: [
+      {
+        type: 'pie',
+        radius: ['40%', '70%'],
+        data: data.groupDistribution.map((g) => ({
+          name: g.groupName,
+          value: g.count,
+        })),
+        label: { show: true, formatter: '{b}: {c}' },
+      },
+    ],
+  });
+}
+
+let refreshTimer: ReturnType<typeof setInterval> | null = null;
+
+async function loadData() {
+  try {
+    const res = await getDashboardOverview();
+    Object.assign(data, res);
+    await nextTick();
+    renderAuditChart();
+    renderGroupChart();
+  } catch (e) {
+    console.error('加载看板数据失败', e);
+  }
+}
+
+function handleResize() {
+  auditChart?.resize();
+  groupChart?.resize();
+}
+
+onMounted(() => {
+  loadData();
+  refreshTimer = setInterval(loadData, 30000);
+  window.addEventListener('resize', handleResize);
+});
+
+onUnmounted(() => {
+  if (refreshTimer) clearInterval(refreshTimer);
+  window.removeEventListener('resize', handleResize);
+  auditChart?.dispose();
+  groupChart?.dispose();
+});
+</script>

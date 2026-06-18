@@ -50,6 +50,37 @@ namespace ClassIsland.ManagementServer.Server.Migrations
                     b.ToTable("AbstractClients");
                 });
 
+            modelBuilder.Entity("ClassIsland.ManagementServer.Server.Entities.AuditLog", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<Guid>("ClientCuid")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("Event")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("EventTimeUtc")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<byte[]>("Payload")
+                        .HasColumnType("longblob");
+
+                    b.Property<DateTime>("UpdatedTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AuditLogs");
+                });
+
             modelBuilder.Entity("ClassIsland.ManagementServer.Server.Entities.Client", b =>
                 {
                     b.Property<Guid>("Cuid")
@@ -96,6 +127,90 @@ namespace ClassIsland.ManagementServer.Server.Migrations
                     b.ToTable("Clients");
                 });
 
+            modelBuilder.Entity("ClassIsland.ManagementServer.Server.Entities.ClientAutomationConfig", b =>
+                {
+                    b.Property<Guid>("ClientCuid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("UpdatedTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("WorkflowsJson")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("ClientCuid");
+
+                    b.ToTable("ClientAutomationConfigs");
+                });
+
+            modelBuilder.Entity("ClassIsland.ManagementServer.Server.Entities.ClientComponentConfig", b =>
+                {
+                    b.Property<Guid>("ClientCuid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("LayoutJson")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("OverrideJson")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PluginComponentTypes")
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid?>("TemplateId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("UpdatedTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("ClientCuid");
+
+                    b.ToTable("ClientComponentConfigs");
+                });
+
+            modelBuilder.Entity("ClassIsland.ManagementServer.Server.Entities.ClientConfigSnapshot", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<Guid>("ClientCuid")
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("ConfigType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Payload")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("RequestGuidId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("UpdatedTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ClientConfigSnapshots");
+                });
+
             modelBuilder.Entity("ClassIsland.ManagementServer.Server.Entities.ClientGroup", b =>
                 {
                     b.Property<long>("Id")
@@ -122,6 +237,116 @@ namespace ClassIsland.ManagementServer.Server.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ClientGroups");
+                });
+
+            modelBuilder.Entity("ClassIsland.ManagementServer.Server.Entities.ClientPluginInfo", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Author")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid>("ClientCuid")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsEnabled")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("LoadStatus")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PluginId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PluginName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("UpdatedTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Version")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ClientPluginInfos");
+                });
+
+            modelBuilder.Entity("ClassIsland.ManagementServer.Server.Entities.ClientPluginInstallRequest", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<Guid>("ClientCuid")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ClientPluginInstallRequests");
+                });
+
+            modelBuilder.Entity("ClassIsland.ManagementServer.Server.Entities.ComponentTemplate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("LayoutJson")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PluginComponentTypes")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("UpdatedTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ComponentTemplates");
                 });
 
             modelBuilder.Entity("ClassIsland.ManagementServer.Server.Entities.ObjectUpdate", b =>
