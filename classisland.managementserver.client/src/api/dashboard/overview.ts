@@ -10,15 +10,6 @@ export interface AuditEventTrend {
   count: number;
 }
 
-export interface RecentCommand {
-  id: number;
-  clientCuid: string;
-  command: string;
-  status: number;
-  exitCode: number | null;
-  createdTime: string;
-}
-
 export interface PolicyCoverage {
   totalClients: number;
   coveredClients: number;
@@ -30,7 +21,6 @@ export interface DashboardOverview {
   totalCount: number;
   groupDistribution: GroupDistribution[];
   auditEventTrend: AuditEventTrend[];
-  recentCommands: RecentCommand[];
   versionDistribution: { version: string; count: number }[];
   policyCoverage: PolicyCoverage;
 }

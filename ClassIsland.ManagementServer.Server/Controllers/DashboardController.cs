@@ -1,5 +1,4 @@
 using ClassIsland.ManagementServer.Server.Context;
-using ClassIsland.ManagementServer.Server.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,12 +10,10 @@ namespace ClassIsland.ManagementServer.Server.Controllers;
 [Route("api/v1/dashboard")]
 public class DashboardController(
     ILogger<DashboardController> logger,
-    ManagementServerContext dbContext,
-    WebSocketConnectionManager wsManager) : ControllerBase
+    ManagementServerContext dbContext) : ControllerBase
 {
     public ILogger<DashboardController> Logger { get; } = logger;
     public ManagementServerContext DbContext { get; } = dbContext;
-    public WebSocketConnectionManager WsManager { get; } = wsManager;
 
     /// <summary>
     /// 获取仪表盘概览数据
@@ -25,7 +22,12 @@ public class DashboardController(
     public async Task<IActionResult> GetOverview()
     {
         var totalCount = await DbContext.Clients.CountAsync();
-        var onlineCount = WsManager.OnlineCount;
+
+        // 在线客户端数：最后心跳在 5 分钟内
+        var fiveMinutesAgo = DateTime.Now.AddMinutes(-5);
+        var onlineCount = await DbContext.Clients
+            .Where(x => x.UpdatedTime >= fiveMinutesAgo)
+            .CountAsync();
 
         // 分组分布
         var groupDistribution = await DbContext.AbstractClients
@@ -64,23 +66,7 @@ public class DashboardController(
             .OrderBy(x => x.date)
             .ToList();
 
-        // 最近命令
-        var recentCommands = await DbContext.RemoteCommands
-            .OrderByDescending(x => x.CreatedTime)
-            .Take(10)
-            .Select(x => new
-            {
-                id = x.Id,
-                clientCuid = x.ClientCuid,
-                command = x.Command,
-                status = x.Status,
-                exitCode = x.ExitCode,
-                createdTime = x.CreatedTime
-            })
-            .ToListAsync();
-
-        // 版本分布（从客户端 MAC 字段暂无版本信息，用 AbstractClient 的信息代替）
-        // 注：当前 Client 实体没有 Version 字段，返回空
+        // 版本分布（暂无版本信息）
         var versionDistribution = new List<object>();
 
         // 策略覆盖
@@ -103,7 +89,6 @@ public class DashboardController(
             totalCount,
             groupDistribution = groupDistributionResult,
             auditEventTrend,
-            recentCommands,
             versionDistribution,
             policyCoverage
         });

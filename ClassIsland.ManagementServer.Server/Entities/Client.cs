@@ -74,17 +74,6 @@ public partial class Client : IObjectWithTime
     [MaxLength(16)]
     public string Mac { get; set; } = "";
 
-    /// <summary>
-    /// 是否允许远程协助
-    /// </summary>
-    public bool RemoteAssistEnabled { get; set; } = false;
-
-    /// <summary>
-    /// 远程协助 PIN 码
-    /// </summary>
-    [MaxLength(6)]
-    public string? RemoteAssistPin { get; set; }
-
     [ForeignKey("Id")]
     public virtual AbstractClient AbstractClient { get; set; } = new();
 }

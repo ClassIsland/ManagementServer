@@ -81,7 +81,6 @@ public class ClientPluginsController(
         if (!file.FileName.EndsWith(".cipx", StringComparison.OrdinalIgnoreCase))
             return BadRequest(new { error = "文件必须是 .cipx 格式" });
 
-        // 保存到服务器临时目录
         var uploadsDir = Path.Combine("data", "plugin-uploads");
         Directory.CreateDirectory(uploadsDir);
         var fileName = $"{cuid}_{DateTime.Now:yyyyMMddHHmmss}_{file.FileName}";
@@ -92,38 +91,26 @@ public class ClientPluginsController(
             await file.CopyToAsync(stream);
         }
 
-        // 读取文件内容为 base64
-        var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
-        var base64Content = Convert.ToBase64String(fileBytes);
-
-        // 通过远程命令让客户端下载并安装
-        // 使用 ExecuteCommand 在客户端执行下载操作
-        // 注意：这里使用 WebSocket 推送文件路径，客户端需要能访问服务器文件
-        // 更好的方案是通过 gRPC 直接传输文件
-
-        // 存储安装请求，等待客户端拉取
         var installRequest = new ClientPluginInstallRequest
         {
             ClientCuid = cuid,
             FileName = fileName,
             FilePath = filePath,
-            Status = 0, // Pending
+            Status = 0,
             CreatedTime = DateTime.Now,
             UpdatedTime = DateTime.Now
         };
         await DbContext.ClientPluginInstallRequests.AddAsync(installRequest);
         await DbContext.SaveChangesAsync();
 
-        // 推送安装命令到客户端
-        var command = new RemoteExecuteCommand
+        var command = new PluginCommand
         {
-            CommandId = installRequest.Id,
-            Command = $"install-plugin:{installRequest.Id}",
-            Shell = 0,
-            TimeoutSeconds = 60
+            Operation = "install",
+            PluginId = "",
+            RequestId = installRequest.Id
         };
         await CommandDeliverService.DeliverCommandAsync(
-            CommandTypes.ExecuteCommand,
+            CommandTypes.ManagePlugin,
             command,
             new ObjectsAssignee
             {
@@ -150,7 +137,7 @@ public class ClientPluginsController(
             return NotFound(new { error = "安装包不存在" });
 
         var fileBytes = await System.IO.File.ReadAllBytesAsync(request.FilePath);
-        request.Status = 1; // Downloaded
+        request.Status = 1;
         request.UpdatedTime = DateTime.Now;
         await DbContext.SaveChangesAsync();
 
@@ -164,15 +151,13 @@ public class ClientPluginsController(
     [Authorize(Roles = Roles.ObjectsWrite)]
     public async Task<IActionResult> UninstallPlugin(Guid cuid, string pluginId)
     {
-        var command = new RemoteExecuteCommand
+        var command = new PluginCommand
         {
-            CommandId = 0,
-            Command = $"uninstall-plugin:{pluginId}",
-            Shell = 0,
-            TimeoutSeconds = 30
+            Operation = "uninstall",
+            PluginId = pluginId
         };
         await CommandDeliverService.DeliverCommandAsync(
-            CommandTypes.ExecuteCommand,
+            CommandTypes.ManagePlugin,
             command,
             new ObjectsAssignee
             {
@@ -191,16 +176,14 @@ public class ClientPluginsController(
     [Authorize(Roles = Roles.ObjectsWrite)]
     public async Task<IActionResult> TogglePlugin(Guid cuid, string pluginId, [FromQuery] bool enable)
     {
-        var action = enable ? "enable-plugin" : "disable-plugin";
-        var command = new RemoteExecuteCommand
+        var operation = enable ? "enable" : "disable";
+        var command = new PluginCommand
         {
-            CommandId = 0,
-            Command = $"{action}:{pluginId}",
-            Shell = 0,
-            TimeoutSeconds = 30
+            Operation = operation,
+            PluginId = pluginId
         };
         await CommandDeliverService.DeliverCommandAsync(
-            CommandTypes.ExecuteCommand,
+            CommandTypes.ManagePlugin,
             command,
             new ObjectsAssignee
             {
@@ -208,7 +191,7 @@ public class ClientPluginsController(
                 TargetClientCuid = cuid
             });
 
-        Logger.LogInformation("已发送插件{Action}命令到客户端 {Cuid}, 插件: {PluginId}", enable ? "启用" : "禁用", cuid, pluginId);
+        Logger.LogInformation("已发送插件{Operation}命令到客户端 {Cuid}, 插件: {PluginId}", enable ? "启用" : "禁用", cuid, pluginId);
         return Ok(new { success = true });
     }
 }

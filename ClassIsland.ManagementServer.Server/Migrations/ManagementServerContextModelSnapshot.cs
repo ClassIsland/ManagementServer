@@ -111,13 +111,6 @@ namespace ClassIsland.ManagementServer.Server.Migrations
                     b.Property<DateTime>("RegisterTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<bool>("RemoteAssistEnabled")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("RemoteAssistPin")
-                        .HasMaxLength(6)
-                        .HasColumnType("varchar(6)");
-
                     b.Property<int>("SubjectsVersion")
                         .HasColumnType("int");
 
@@ -704,53 +697,6 @@ namespace ClassIsland.ManagementServer.Server.Migrations
                     b.HasIndex("ParentId");
 
                     b.ToTable("ProfileTimelayoutTimepoints");
-                });
-
-            modelBuilder.Entity("ClassIsland.ManagementServer.Server.Entities.RemoteCommand", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<Guid>("ClientCuid")
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Command")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime?>("CompletedTime")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int?>("ExitCode")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Shell")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Stderr")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Stdout")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("TimeoutSeconds")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedTime")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RemoteCommands");
                 });
 
             modelBuilder.Entity("ClassIsland.ManagementServer.Server.Entities.Setting", b =>

@@ -52,8 +52,6 @@ public partial class ManagementServerContext : IdentityDbContext<User, Role, str
 
     public virtual DbSet<ClientConfigSnapshot> ClientConfigSnapshots { get; set; }
 
-    public virtual DbSet<RemoteCommand> RemoteCommands { get; set; }
-
     public virtual DbSet<ComponentTemplate> ComponentTemplates { get; set; }
 
     public virtual DbSet<ClientComponentConfig> ClientComponentConfigs { get; set; }

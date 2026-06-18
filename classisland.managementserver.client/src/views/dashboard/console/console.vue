@@ -52,22 +52,12 @@
         </n-card>
       </n-gi>
     </n-grid>
-
-    <!-- 命令历史 -->
-    <n-card title="最近命令执行">
-      <n-data-table
-        :columns="commandColumns"
-        :data="data.recentCommands"
-        :bordered="false"
-        size="small"
-      />
-    </n-card>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, reactive, computed, onMounted, onUnmounted, nextTick } from 'vue';
-import { NGrid, NGi, NCard, NStatistic, NIcon, NDataTable } from 'naive-ui';
+import { NGrid, NGi, NCard, NStatistic, NIcon } from 'naive-ui';
 import { WifiOutlined, DesktopOutlined } from '@vicons/antd';
 import { getDashboardOverview, type DashboardOverview } from '@/api/dashboard/overview';
 import * as echarts from 'echarts';
@@ -77,7 +67,6 @@ const data = reactive<DashboardOverview>({
   totalCount: 0,
   groupDistribution: [],
   auditEventTrend: [],
-  recentCommands: [],
   versionDistribution: [],
   policyCoverage: { totalClients: 0, coveredClients: 0, coverageRate: 0 },
 });
@@ -95,43 +84,6 @@ const auditChartRef = ref<HTMLElement>();
 const groupChartRef = ref<HTMLElement>();
 let auditChart: echarts.ECharts | null = null;
 let groupChart: echarts.ECharts | null = null;
-
-const commandColumns = [
-  { title: 'ID', key: 'id', width: 60 },
-  { title: '目标', key: 'clientCuid', width: 200, ellipsis: { tooltip: true } },
-  { title: '命令', key: 'command', ellipsis: { tooltip: true } },
-  {
-    title: '状态',
-    key: 'status',
-    width: 80,
-    render(row: any) {
-      const map: Record<number, string> = {
-        0: '⏳ 等待',
-        1: '🔄 执行中',
-        2: '✅ 完成',
-        3: '❌ 失败',
-        4: '⏰ 超时',
-      };
-      return map[row.status] ?? '未知';
-    },
-  },
-  {
-    title: '退出码',
-    key: 'exitCode',
-    width: 80,
-    render(row: any) {
-      return row.exitCode ?? '-';
-    },
-  },
-  {
-    title: '时间',
-    key: 'createdTime',
-    width: 180,
-    render(row: any) {
-      return new Date(row.createdTime).toLocaleString('zh-CN');
-    },
-  },
-];
 
 function renderAuditChart() {
   if (!auditChartRef.value) return;

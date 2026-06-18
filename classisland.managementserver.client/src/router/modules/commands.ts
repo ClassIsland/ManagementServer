@@ -1,6 +1,6 @@
 import {RouteRecordRaw} from "vue-router";
 import {Layout} from "@/router/constant";
-import {RocketOutlined, NotificationOutlined, ReloadOutlined, CodeOutlined} from "@vicons/antd";
+import {RocketOutlined, NotificationOutlined, ReloadOutlined} from "@vicons/antd";
 import { renderIcon } from '@/utils/index';
 
 const routeName = "commands";
@@ -12,7 +12,7 @@ const routes: Array<RouteRecordRaw> = [
     component: Layout,
     meta: {
       title: '命令',
-      roles: ["CommandsUser"],
+      roles: ["ClientsWrite"],
       sort: 98,
       icon: renderIcon(RocketOutlined)
     },
@@ -33,15 +33,6 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           title: '重启实例',
           icon: renderIcon(ReloadOutlined)
-        },
-      },
-      {
-        path: 'remote',
-        name: `${routeName}_remote`,
-        component: () => import("@/views/commands/remote/index.vue"),
-        meta: {
-          title: '远程命令',
-          icon: renderIcon(CodeOutlined)
         },
       }
     ]

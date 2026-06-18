@@ -12,9 +12,7 @@ public static class Roles
     
     public const string ClientsDelete = "ClientsDelete";
     
-    public const string CommandsUser = "CommandsUser";
-    
     public const string UsersManager = "UsersManager";
 
-    public static readonly List<string> AllRoles = [Admin, ObjectsWrite, ObjectsDelete, ClientsWrite, ClientsDelete, CommandsUser, UsersManager];
+    public static readonly List<string> AllRoles = [Admin, ObjectsWrite, ObjectsDelete, ClientsWrite, ClientsDelete, UsersManager];
 }

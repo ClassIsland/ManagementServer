@@ -101,7 +101,6 @@ builder.Services.AddScoped<ClientCommandDeliverService>();
 builder.Services.AddScoped<OrganizationSettingsService>();
 builder.Services.AddSingleton<ObjectsCacheService>();
 builder.Services.AddSingleton<CyreneMspConnectionService>();
-builder.Services.AddSingleton<WebSocketConnectionManager>();
 builder.Services.AddSingleton<PendingConfigRequestService>();
 builder.Services.AddSingleton<IAuthorizationHandler, AdminAccessHandler>();
 builder.WebHost.ConfigureKestrel((context, options) =>
@@ -122,8 +121,6 @@ var logger = app.Services.GetRequiredService<ILogger<Program>>();
 logger.LogInformation("Welcome to {}!", "ClassIsland.ManagementServer".Pastel("#00bfff"));
 
 app.UseAuthorization();
-app.UseWebSockets();
-app.UseMiddleware<WebSocketMiddleware>();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 

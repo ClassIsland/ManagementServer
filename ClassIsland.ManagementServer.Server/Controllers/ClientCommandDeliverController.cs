@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ClassIsland.ManagementServer.Server.Controllers;
 
 [ApiController]
-[Authorize(Roles = Roles.CommandsUser)]
+[Authorize(Roles = Roles.ClientsWrite)]
 [Route("api/v1/client-commands/")]
 public class ClientCommandDeliverController(ClientCommandDeliverService clientCommandDeliverService) : ControllerBase
 {
